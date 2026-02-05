@@ -112,7 +112,12 @@ All casino locations in the above states must be included to properly model comp
 - Monthly slot and table revenue by property
 - Gaming positions: slot machines and table games reported
 
-**Cross-section period:** [TBD - select month/quarter where all data available]
+**Cross-section period:** Calendar year 2022
+
+We use 2022 as our reference period for three reasons:
+1. Casino location data (from existing geo-demand model) reflects 2022 market structure
+2. 2022 represents post-COVID market stabilization with "normal" gaming patterns
+3. ACS 2018-2022 5-year estimates provide matching demographic data
 
 | State | Casinos with Revenue Data | Gaming Positions Available |
 |-------|---------------------------|---------------------------|
@@ -151,16 +156,18 @@ The factor of 6 for tables reflects typical seats per table game. Alternative we
 
 ### 3.5 Demographic Data (Demand Characteristics)
 
-**Source:** U.S. Census Bureau, American Community Survey (ACS)
+**Source:** U.S. Census Bureau, American Community Survey (ACS) 2018-2022 5-year estimates
 
 **Unit of analysis:** ZIP code tabulation area (ZCTA)
 
 **Variables:**
 | Variable | Definition | Source |
 |----------|------------|--------|
-| $P_i$ | Adult population (21+) | ACS 5-year estimates |
-| $W_i$ | Median household income | ACS 5-year estimates |
+| $P_i$ | Adult population (21+) | ACS 2018-2022 |
+| $W_i$ | Median household income | ACS 2018-2022 |
 | $\rho_i$ | Population density | Calculated |
+
+**Note:** The existing `allzips.rds` file contains demographic data that can be used directly or updated with 2018-2022 ACS estimates for consistency.
 
 **Geographic coverage:**
 | State | Approx. ZCTAs |
