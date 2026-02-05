@@ -79,27 +79,79 @@ Typical findings suggest β ≈ 1.5-2.5 for discretionary entertainment travel.
 
 ## 3. Data
 
-### 3.1 Casino Revenue Data
+### 3.1 Study Region
+
+The study region encompasses Pennsylvania and Ohio (where we observe casino-level revenue) plus all neighboring states that contribute demand to or compete for demand with PA/OH casinos.
+
+**Demand sources (ZIP codes):**
+| State | Role | Rationale |
+|-------|------|-----------|
+| Pennsylvania | Primary | Revenue observed |
+| Ohio | Primary | Revenue observed |
+| New York | Border | Feeds demand to PA casinos |
+| New Jersey | Border | Feeds demand to PA casinos |
+| Delaware | Border | Feeds demand to PA casinos |
+| Maryland | Border | Feeds demand to PA casinos |
+| West Virginia | Border | Feeds demand to PA and OH casinos |
+| Kentucky | Border | Feeds demand to OH casinos |
+| Indiana | Border | Feeds demand to OH casinos |
+| Michigan | Border | Feeds demand to OH casinos |
+
+**Competing casinos (supply):**
+All casino locations in the above states must be included to properly model competition, even though we only observe revenue for PA and OH properties.
+
+### 3.2 Casino Revenue Data (Dependent Variable)
 
 **Pennsylvania** (Source: PA Gaming Control Board)
 - 17 licensed casinos (Category 1-4)
 - Monthly slot and table revenue by property
-- Period: [TBD - suggest 2019-2024, excluding COVID months]
+- Gaming positions: slot machines and table games reported
 
 **Ohio** (Source: Ohio Casino Control Commission)
 - 4 licensed casinos
 - Monthly slot and table revenue by property
-- Period: [TBD - matching PA]
+- Gaming positions: slot machines and table games reported
 
-| State | Properties | Months | Observations |
-|-------|------------|--------|--------------|
-| Pennsylvania | 17 | TBD | TBD |
-| Ohio | 4 | TBD | TBD |
-| **Total** | 21 | — | — |
+**Cross-section period:** [TBD - select month/quarter where all data available]
 
-### 3.2 Demographic Data
+| State | Casinos with Revenue Data | Gaming Positions Available |
+|-------|---------------------------|---------------------------|
+| Pennsylvania | 17 | Yes (slots + tables) |
+| Ohio | 4 | Yes (slots + tables) |
+| **Total observed** | **21** | — |
 
-**Source:** U.S. Census Bureau, American Community Survey
+### 3.3 Competing Casino Locations (No Revenue Observed)
+
+Casinos in neighboring states compete for the same demand pool. We include their locations to properly model the choice set, but do not observe their revenue.
+
+| State | Estimated Casino Count | Data Source |
+|-------|------------------------|-------------|
+| New York | ~15+ | NY Gaming Commission |
+| New Jersey | ~9 | NJ DGE |
+| Delaware | ~3 | DE Lottery |
+| Maryland | ~6 | MD Lottery & Gaming |
+| West Virginia | ~5 | WV Lottery |
+| Kentucky | ~0 (horse racing only) | — |
+| Indiana | ~13 | IN Gaming Commission |
+| Michigan | ~26 (commercial + tribal) | MI Gaming Control Board |
+
+**Note:** Exact counts and locations to be compiled from state gaming commission records and existing `casinodata.rds` file.
+
+### 3.4 Casino Supply Characteristics
+
+To control for supply-side heterogeneity, we include casino capacity measures:
+
+| Variable | Definition | Source |
+|----------|------------|--------|
+| $SLOTS_j$ | Number of slot machines at casino $j$ | State gaming reports |
+| $TABLES_j$ | Number of table games at casino $j$ | State gaming reports |
+| $POSITIONS_j$ | Total gaming positions ($SLOTS_j + 6 \times TABLES_j$) | Calculated |
+
+The factor of 6 for tables reflects typical seats per table game. Alternative weightings can be tested for robustness.
+
+### 3.5 Demographic Data (Demand Characteristics)
+
+**Source:** U.S. Census Bureau, American Community Survey (ACS)
 
 **Unit of analysis:** ZIP code tabulation area (ZCTA)
 
@@ -110,20 +162,31 @@ Typical findings suggest β ≈ 1.5-2.5 for discretionary entertainment travel.
 | $W_i$ | Median household income | ACS 5-year estimates |
 | $\rho_i$ | Population density | Calculated |
 
-**Geographic scope:**
-- Pennsylvania: ~1,700 ZCTAs
-- Ohio: ~1,200 ZCTAs
-- Border states (NY, NJ, WV, MD, DE, MI, IN, KY): ~X,XXX ZCTAs
+**Geographic coverage:**
+| State | Approx. ZCTAs |
+|-------|---------------|
+| Pennsylvania | ~1,700 |
+| Ohio | ~1,200 |
+| New York | ~1,800 |
+| New Jersey | ~600 |
+| Delaware | ~70 |
+| Maryland | ~500 |
+| West Virginia | ~700 |
+| Kentucky | ~900 |
+| Indiana | ~700 |
+| Michigan | ~1,000 |
+| **Total** | **~9,200** |
 
-### 3.3 Distance Calculations
+### 3.6 Distance Calculations
 
 - Haversine (great-circle) distance from ZIP centroid to casino location
-- Calculated for all ZIP-casino pairs within 150-mile radius
-- Alternative: Drive-time distance (Google/HERE API) for robustness
+- Calculated for all ZIP-casino pairs
+- Demand allocation limited to casinos within reasonable travel distance (e.g., 150 miles)
+- Alternative: Drive-time distance (API-based) for robustness
 
-### 3.4 Summary Statistics
+### 3.7 Summary Statistics
 
-[Table: Summary statistics for key variables]
+[Table: Summary statistics for key variables - to be populated]
 
 ---
 
@@ -131,18 +194,38 @@ Typical findings suggest β ≈ 1.5-2.5 for discretionary entertainment travel.
 
 ### 4.1 Model Specification
 
-**Casino-level revenue** is the sum of demand from all ZIP codes:
+**Demand from ZIP $i$ to casino $j$:**
 
-$$R_j = \sum_{i} D_{ij} = \sum_{i} \frac{P_i \cdot W_i^\gamma \cdot f(d_{ij})}{\sum_{k \in C} f(d_{ik})}$$
+Each ZIP code's gambling demand is allocated across all accessible casinos based on distance and casino attractiveness:
+
+$$D_{ij} = P_i \cdot W_i^\gamma \cdot \frac{A_j \cdot f(d_{ij})}{\sum_{k \in C_i} A_k \cdot f(d_{ik})}$$
 
 Where:
-- $R_j$ = observed revenue at casino $j$
-- $C$ = set of competing casinos accessible to ZIP $i$
-- $\gamma$ = income elasticity parameter
+- $D_{ij}$ = demand (in dollars) flowing from ZIP $i$ to casino $j$
+- $P_i$ = adult population (21+) in ZIP $i$
+- $W_i$ = median household income in ZIP $i$
+- $\gamma$ = income elasticity of gambling demand
+- $A_j$ = attractiveness/capacity of casino $j$ (see below)
+- $f(d_{ij})$ = distance decay function (to be estimated)
+- $C_i$ = set of casinos accessible to ZIP $i$ (within threshold distance)
 
-**Market share formulation:**
+**Casino attractiveness (supply-side control):**
 
-$$S_j = \frac{R_j}{\sum_j R_j} = \frac{\sum_i P_i W_i^\gamma f(d_{ij}) / \sum_k f(d_{ik})}{\sum_j \sum_i P_i W_i^\gamma f(d_{ij}) / \sum_k f(d_{ik})}$$
+$$A_j = POSITIONS_j^\delta = (SLOTS_j + 6 \times TABLES_j)^\delta$$
+
+Where $\delta$ captures returns to scale in casino capacity. If $\delta = 1$, revenue scales linearly with gaming positions. If $\delta < 1$, diminishing returns to size.
+
+**Casino-level revenue:**
+
+$$R_j = \sum_{i} D_{ij} = \sum_{i} P_i \cdot W_i^\gamma \cdot \frac{A_j \cdot f(d_{ij})}{\sum_{k \in C_i} A_k \cdot f(d_{ik})}$$
+
+**Key insight:** We only observe $R_j$ for PA and OH casinos, but the denominator includes *all* competing casinos (including those in border states). This properly accounts for demand leakage to out-of-state competitors.
+
+**Market share formulation (for PA+OH casinos only):**
+
+$$S_j = \frac{R_j}{\sum_{j \in \{PA,OH\}} R_j}$$
+
+The predicted share depends on the full competitive landscape, but we only fit to observed PA/OH revenues.
 
 ### 4.2 Candidate Distance Decay Functions
 
@@ -163,29 +246,43 @@ $$f(d) = \frac{1}{1 + (d/\alpha)^\beta}$$
 **Model 5: Combined exponential-power**
 $$f(d) = d^{-\alpha} \cdot e^{-\beta d}$$
 
-### 4.3 Estimation Approach
+### 4.3 Parameters to Estimate
 
-**Option A: Non-linear least squares (NLS)**
+| Parameter | Interpretation | Expected Range |
+|-----------|----------------|----------------|
+| $\beta$ (or $\alpha, \beta$) | Distance decay rate(s) | Context-dependent |
+| $\gamma$ | Income elasticity of demand | 0.5 - 1.5 |
+| $\delta$ | Returns to scale in casino capacity | 0.5 - 1.2 |
 
-Minimize sum of squared errors between predicted and actual revenue shares:
+**Note:** The distance decay parameters vary by functional form—some models have one parameter ($\beta$), others have two ($\alpha$, $\beta$).
 
-$$\min_{\theta} \sum_j \left( S_j^{observed} - S_j^{predicted}(\theta) \right)^2$$
+### 4.4 Estimation Approach
 
-Where $\theta$ = {$\beta$, $\gamma$, ...} are parameters to estimate.
+**Primary method: Non-linear least squares (NLS)**
 
-**Option B: Maximum likelihood estimation (MLE)**
+Minimize sum of squared errors between predicted and actual revenues:
+
+$$\min_{\theta} \sum_{j \in \{PA,OH\}} \left( R_j^{observed} - R_j^{predicted}(\theta) \right)^2$$
+
+Where $\theta$ = {distance decay parameters, $\gamma$, $\delta$}.
+
+Alternatively, fit to revenue shares to normalize scale:
+
+$$\min_{\theta} \sum_{j \in \{PA,OH\}} \left( S_j^{observed} - S_j^{predicted}(\theta) \right)^2$$
+
+**Alternative: Maximum likelihood estimation (MLE)**
 
 Assume revenue shares follow Dirichlet distribution:
 
-$$\mathbf{S} \sim Dirichlet(\alpha \cdot \mathbf{\pi}(\theta))$$
+$$\mathbf{S} \sim Dirichlet(\phi \cdot \mathbf{\pi}(\theta))$$
 
-Where $\mathbf{\pi}(\theta)$ = predicted share vector.
+Where $\mathbf{\pi}(\theta)$ = predicted share vector and $\phi$ = precision parameter.
 
-**Option C: Bayesian estimation**
+**Alternative: Bayesian estimation**
 
-Prior distributions on parameters + MCMC sampling.
+Prior distributions on parameters + MCMC sampling. Useful for uncertainty quantification.
 
-### 4.4 Model Comparison Criteria
+### 4.5 Model Comparison Criteria
 
 | Criterion | Formula | Interpretation |
 |-----------|---------|----------------|
@@ -195,13 +292,15 @@ Prior distributions on parameters + MCMC sampling.
 | BIC | $k\ln(n) - 2\ln(\hat{L})$ | Stronger parsimony penalty |
 | MAPE | $\frac{1}{n}\sum\left|\frac{S_j - \hat{S}_j}{S_j}\right|$ | Percentage error |
 
-### 4.5 Robustness Checks
+### 4.6 Robustness Checks
 
 1. **State-specific estimation** — Do PA and OH have different decay functions?
-2. **Temporal stability** — Are parameters stable across years?
+2. **Distance threshold sensitivity** — How do results change with 100/150/200 mile cutoffs?
 3. **Urban vs. rural** — Does decay differ by population density?
 4. **Facility type** — Category 1/2/3/4 differences in PA?
 5. **Drive-time vs. distance** — Does travel time improve fit?
+6. **Capacity measure alternatives** — Different weightings for slots vs. tables
+7. **Border casino inclusion** — Sensitivity to assumed locations of competing casinos
 
 ---
 
@@ -257,11 +356,12 @@ Prior distributions on parameters + MCMC sampling.
 
 ### 6.4 Limitations
 
-1. **Selection on observables** — Only casinos that were built are observed
-2. **Equilibrium data** — Revenues reflect market equilibrium, not pure demand
-3. **Supply heterogeneity** — Casinos differ in size/quality (partially addressed)
-4. **Cross-border effects** — Interstate competition complicates analysis
-5. **Temporal aggregation** — Monthly data masks day-of-week patterns
+1. **Partial revenue observation** — We observe revenue only for PA and OH casinos, not for competing border state casinos. Model relies on correct specification of competition.
+2. **Supply heterogeneity** — Gaming positions capture capacity but not quality (management, amenities, marketing). Residual variation may reflect unobserved casino attributes.
+3. **Selection on observables** — Only casinos that were built are observed; cannot validate predictions for hypothetical locations.
+4. **Cross-section identification** — Single time period limits ability to separate distance decay from market-specific effects.
+5. **Border casino data quality** — Locations and characteristics of competing casinos may be less precisely measured than PA/OH properties.
+6. **Homogeneous preferences assumed** — Model assumes uniform distance decay across all demographic groups.
 
 ---
 
