@@ -121,26 +121,29 @@ We use 2022 as our reference period for three reasons:
 
 | State | Casinos with Revenue Data | Gaming Positions Available |
 |-------|---------------------------|---------------------------|
-| Pennsylvania | 17 | Yes (slots + tables) |
-| Ohio | 4 | Yes (slots + tables) |
-| **Total observed** | **21** | — |
+| Pennsylvania | 14-17 | Yes (slots + tables from PGCB) |
+| Ohio | 12 (4 casinos + 8 racinos) | Yes (slots + tables from OCCC) |
+| **Total observed** | **26-29** | — |
+
+**Note:** Ohio's 12 properties include 4 full casinos (JACK Cleveland, Hollywood Columbus, Hollywood Toledo, Hard Rock Cincinnati) and 8 racinos (VLT facilities at racetracks). Pennsylvania count depends on whether all Category 4 mini-casinos were operational in 2022.
 
 ### 3.3 Competing Casino Locations (No Revenue Observed)
 
 Casinos in neighboring states compete for the same demand pool. We include their locations to properly model the choice set, but do not observe their revenue.
 
-| State | Estimated Casino Count | Data Source |
-|-------|------------------------|-------------|
-| New York | ~15+ | NY Gaming Commission |
-| New Jersey | ~9 | NJ DGE |
-| Delaware | ~3 | DE Lottery |
-| Maryland | ~6 | MD Lottery & Gaming |
-| West Virginia | ~5 | WV Lottery |
-| Kentucky | ~0 (horse racing only) | — |
-| Indiana | ~13 | IN Gaming Commission |
-| Michigan | ~26 (commercial + tribal) | MI Gaming Control Board |
+| State | Casinos in Database | Data Source |
+|-------|---------------------|-------------|
+| New York | 22 | `casinodata.rds` (2022) |
+| New Jersey | 11 | `casinodata.rds` (2022) |
+| Delaware | 3 | `casinodata.rds` (2022) |
+| Maryland | 6 | `casinodata.rds` (2022) |
+| West Virginia | 5 | `casinodata.rds` (2022) |
+| Kentucky | 0 | No casinos in 2022 |
+| Indiana | 12 | `casinodata.rds` (2022) |
+| Michigan | 25 | `casinodata.rds` (2022) |
+| **Border state total** | **84** | — |
 
-**Note:** Exact counts and locations to be compiled from state gaming commission records and existing `casinodata.rds` file.
+**Note:** Casino locations from existing geo-demand model database reflect 2022 market structure. Includes commercial and tribal facilities.
 
 ### 3.4 Casino Supply Characteristics
 
@@ -169,20 +172,20 @@ The factor of 6 for tables reflects typical seats per table game. Alternative we
 
 **Note:** The existing `allzips.rds` file contains demographic data that can be used directly or updated with 2018-2022 ACS estimates for consistency.
 
-**Geographic coverage:**
-| State | Approx. ZCTAs |
-|-------|---------------|
-| Pennsylvania | ~1,700 |
-| Ohio | ~1,200 |
-| New York | ~1,800 |
-| New Jersey | ~600 |
-| Delaware | ~70 |
-| Maryland | ~500 |
-| West Virginia | ~700 |
-| Kentucky | ~900 |
-| Indiana | ~700 |
-| Michigan | ~1,000 |
-| **Total** | **~9,200** |
+**Geographic coverage (from `allzips.rds`):**
+| State | ZCTAs |
+|-------|-------|
+| Pennsylvania | 1,830 |
+| Ohio | 1,232 |
+| New York | 1,824 |
+| New Jersey | 595 |
+| Delaware | 68 |
+| Maryland | 477 |
+| West Virginia | 736 |
+| Kentucky | 778 |
+| Indiana | 806 |
+| Michigan | 990 |
+| **Total** | **9,336** |
 
 ### 3.6 Distance Calculations
 
