@@ -1,0 +1,12 @@
+# Data files (may contain proprietary revenue data)
+data/*.csv
+data/*.rds
+
+# Keep directory structure
+!data/.gitkeep
+
+# Results can be regenerated
+results/*.rds
+
+# Large figure files
+figures/*.png
