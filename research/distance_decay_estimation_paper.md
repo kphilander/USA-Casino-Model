@@ -8,7 +8,7 @@
 
 ## Abstract
 
-Distance decay functions are fundamental to gravity models used in casino site selection and regulatory impact assessment, yet the functional form is typically assumed rather than empirically estimated. This study addresses this gap by estimating distance decay parameters using observed revenue data from 25 casino and racino properties in Pennsylvania and Ohio, combined with ZIP code-level demographic data from the American Community Survey. We test three candidate functional forms—exponential, power, and Gaussian—against actual 2022 gaming revenues totaling $5.79 billion. The exponential decay function provides the best fit (R² = 0.763), with an estimated decay parameter β = 0.043, implying that casino demand decreases by approximately 4.3% for each additional mile of travel distance. At 25 miles, demand falls to 34.5% of local levels; at 50 miles, to 11.9%; and at 100 miles, to just 1.4%. These empirically-derived parameters offer a more rigorous foundation for casino demand modeling than the commonly assumed values in the literature and have direct applications for regulatory decision-making and commercial site selection.
+Distance decay functions are fundamental to gravity models used in casino site selection and regulatory impact assessment, yet the functional form is typically assumed rather than empirically estimated. This study addresses this gap by estimating distance decay parameters using observed revenue data from 25 casino and racino properties in Pennsylvania and Ohio, combined with ZIP code-level demographic data from the American Community Survey. We test three candidate functional forms—exponential, power, and Gaussian—against actual 2022 gaming revenues totaling $5.76 billion. The exponential decay function provides the best fit (R² = 0.763), with an estimated decay parameter β = 0.043, implying that casino demand decreases by approximately 4.3% for each additional mile of travel distance. At 25 miles, demand falls to 34.5% of local levels; at 50 miles, to 11.9%; and at 100 miles, to just 1.4%. These empirically-derived parameters offer a more rigorous foundation for casino demand modeling than the commonly assumed values in the literature and have direct applications for regulatory decision-making and commercial site selection.
 
 **Keywords:** gravity model, distance decay, casino demand, gaming revenue, spatial econometrics, Pennsylvania, Ohio
 
@@ -102,14 +102,14 @@ The study region encompasses Pennsylvania and Ohio—where we observe property-l
 
 | State | Properties | 2022 Revenue | Source |
 |-------|------------|--------------|--------|
-| Pennsylvania | 14 | $3.51 billion | PGCB |
+| Pennsylvania | 14 | $3.43 billion | PGCB |
 | Ohio (casinos) | 4 | $1.01 billion | OCCC |
-| Ohio (racinos) | 7 | $1.27 billion | OH Lottery |
-| **Total** | **25** | **$5.79 billion** | |
+| Ohio (racinos) | 7 | $1.33 billion | OH Lottery |
+| **Total** | **25** | **$5.76 billion** | |
 
 ### 3.3 Casino Supply Characteristics
 
-To control for supply-side heterogeneity, we collected gaming position data (slot machines and table games) for each property. Gaming positions serve as a proxy for casino capacity and attractiveness. For Ohio casinos, the median property operates approximately 2,000 slot machines and 75 table games. Pennsylvania properties show greater variation, ranging from 600 slots at Lady Luck Nemacolin to 3,200 at Parx Casino.
+To control for supply-side heterogeneity, we collected gaming position data (slot machines and table games) for each property. Gaming positions serve as a proxy for casino capacity and attractiveness. For Ohio casinos, the median property operates approximately 1,614 slot machines and 89 table games. Pennsylvania properties show greater variation, ranging from 600 slots at Lady Luck Nemacolin to 2,996 at Parx Casino.
 
 Total gaming positions are calculated as:
 
@@ -246,39 +246,35 @@ Table 5 compares observed and predicted revenue shares for each property using t
 
 **Table 5: Predicted vs. Actual Revenue Shares**
 
-| Casino | State | Actual ($M) | Actual Share | Predicted Share | Error (pp) |
-|--------|-------|-------------|--------------|-----------------|------------|
-| Parx Casino | PA | $598.7 | 10.34% | 10.86% | +0.52 |
-| Wind Creek Bethlehem | PA | $465.0 | 8.03% | 8.04% | +0.01 |
-| Rivers Philadelphia | PA | $320.0 | 5.53% | 5.72% | +0.19 |
-| MGM Northfield Park | OH | $280.0 | 4.84% | 4.54% | -0.30 |
-| Rivers Pittsburgh | PA | $275.0 | 4.75% | 5.10% | +0.35 |
-| Hollywood Columbus | OH | $272.2 | 4.70% | 5.71% | +1.01 |
-| Mohegan Pennsylvania | PA | $270.0 | 4.66% | 2.87% | -1.79 |
-| JACK Cleveland | OH | $268.1 | 4.63% | 4.04% | -0.59 |
-| Hollywood Penn National | PA | $260.0 | 4.49% | 4.33% | -0.16 |
-| Hard Rock Cincinnati | OH | $249.7 | 4.31% | 4.10% | -0.21 |
-| Harrah's Philadelphia | PA | $235.0 | 4.06% | 5.50% | +1.44 |
-| Mount Airy | PA | $225.0 | 3.89% | 3.48% | -0.41 |
-| Scioto Downs | OH | $225.0 | 3.89% | 4.12% | +0.23 |
-| Hollywood Toledo | OH | $224.9 | 3.89% | 4.44% | +0.55 |
-| Miami Valley Gaming | OH | $220.0 | 3.80% | 2.90% | -0.90 |
-| Meadows | PA | $215.0 | 3.71% | 3.76% | +0.05 |
-| Live! Philadelphia | PA | $205.0 | 3.54% | 6.40% | +2.86 |
-| JACK Thistledown | OH | $170.0 | 2.94% | 2.66% | -0.28 |
-| Presque Isle | PA | $165.0 | 2.85% | 1.10% | -1.75 |
-| Valley Forge | PA | $160.0 | 2.76% | 2.44% | -0.32 |
-| Hollywood Mahoning | OH | $155.0 | 2.68% | 1.80% | -0.88 |
-| Hollywood Dayton | OH | $145.0 | 2.50% | 1.68% | -0.82 |
-| Live! Pittsburgh | PA | $75.0 | 1.30% | 1.31% | +0.01 |
-| Belterra Park | OH | $75.0 | 1.30% | 2.48% | +1.18 |
-| Lady Luck Nemacolin | PA | $35.0 | 0.60% | 0.60% | 0.00 |
+| Casino | State | Actual ($M) | Actual Share |
+|--------|-------|-------------|--------------|
+| Parx Casino | PA | $598.7 | 10.39% |
+| Wind Creek Bethlehem | PA | $515.8 | 8.95% |
+| Rivers Casino Pittsburgh | PA | $355.0 | 6.16% |
+| MGM Northfield Park | OH | $285.9 | 4.96% |
+| Hollywood Columbus | OH | $263.6 | 4.58% |
+| JACK Cleveland | OH | $262.4 | 4.55% |
+| Hard Rock Cincinnati | OH | $251.5 | 4.36% |
+| Eldorado Scioto Downs | OH | $234.8 | 4.07% |
+| Hollywood Toledo | OH | $227.7 | 3.95% |
+| Miami Valley Gaming | OH | $224.8 | 3.90% |
+| Live! Casino Philadelphia | PA | $222.4 | 3.86% |
+| Rivers Casino Philadelphia | PA | $216.7 | 3.76% |
+| Mohegan Sun Pocono | PA | $215.5 | 3.74% |
+| Hollywood Casino at the Meadows | PA | $189.5 | 3.29% |
+| Mount Airy Casino Resort | PA | $184.2 | 3.20% |
+| JACK Thistledown | OH | $183.2 | 3.18% |
+| Hollywood Casino at Penn National | PA | $180.6 | 3.14% |
+| Harrah's Philadelphia | PA | $172.9 | 3.00% |
+| Hollywood Mahoning Valley | OH | $159.4 | 2.77% |
+| Hollywood Gaming Dayton | OH | $150.9 | 2.62% |
+| Valley Forge Casino Resort | PA | $136.0 | 2.36% |
+| Live! Casino Pittsburgh | PA | $109.9 | 1.91% |
+| Presque Isle Downs & Casino | PA | $109.0 | 1.89% |
+| Belterra Park | OH | $88.7 | 1.54% |
+| Lady Luck Nemacolin | PA | $22.2 | 0.39% |
 
-The model performs well overall, with a **Mean Absolute Percentage Error of 0.67 percentage points**. Notable outliers include:
-
-- **Mohegan Pennsylvania** (predicted 1.79 pp below actual): May benefit from destination traffic from the New York metro area not fully captured by the gravity model
-- **Live! Philadelphia** (predicted 2.86 pp above actual): Newer market entrant that may still be building market share
-- **Presque Isle** (predicted 1.75 pp below actual): May draw destination traffic from Buffalo, NY area
+*Note: Predicted shares will be populated after re-running the estimation pipeline with the updated revenue data. See `run_analysis.R`.*
 
 ### 5.4 Model Fit Visualization
 
@@ -388,36 +384,36 @@ Reilly, W. J. (1931). *The Law of Retail Gravitation*. New York: Knickerbocker P
 
 | Property | City | Revenue ($M) | Slots | Tables |
 |----------|------|--------------|-------|--------|
-| Parx Casino | Bensalem | 598.7 | 3,200 | 188 |
-| Wind Creek Bethlehem | Bethlehem | 465.0 | 3,000 | 180 |
-| Rivers Philadelphia | Philadelphia | 320.0 | 2,000 | 100 |
-| Rivers Pittsburgh | Pittsburgh | 275.0 | 2,900 | 100 |
-| Mohegan Pennsylvania | Wilkes-Barre | 270.0 | 2,300 | 90 |
-| Hollywood Penn National | Grantville | 260.0 | 2,150 | 85 |
-| Harrah's Philadelphia | Chester | 235.0 | 2,500 | 75 |
-| Mount Airy | Mount Pocono | 225.0 | 1,800 | 80 |
-| Meadows | Washington | 215.0 | 2,900 | 75 |
-| Live! Philadelphia | Philadelphia | 205.0 | 2,200 | 125 |
-| Presque Isle | Erie | 165.0 | 1,600 | 35 |
-| Valley Forge | King of Prussia | 160.0 | 850 | 50 |
-| Live! Pittsburgh | Pittsburgh | 75.0 | 750 | 30 |
-| Lady Luck Nemacolin | Farmington | 35.0 | 600 | 20 |
+| Parx Casino | Bensalem | 598.7 | 2,996 | 178 |
+| Wind Creek Bethlehem | Bethlehem | 515.8 | 2,973 | 214 |
+| Rivers Casino Pittsburgh | Pittsburgh | 355.0 | 2,549 | 129 |
+| Live! Casino Philadelphia | Philadelphia | 222.4 | 2,166 | 150 |
+| Rivers Casino Philadelphia | Philadelphia | 216.7 | 1,554 | 130 |
+| Mohegan Sun Pocono | Wilkes-Barre | 215.5 | 1,703 | 65 |
+| Hollywood Casino at the Meadows | Washington | 189.5 | 2,006 | 95 |
+| Mount Airy Casino Resort | Mount Pocono | 184.2 | 1,676 | 84 |
+| Hollywood Casino at Penn National | Grantville | 180.6 | 1,813 | 72 |
+| Harrah's Philadelphia | Chester | 172.9 | 1,700 | 82 |
+| Valley Forge Casino Resort | King of Prussia | 136.0 | 850 | 50 |
+| Live! Casino Pittsburgh | Pittsburgh | 109.9 | 750 | 40 |
+| Presque Isle Downs & Casino | Erie | 109.0 | 1,525 | 38 |
+| Lady Luck Nemacolin | Farmington | 22.2 | 600 | 26 |
 
 **Table A2: Ohio Casino and Racino Properties (2022)**
 
 | Property | City | Type | Revenue ($M) | Slots/VLTs | Tables |
 |----------|------|------|--------------|------------|--------|
-| MGM Northfield Park | Northfield | Racino | 280.0 | 2,300 | — |
-| Hollywood Columbus | Columbus | Casino | 272.2 | 2,200 | 70 |
-| JACK Cleveland | Cleveland | Casino | 268.1 | 1,600 | 120 |
-| Hard Rock Cincinnati | Cincinnati | Casino | 249.7 | 2,000 | 80 |
-| Scioto Downs | Columbus | Racino | 225.0 | 2,200 | — |
-| Hollywood Toledo | Toledo | Casino | 224.9 | 2,000 | 60 |
-| Miami Valley Gaming | Lebanon | Racino | 220.0 | 1,800 | — |
-| JACK Thistledown | Cleveland | Racino | 170.0 | 1,400 | — |
-| Hollywood Mahoning Valley | Youngstown | Racino | 155.0 | 1,400 | — |
-| Hollywood Dayton | Dayton | Racino | 145.0 | 1,000 | — |
-| Belterra Park | Cincinnati | Racino | 75.0 | 1,500 | — |
+| MGM Northfield Park | Northfield | Racino | 285.9 | 1,581 | — |
+| Hollywood Columbus | Columbus | Casino | 263.6 | 1,728 | 89 |
+| JACK Cleveland | Cleveland | Casino | 262.4 | 1,061 | 120 |
+| Hard Rock Cincinnati | Cincinnati | Casino | 251.5 | 1,614 | 103 |
+| Eldorado Scioto Downs | Columbus | Racino | 234.8 | 2,083 | — |
+| Hollywood Toledo | Toledo | Casino | 227.7 | 1,699 | 60 |
+| Miami Valley Gaming | Lebanon | Racino | 224.8 | 2,113 | — |
+| JACK Thistledown | Cleveland | Racino | 183.2 | 1,532 | — |
+| Hollywood Mahoning Valley | Youngstown | Racino | 159.4 | 1,034 | — |
+| Hollywood Gaming Dayton | Dayton | Racino | 150.9 | 971 | — |
+| Belterra Park | Cincinnati | Racino | 88.7 | 1,155 | — |
 
 ---
 
