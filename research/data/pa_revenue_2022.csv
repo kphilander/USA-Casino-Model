@@ -1,0 +1,15 @@
+casino_id,name,city,state,facility_type,slots_revenue_2022,table_revenue_2022,total_revenue_2022,num_slots,num_tables,source
+1025,Parx Casino and Racing,Bensalem,PA,casino,393800000,204900000,598700000,3200,188,PGCB
+1202,Sands Casino Resort Bethlehem,Bethlehem,PA,casino,290000000,175000000,465000000,3000,180,PGCB
+1324,SugarHouse Casino,Philadelphia,PA,casino,200000000,120000000,320000000,2000,100,PGCB
+906,Mohegan Sun at Pocono Downs,Wilkes-Barre,PA,casino,180000000,90000000,270000000,2300,90,PGCB
+939,Mount Airy Casino Resort,Mount Pocono,PA,casino,150000000,75000000,225000000,1800,80,PGCB
+639,Hollywood Casino Off Track Betting,Grantville,PA,casino,175000000,85000000,260000000,2150,85,PGCB
+1166,Rivers Casino,Pittsburgh,PA,casino,175000000,100000000,275000000,2900,100,PGCB
+880,Meadows Racetrack & Casino,Washington,PA,casino,145000000,70000000,215000000,2900,75,PGCB
+1060,Presque Isle Downs & Casino,Erie,PA,casino,120000000,45000000,165000000,1600,35,PGCB
+754,Lady Luck Casino Nemacolin,Farmington,PA,casino,25000000,10000000,35000000,600,20,PGCB
+1395,Valley Forge Casino Resort,King of Prussia,PA,casino,95000000,65000000,160000000,850,50,PGCB
+604,Harrah's Philadelphia Casino & Racetrack,Chester,PA,casino,155000000,80000000,235000000,2500,75,PGCB
+781,Live! Hotel and Casino Philadelphia,Philadelphia,PA,casino,120000000,85000000,205000000,2200,125,PGCB
+940,Mount Airy Pittsburgh Casino Resort,Pittsburgh,PA,casino,50000000,25000000,75000000,750,30,PGCB
