@@ -1,0 +1,14 @@
+# Intermediate data files (can be regenerated)
+data/*.rds
+
+# Keep directory structure
+!data/.gitkeep
+
+# Keep revenue data (publicly available from gaming commissions)
+!data/*_revenue_2022.csv
+
+# Model estimates (binary, can be regenerated)
+results/*.rds
+
+# Large figure files
+figures/*.png

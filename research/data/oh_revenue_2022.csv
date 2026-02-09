@@ -1,0 +1,12 @@
+casino_id,name,city,state,facility_type,slots_revenue_2022,table_revenue_2022,total_revenue_2022,num_slots,num_tables,source
+633,Hollywood Casino Columbus,Columbus,OH,casino,220000000,52200000,272200000,2200,70,OCCC
+689,JACK Cleveland Casino,Cleveland,OH,casino,190000000,78100000,268100000,1600,120,OCCC
+688,Jack Cincinnati Casino,Cincinnati,OH,casino,180000000,69700000,249700000,2000,80,OCCC
+642,Hollywood Casino Toledo,Toledo,OH,casino,185000000,39900000,224900000,2000,60,OCCC
+1471,MGM Northfield Park,Northfield,OH,racino,280000000,0,280000000,2300,0,OH_Lottery
+1476,Eldorado Scioto Downs,Columbus,OH,racino,225000000,0,225000000,2200,0,OH_Lottery
+1475,Miami Valley Gaming,Lebanon,OH,racino,220000000,0,220000000,1800,0,OH_Lottery
+1474,Jack Thistledown,Cleveland,OH,racino,170000000,0,170000000,1400,0,OH_Lottery
+1473,Hollywood Gaming at Mahoning Valley,Youngstown,OH,racino,155000000,0,155000000,1400,0,OH_Lottery
+1472,Hollywood Gaming at Dayton,Dayton,OH,racino,145000000,0,145000000,1000,0,OH_Lottery
+94,Belterra Park Gaming & Entertainment,Cincinnati,OH,racino,75000000,0,75000000,1500,0,OH_Lottery
