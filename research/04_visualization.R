@@ -100,10 +100,10 @@ best_model_name <- comparison$model[1]
 fig2_data <- revenue_data %>%
   mutate(
     revenue_millions = total_revenue_2022 / 1e6,
-    state = ifelse(grepl("PA|Pennsylvania", source), "Pennsylvania", "Ohio")
+    state_label = ifelse(state == "PA", "Pennsylvania", "Ohio")
   )
 
-fig2 <- ggplot(fig2_data, aes(x = reorder(name, -revenue_millions), y = revenue_millions, fill = state)) +
+fig2 <- ggplot(fig2_data, aes(x = reorder(name, -revenue_millions), y = revenue_millions, fill = state_label)) +
   geom_col() +
   coord_flip() +
   scale_fill_manual(values = c("Pennsylvania" = "#1f77b4", "Ohio" = "#ff7f0e")) +
@@ -111,7 +111,7 @@ fig2 <- ggplot(fig2_data, aes(x = reorder(name, -revenue_millions), y = revenue_
     title = "Figure 2: Observed Casino Revenues (2022)",
     x = NULL,
     y = "Revenue ($ millions)",
-    fill = "State"
+    fill = NULL
   ) +
   theme(
     legend.position = "bottom",

@@ -8,7 +8,7 @@
 
 ## Abstract
 
-Distance decay functions are fundamental to gravity models used in casino site selection and regulatory impact assessment, yet the functional form is typically assumed rather than empirically estimated. This study addresses this gap by estimating distance decay parameters using observed revenue data from 25 casino and racino properties in Pennsylvania and Ohio, combined with ZIP code-level demographic data from the American Community Survey. We test three candidate functional forms—exponential, power, and Gaussian—against actual 2022 gaming revenues totaling $5.79 billion. The exponential decay function provides the best fit (R² = 0.763), with an estimated decay parameter β = 0.043, implying that casino demand decreases by approximately 4.3% for each additional mile of travel distance. At 25 miles, demand falls to 34.5% of local levels; at 50 miles, to 11.9%; and at 100 miles, to just 1.4%. These empirically-derived parameters offer a more rigorous foundation for casino demand modeling than the commonly assumed values in the literature and have direct applications for regulatory decision-making and commercial site selection.
+Distance decay functions are fundamental to gravity models used in casino site selection and regulatory impact assessment, yet the functional form is typically assumed rather than empirically estimated. This study addresses this gap by estimating distance decay parameters using observed revenue data from 25 casino and racino properties in Pennsylvania and Ohio, combined with ZIP code-level demographic data from the American Community Survey. We test three candidate functional forms—exponential, power, and Gaussian—against actual 2022 gaming revenues totaling $5.56 billion. The exponential decay function provides the best fit (R² = 0.773), with an estimated decay parameter β = 0.047, implying that casino demand decreases by approximately 4.6% for each additional mile of travel distance. At 25 miles, demand falls to 30.7% of local levels; at 50 miles, to 9.4%; and at 100 miles, to just 0.9%. These empirically-derived parameters offer a more rigorous foundation for casino demand modeling than the commonly assumed values in the literature and have direct applications for regulatory decision-making and commercial site selection.
 
 **Keywords:** gravity model, distance decay, casino demand, gaming revenue, spatial econometrics, Pennsylvania, Ohio
 
@@ -102,14 +102,14 @@ The study region encompasses Pennsylvania and Ohio—where we observe property-l
 
 | State | Properties | 2022 Revenue | Source |
 |-------|------------|--------------|--------|
-| Pennsylvania | 14 | $3.51 billion | PGCB |
+| Pennsylvania | 14 | $3.23 billion | PGCB |
 | Ohio (casinos) | 4 | $1.01 billion | OCCC |
-| Ohio (racinos) | 7 | $1.27 billion | OH Lottery |
-| **Total** | **25** | **$5.79 billion** | |
+| Ohio (racinos) | 7 | $1.33 billion | OH Lottery |
+| **Total** | **25** | **$5.56 billion** | |
 
 ### 3.3 Casino Supply Characteristics
 
-To control for supply-side heterogeneity, we collected gaming position data (slot machines and table games) for each property. Gaming positions serve as a proxy for casino capacity and attractiveness. For Ohio casinos, the median property operates approximately 2,000 slot machines and 75 table games. Pennsylvania properties show greater variation, ranging from 600 slots at Lady Luck Nemacolin to 3,200 at Parx Casino.
+To control for supply-side heterogeneity, we collected gaming position data (slot machines and table games) for each property. Gaming positions serve as a proxy for casino capacity and attractiveness. For Ohio casinos, the median property operates approximately 1,614 slot machines and 89 table games. Pennsylvania properties show greater variation, ranging from 600 slots at Lady Luck Nemacolin to 2,996 at Parx Casino.
 
 Total gaming positions are calculated as:
 
@@ -217,26 +217,26 @@ Table 3 presents the estimated parameters for each distance decay specification.
 
 | Model | Parameter | Estimate | SSE | R² |
 |-------|-----------|----------|-----|-----|
-| **Exponential** | **β** | **0.0426** | **0.00228** | **0.763** |
-| Gaussian | β | 0.00051 | 0.00238 | 0.753 |
-| Power | β | 0.754 | 0.00276 | 0.713 |
+| **Exponential** | **β** | **0.0472** | **0.00266** | **0.773** |
+| Gaussian | β | 0.000529 | 0.00270 | 0.769 |
+| Power | β | 1.685 | 0.00360 | 0.692 |
 
-The exponential model provides the best fit, explaining 76.3% of the variance in casino revenue shares. The Gaussian specification performs nearly as well (R² = 0.753), while the power model shows notably weaker fit (R² = 0.713).
+The exponential model provides the best fit, explaining 77.3% of the variance in casino revenue shares. The Gaussian specification performs nearly as well (R² = 0.769), while the power model shows notably weaker fit (R² = 0.692).
 
 ### 5.2 Interpretation of the Exponential Decay Parameter
 
-The estimated exponential decay parameter β = 0.0426 implies that casino demand decreases by approximately 4.26% for each additional mile of travel distance. This translates to the following demand levels at key distances:
+The estimated exponential decay parameter β = 0.0472 implies that casino demand decreases by approximately 4.6% for each additional mile of travel distance. This translates to the following demand levels at key distances:
 
 **Table 4: Demand Decay by Distance (Exponential Model)**
 
 | Distance | Relative Demand | Interpretation |
 |----------|-----------------|----------------|
 | 0 miles | 100% | Local demand (baseline) |
-| 10 miles | 65.3% | Two-thirds of local demand |
-| 25 miles | 34.5% | One-third of local demand |
-| 50 miles | 11.9% | One-eighth of local demand |
-| 75 miles | 4.1% | Minimal demand |
-| 100 miles | 1.4% | Negligible demand |
+| 10 miles | 62.4% | Nearly two-thirds of local demand |
+| 25 miles | 30.7% | Less than one-third of local demand |
+| 50 miles | 9.4% | Less than one-tenth of local demand |
+| 75 miles | 2.9% | Minimal demand |
+| 100 miles | 0.9% | Negligible demand |
 
 These results suggest that the effective catchment area for a typical casino extends approximately 50 miles, beyond which demand contribution becomes marginal.
 
@@ -244,41 +244,37 @@ These results suggest that the effective catchment area for a typical casino ext
 
 Table 5 compares observed and predicted revenue shares for each property using the exponential model.
 
-**Table 5: Predicted vs. Actual Revenue Shares**
+**Table 5: Predicted vs. Actual Revenue Shares (Exponential Model)**
 
 | Casino | State | Actual ($M) | Actual Share | Predicted Share | Error (pp) |
 |--------|-------|-------------|--------------|-----------------|------------|
-| Parx Casino | PA | $598.7 | 10.34% | 10.86% | +0.52 |
-| Wind Creek Bethlehem | PA | $465.0 | 8.03% | 8.04% | +0.01 |
-| Rivers Philadelphia | PA | $320.0 | 5.53% | 5.72% | +0.19 |
-| MGM Northfield Park | OH | $280.0 | 4.84% | 4.54% | -0.30 |
-| Rivers Pittsburgh | PA | $275.0 | 4.75% | 5.10% | +0.35 |
-| Hollywood Columbus | OH | $272.2 | 4.70% | 5.71% | +1.01 |
-| Mohegan Pennsylvania | PA | $270.0 | 4.66% | 2.87% | -1.79 |
-| JACK Cleveland | OH | $268.1 | 4.63% | 4.04% | -0.59 |
-| Hollywood Penn National | PA | $260.0 | 4.49% | 4.33% | -0.16 |
-| Hard Rock Cincinnati | OH | $249.7 | 4.31% | 4.10% | -0.21 |
-| Harrah's Philadelphia | PA | $235.0 | 4.06% | 5.50% | +1.44 |
-| Mount Airy | PA | $225.0 | 3.89% | 3.48% | -0.41 |
-| Scioto Downs | OH | $225.0 | 3.89% | 4.12% | +0.23 |
-| Hollywood Toledo | OH | $224.9 | 3.89% | 4.44% | +0.55 |
-| Miami Valley Gaming | OH | $220.0 | 3.80% | 2.90% | -0.90 |
-| Meadows | PA | $215.0 | 3.71% | 3.76% | +0.05 |
-| Live! Philadelphia | PA | $205.0 | 3.54% | 6.40% | +2.86 |
-| JACK Thistledown | OH | $170.0 | 2.94% | 2.66% | -0.28 |
-| Presque Isle | PA | $165.0 | 2.85% | 1.10% | -1.75 |
-| Valley Forge | PA | $160.0 | 2.76% | 2.44% | -0.32 |
-| Hollywood Mahoning | OH | $155.0 | 2.68% | 1.80% | -0.88 |
-| Hollywood Dayton | OH | $145.0 | 2.50% | 1.68% | -0.82 |
-| Live! Pittsburgh | PA | $75.0 | 1.30% | 1.31% | +0.01 |
-| Belterra Park | OH | $75.0 | 1.30% | 2.48% | +1.18 |
-| Lady Luck Nemacolin | PA | $35.0 | 0.60% | 0.60% | 0.00 |
+| Parx Casino | PA | $598.7 | 10.77% | 10.89% | +0.12 |
+| Wind Creek Bethlehem | PA | $515.8 | 9.28% | 8.70% | −0.58 |
+| Rivers Casino Pittsburgh | PA | $355.0 | 6.38% | 5.50% | −0.88 |
+| MGM Northfield Park | OH | $285.9 | 5.14% | 3.88% | −1.26 |
+| Hollywood Columbus | OH | $263.6 | 4.74% | 5.61% | +0.87 |
+| JACK Cleveland | OH | $262.4 | 4.72% | 3.78% | −0.94 |
+| Hard Rock Cincinnati | OH | $251.5 | 4.52% | 3.93% | −0.59 |
+| Eldorado Scioto Downs | OH | $234.8 | 4.22% | 4.35% | +0.13 |
+| Hollywood Toledo | OH | $227.7 | 4.09% | 4.43% | +0.34 |
+| Miami Valley Gaming | OH | $224.8 | 4.04% | 3.59% | −0.45 |
+| Live! Casino Philadelphia | PA | $222.4 | 4.00% | 7.15% | +3.15 |
+| Rivers Casino Philadelphia | PA | $216.7 | 3.90% | 5.51% | +1.61 |
+| Mohegan Sun Pocono | PA | $215.5 | 3.88% | 2.29% | −1.59 |
+| Hollywood Casino at the Meadows | PA | $189.5 | 3.41% | 3.19% | −0.22 |
+| Mount Airy Casino Resort | PA | $184.2 | 3.31% | 3.38% | +0.07 |
+| JACK Thistledown | OH | $183.2 | 3.29% | 3.60% | +0.31 |
+| Hollywood Casino at Penn National | PA | $180.6 | 3.25% | 4.34% | +1.09 |
+| Harrah's Philadelphia | PA | $172.9 | 3.11% | 4.36% | +1.25 |
+| Hollywood Mahoning Valley | OH | $159.4 | 2.87% | 1.59% | −1.28 |
+| Hollywood Gaming Dayton | OH | $150.9 | 2.71% | 1.77% | −0.94 |
+| Valley Forge Casino Resort | PA | $136.0 | 2.45% | 2.62% | +0.17 |
+| Live! Casino Pittsburgh | PA | $109.9 | 1.98% | 1.58% | −0.40 |
+| Presque Isle Downs & Casino | PA | $109.0 | 1.96% | 1.21% | −0.75 |
+| Belterra Park | OH | $88.7 | 1.60% | 2.06% | +0.46 |
+| Lady Luck Nemacolin | PA | $22.2 | 0.40% | 0.70% | +0.30 |
 
-The model performs well overall, with a **Mean Absolute Percentage Error of 0.67 percentage points**. Notable outliers include:
-
-- **Mohegan Pennsylvania** (predicted 1.79 pp below actual): May benefit from destination traffic from the New York metro area not fully captured by the gravity model
-- **Live! Philadelphia** (predicted 2.86 pp above actual): Newer market entrant that may still be building market share
-- **Presque Isle** (predicted 1.75 pp below actual): May draw destination traffic from Buffalo, NY area
+The model achieves a mean absolute error of 0.79 percentage points across the 25 properties. The largest outlier is Live! Casino Philadelphia, where the model over-predicts share by 3.15 percentage points, likely reflecting the Philadelphia market's intense competition and the property's relatively recent entry. Mohegan Sun Pocono is under-predicted by 1.59 percentage points, possibly due to its resort amenities capturing demand beyond what the gravity model attributes to its location.
 
 ### 5.4 Model Fit Visualization
 
@@ -286,7 +282,7 @@ Figure 1 illustrates the estimated decay functions across the three specificatio
 
 *[Figure 1: Distance Decay Functions]*
 
-The exponential function (β = 0.043) shows moderate initial decay that continues steadily. The Gaussian function shows sharper initial decay that flattens quickly. The power function maintains higher weight at longer distances.
+The exponential function (β = 0.047) shows moderate initial decay that continues steadily. The Gaussian function shows sharper initial decay that flattens quickly. The power function maintains higher weight at longer distances.
 
 The visual comparison highlights why the exponential specification performs best: it captures both the substantial local concentration of demand and the gradual tail of longer-distance patrons, while the Gaussian model over-concentrates demand locally and the power model over-weights distant demand.
 
@@ -296,9 +292,9 @@ The visual comparison highlights why the exponential specification performs best
 
 ### 6.1 Interpretation of Results
 
-The finding that exponential decay with β ≈ 0.043 best characterizes casino demand has several implications:
+The finding that exponential decay with β ≈ 0.047 best characterizes casino demand has several implications:
 
-**Local market dominance**: With demand falling to one-third of local levels at just 25 miles, casino revenues are heavily concentrated among nearby residents. This supports the emphasis on local market demographics in casino feasibility studies and suggests that proposals for new casinos should focus primarily on their immediate catchment areas.
+**Local market dominance**: With demand falling to less than one-third of local levels at just 25 miles, casino revenues are heavily concentrated among nearby residents. This supports the emphasis on local market demographics in casino feasibility studies and suggests that proposals for new casinos should focus primarily on their immediate catchment areas.
 
 **Limited destination draw**: The rapid decay beyond 50 miles implies that most regional casinos function as local entertainment venues rather than destination attractions. This distinguishes them from resort-destination properties (e.g., Las Vegas, Atlantic City) where demand patterns likely differ substantially.
 
@@ -306,13 +302,13 @@ The finding that exponential decay with β ≈ 0.043 best characterizes casino d
 
 ### 6.2 Comparison to Prior Literature
 
-The estimated decay rate (β = 0.043) falls within the range observed in related retail and recreation contexts. Cesario's (1976) recreational travel studies implied exponential decay rates of 0.03-0.06, while Huff's (2003) shopping center analysis found rates of 0.02-0.10 depending on retail format. Our casino-specific estimate sits comfortably in the middle of this range, consistent with casinos' hybrid nature as retail and entertainment destinations.
+The estimated decay rate (β = 0.047) falls within the range observed in related retail and recreation contexts. Cesario's (1976) recreational travel studies implied exponential decay rates of 0.03-0.06, while Huff's (2003) shopping center analysis found rates of 0.02-0.10 depending on retail format. Our casino-specific estimate sits comfortably in the middle of this range, consistent with casinos' hybrid nature as retail and entertainment destinations.
 
 The strong performance of the exponential specification (vs. power) differs from some recreational demand studies that found power decay more appropriate. This may reflect the routine, repeat-visit nature of casino patronage, which more closely resembles retail shopping than one-time recreational trips.
 
 ### 6.3 Policy Implications
 
-**For regulators**: The empirically-estimated decay parameter provides a more defensible foundation for casino demand modeling than assumed values. Regulatory bodies evaluating license applications can apply β = 0.043 in gravity models with confidence that it reflects observed behavior in mature markets.
+**For regulators**: The empirically-estimated decay parameter provides a more defensible foundation for casino demand modeling than assumed values. Regulatory bodies evaluating license applications can apply β = 0.047 in gravity models with confidence that it reflects observed behavior in mature markets.
 
 **For operators**: Site selection should prioritize locations with strong demographics within a 25-mile radius, as this zone contributes the majority of demand. Locations in areas already served by competitors within 50 miles face substantial cannibalization risk.
 
@@ -340,11 +336,11 @@ This study provides the first systematic estimation of casino demand distance de
 
 1. **Exponential decay** best characterizes casino demand, outperforming power and Gaussian specifications.
 
-2. **The decay parameter β = 0.043** implies demand decreases by 4.3% per mile, with effective catchment areas extending approximately 50 miles.
+2. **The decay parameter β = 0.047** implies demand decreases by 4.6% per mile, with effective catchment areas extending approximately 50 miles.
 
-3. **The model explains 76.3%** of the variance in casino revenue shares across 25 PA and OH properties, demonstrating strong predictive validity.
+3. **The model explains 77.3%** of the variance in casino revenue shares across 25 PA and OH properties, demonstrating strong predictive validity.
 
-4. **Local markets dominate**: At 25 miles, demand falls to just one-third of local levels, emphasizing the importance of immediate catchment demographics.
+4. **Local markets dominate**: At 25 miles, demand falls to less than one-third of local levels, emphasizing the importance of immediate catchment demographics.
 
 These empirically-grounded parameters offer a more rigorous foundation for casino demand modeling than the commonly assumed values in the literature. Future research should extend this analysis to additional markets, examine heterogeneity in decay rates across demographic segments, and investigate temporal stability of the estimated parameters.
 
@@ -388,36 +384,36 @@ Reilly, W. J. (1931). *The Law of Retail Gravitation*. New York: Knickerbocker P
 
 | Property | City | Revenue ($M) | Slots | Tables |
 |----------|------|--------------|-------|--------|
-| Parx Casino | Bensalem | 598.7 | 3,200 | 188 |
-| Wind Creek Bethlehem | Bethlehem | 465.0 | 3,000 | 180 |
-| Rivers Philadelphia | Philadelphia | 320.0 | 2,000 | 100 |
-| Rivers Pittsburgh | Pittsburgh | 275.0 | 2,900 | 100 |
-| Mohegan Pennsylvania | Wilkes-Barre | 270.0 | 2,300 | 90 |
-| Hollywood Penn National | Grantville | 260.0 | 2,150 | 85 |
-| Harrah's Philadelphia | Chester | 235.0 | 2,500 | 75 |
-| Mount Airy | Mount Pocono | 225.0 | 1,800 | 80 |
-| Meadows | Washington | 215.0 | 2,900 | 75 |
-| Live! Philadelphia | Philadelphia | 205.0 | 2,200 | 125 |
-| Presque Isle | Erie | 165.0 | 1,600 | 35 |
-| Valley Forge | King of Prussia | 160.0 | 850 | 50 |
-| Live! Pittsburgh | Pittsburgh | 75.0 | 750 | 30 |
-| Lady Luck Nemacolin | Farmington | 35.0 | 600 | 20 |
+| Parx Casino | Bensalem | 598.7 | 2,996 | 178 |
+| Wind Creek Bethlehem | Bethlehem | 515.8 | 2,973 | 214 |
+| Rivers Casino Pittsburgh | Pittsburgh | 355.0 | 2,549 | 129 |
+| Live! Casino Philadelphia | Philadelphia | 222.4 | 2,166 | 150 |
+| Rivers Casino Philadelphia | Philadelphia | 216.7 | 1,554 | 130 |
+| Mohegan Sun Pocono | Wilkes-Barre | 215.5 | 1,703 | 65 |
+| Hollywood Casino at the Meadows | Washington | 189.5 | 2,006 | 95 |
+| Mount Airy Casino Resort | Mount Pocono | 184.2 | 1,676 | 84 |
+| Hollywood Casino at Penn National | Grantville | 180.6 | 1,813 | 72 |
+| Harrah's Philadelphia | Chester | 172.9 | 1,700 | 82 |
+| Valley Forge Casino Resort | King of Prussia | 136.0 | 850 | 50 |
+| Live! Casino Pittsburgh | Pittsburgh | 109.9 | 750 | 40 |
+| Presque Isle Downs & Casino | Erie | 109.0 | 1,525 | 38 |
+| Lady Luck Nemacolin | Farmington | 22.2 | 600 | 26 |
 
 **Table A2: Ohio Casino and Racino Properties (2022)**
 
 | Property | City | Type | Revenue ($M) | Slots/VLTs | Tables |
 |----------|------|------|--------------|------------|--------|
-| MGM Northfield Park | Northfield | Racino | 280.0 | 2,300 | — |
-| Hollywood Columbus | Columbus | Casino | 272.2 | 2,200 | 70 |
-| JACK Cleveland | Cleveland | Casino | 268.1 | 1,600 | 120 |
-| Hard Rock Cincinnati | Cincinnati | Casino | 249.7 | 2,000 | 80 |
-| Scioto Downs | Columbus | Racino | 225.0 | 2,200 | — |
-| Hollywood Toledo | Toledo | Casino | 224.9 | 2,000 | 60 |
-| Miami Valley Gaming | Lebanon | Racino | 220.0 | 1,800 | — |
-| JACK Thistledown | Cleveland | Racino | 170.0 | 1,400 | — |
-| Hollywood Mahoning Valley | Youngstown | Racino | 155.0 | 1,400 | — |
-| Hollywood Dayton | Dayton | Racino | 145.0 | 1,000 | — |
-| Belterra Park | Cincinnati | Racino | 75.0 | 1,500 | — |
+| MGM Northfield Park | Northfield | Racino | 285.9 | 1,581 | — |
+| Hollywood Columbus | Columbus | Casino | 263.6 | 1,728 | 89 |
+| JACK Cleveland | Cleveland | Casino | 262.4 | 1,061 | 120 |
+| Hard Rock Cincinnati | Cincinnati | Casino | 251.5 | 1,614 | 103 |
+| Eldorado Scioto Downs | Columbus | Racino | 234.8 | 2,083 | — |
+| Hollywood Toledo | Toledo | Casino | 227.7 | 1,699 | 60 |
+| Miami Valley Gaming | Lebanon | Racino | 224.8 | 2,113 | — |
+| JACK Thistledown | Cleveland | Racino | 183.2 | 1,532 | — |
+| Hollywood Mahoning Valley | Youngstown | Racino | 159.4 | 1,034 | — |
+| Hollywood Gaming Dayton | Dayton | Racino | 150.9 | 971 | — |
+| Belterra Park | Cincinnati | Racino | 88.7 | 1,155 | — |
 
 ---
 
