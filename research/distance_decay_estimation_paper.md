@@ -8,7 +8,7 @@ Kahlil Philander
 
 ## Abstract
 
-Gravity models are widely used to estimate casino demand, yet the distance decay functions that drive these models are typically assumed rather than empirically estimated. This study addresses this gap by estimating distance decay parameters using observed property-level gross gaming revenue (GGR) data from 92 casinos across nine U.S. states, representing $18.8 billion in 2022 GGR. The model is estimated to predict each venue's share of its own state's total GGR—a within-state share formulation that enables forecasting venue-level revenue in jurisdictions that report only statewide totals. Supply-side attractiveness is captured through hotel and table game availability. The gravity model with power distance decay explains 90% of the variance in within-state revenue shares (*R*² = .90), with a decay parameter of *β* = 2.26 and attractiveness multipliers of 1.96× for hotels and 1.37× for table games. Leave-one-market-out cross-validation confirms model stability (*R*² = .88, shrinkage = .02), and leave-one-state-out cross-validation demonstrates the model can predict venue-level allocation within a held-out state to within 3.31 percentage points. These results provide empirically grounded parameters for casino demand modeling and a practical tool for estimating venue-level GGR from aggregate state reports.
+Gravity models are widely used to estimate casino demand, yet the distance decay functions that drive these models are typically assumed rather than empirically estimated. This study addresses this gap by estimating distance decay parameters using observed property-level gross gaming revenue (GGR) data from 92 casinos across nine U.S. states, representing $18.8 billion in 2022 GGR. The model is estimated to predict each venue's share of its own state's total GGR—a within-state share formulation that enables forecasting venue-level revenue in jurisdictions that report only statewide totals. Supply-side attractiveness is captured through hotel and table game availability. The gravity model with power distance decay explains 90% of the variance in within-state revenue shares (*R*² = .90), with a decay parameter of *β* = 2.28 and attractiveness multipliers of 1.82× for hotels and 1.43× for table games. Leave-one-market-out cross-validation confirms model stability (*R*² = .88, shrinkage = .02), and leave-one-state-out cross-validation demonstrates the model can predict venue-level allocation within a held-out state to within 3.31 percentage points. These results provide empirically grounded parameters for casino demand modeling and a practical tool for estimating venue-level GGR from aggregate state reports.
 
 **Keywords:** gravity model, distance decay, casino demand, gaming revenue, within-state market share, cross-validation
 
@@ -115,11 +115,11 @@ Iowa's three tribal casinos (Blackbird Bend, Meskwaki, and Prairie Flower) do no
 
 Two binary supply-side attractiveness controls were constructed for each casino:
 
-- **Has hotel** (*H*): Whether the property operates an on-site hotel. Coded from a comprehensive U.S. casino database containing property-level attributes for 1,476 venues.
+- **Has hotel** (*H*): Whether the property operates an on-site hotel. Initially coded from a comprehensive U.S. casino database containing property-level attributes for 1,476 venues, then verified against property websites and public records for all 92 observed venues. Eleven corrections were applied to reflect 2022 operational status: nine properties were reclassified from no-hotel to hotel (e.g., Grand Falls Casino Resort, River City Casino, Rhythm City Casino Resort), and two were reclassified from hotel to no-hotel (e.g., Hard Rock Casino Northern Indiana, whose planned hotel was not yet operational in 2022).
 
 - **Has tables** (*T*): Whether the property offers table games. Several facility types are slots-only by regulatory design: Ohio video lottery terminal (VLT) racinos, New York VLT facilities, and Massachusetts's Plainridge Park Casino (a racino). Properties with zero reported table revenue were coded as *T* = 0.
 
-Among the 354 casinos in the study region, 139 (39%) have hotels and 338 (95%) have table games. The 16 slots-only properties tend to be smaller facilities in secondary markets.
+Among the 354 casinos in the study region, 145 (41%) have hotels and 338 (95%) have table games. The 16 slots-only properties tend to be smaller facilities in secondary markets.
 
 ### Demographic Data
 
@@ -203,7 +203,7 @@ Second, an eight-state model excluding Iowa is estimated to assess sensitivity t
 
 ### Distance Decay Parameter Estimates
 
-Table 3 presents the estimated gravity model parameters for each distance decay specification. The power decay function provides the best fit, explaining 90% of the variance in within-state revenue shares.
+Table 3 presents the estimated gravity model parameters for each distance decay specification. The power decay function provides the best fit, explaining approximately 90% of the variance in within-state revenue shares.
 
 **Table 3**
 
@@ -211,9 +211,9 @@ Table 3 presents the estimated gravity model parameters for each distance decay 
 
 | Decay form | *β* | *α*_Hotel | *α*_Tables | SSE | *R*² |
 |---|---|---|---|---|---|
-| **Power** | **2.256** | **0.675** | **0.312** | **0.107** | **.902** |
-| Exponential | 0.073 | 0.683 | 0.392 | 0.118 | .892 |
-| Gaussian | 0.002 | 0.854 | 0.446 | 0.137 | .875 |
+| **Power** | **2.279** | **0.597** | **0.358** | **0.111** | **.898** |
+| Exponential | 0.072 | 0.628 | 0.422 | 0.122 | .889 |
+| Gaussian | 0.002 | 0.730 | 0.515 | 0.143 | .870 |
 
 *Note.* *N* = 85 observed markets across nine states. Parameters estimated by L-BFGS-B minimizing within-state share SSE. Optimal clustering radius = 5 miles (280 markets: 85 observed, 195 border). Power decay: *f*(*d*) = (*d* + 0.1)^(−*β*). All three specifications select the same optimal clustering radius.
 
@@ -227,17 +227,17 @@ The estimated attractiveness parameters translate into multiplicative effects on
 
 | Amenity combination | Multiplier |
 |---|---|
-| Hotel only | 1.96× |
-| Table games only | 1.37× |
-| Hotel + table games | 2.68× |
+| Hotel only | 1.82× |
+| Table games only | 1.43× |
+| Hotel + table games | 2.60× |
 
-*Note.* Multipliers computed as exp(*α*). A casino with a hotel is predicted to attract 1.96 times the demand of an otherwise identical casino without a hotel, holding distance and all other factors constant.
+*Note.* Multipliers computed as exp(*α*). A casino with a hotel is predicted to attract 1.82 times the demand of an otherwise identical casino without a hotel, holding distance and all other factors constant.
 
-These multipliers are economically meaningful. A full-service casino with both a hotel and table games is predicted to attract 2.68 times the demand of a slots-only facility without a hotel—a difference that substantially affects predicted market shares, particularly in states where some venues are racinos (slots-only, no hotel) competing against integrated resorts.
+These multipliers are economically meaningful. A full-service casino with both a hotel and table games is predicted to attract 2.60 times the demand of a slots-only facility without a hotel—a difference that substantially affects predicted market shares, particularly in states where some venues are racinos (slots-only, no hotel) competing against integrated resorts.
 
 ### Interpretation of Power Decay
 
-The power decay exponent *β* = 2.26 means that demand falls with the inverse square of distance. At twice the distance, demand is 2^(−2.26) = 0.21 times as large—roughly one fifth. At three times the distance, demand is 3^(−2.26) = 0.085 times as large. This produces rapid local concentration with a moderate tail: a casino draws the majority of its demand from within 25 miles, but distant population centers with large populations can still contribute meaningfully.
+The power decay exponent *β* = 2.28 means that demand falls with the inverse square of distance. At twice the distance, demand is 2^(−2.28) = 0.21 times as large—roughly one fifth. At three times the distance, demand is 3^(−2.28) = 0.083 times as large. This produces rapid local concentration with a moderate tail: a casino draws the majority of its demand from within 25 miles, but distant population centers with large populations can still contribute meaningfully.
 
 This exponent falls within the 1.5–2.5 range documented by Cesario (1976) for recreational travel and is consistent with casinos functioning as regional entertainment destinations that attract primarily local and near-local patronage.
 
@@ -249,12 +249,12 @@ This exponent falls within the 1.5–2.5 range documented by Cesario (1976) for 
 
 | Model | MAPE (pp) | RMSE (pp) | *R*² |
 |---|---|---|---|
-| Gravity (power) | 2.86 | 3.87 | .884 |
-| LN (exponential) | 2.87 | 3.95 | .879 |
+| Gravity (power) | 2.89 | 3.95 | .879 |
+| LN (exponential) | 2.88 | 3.95 | .879 |
 
 *Note.* MAPE = mean absolute prediction error; RMSE = root mean square error; pp = percentage points of within-state share. 85 folds. Each fold re-estimates all parameters on the remaining 84 markets.
 
-The gravity model's in-sample *R*² of .902 shrinks to .884 under LOOCV—a shrinkage of only .018, indicating that the three-parameter model is not overfit to the data. The LN model shows comparable out-of-sample performance despite its different in-sample metric (OLS *R*² on log-revenue = .631).
+The gravity model's in-sample *R*² of .898 shrinks to .879 under LOOCV—a shrinkage of only .020, indicating that the three-parameter model is not overfit to the data. The LN model shows comparable out-of-sample performance despite its different in-sample metric (OLS *R*² on log-revenue = .630).
 
 **Table 6**
 
@@ -262,16 +262,16 @@ The gravity model's in-sample *R*² of .902 shrinks to .884 under LOOCV—a shri
 
 | State | Properties | Markets | State GGR ($M) | Gravity MAPE | LN MAPE |
 |---|---|---|---|---|---|
-| CT | 2 | 2 | 1,236 | 5.56 | 7.57 |
-| IA | 19 | 15 | 1,765 | 1.55 | 2.17 |
-| IN | 12 | 11 | 2,504 | 3.43 | 2.64 |
-| MA | 3 | 3 | 1,132 | 4.19 | 7.26 |
-| MD | 6 | 6 | 2,051 | 3.07 | 5.72 |
-| MO | 13 | 12 | 1,905 | 1.94 | 2.11 |
-| NY | 12 | 12 | 2,646 | 3.58 | 1.86 |
-| OH | 11 | 11 | 2,333 | 3.29 | 2.07 |
-| PA | 14 | 13 | 3,229 | 3.19 | 3.37 |
-| **Mean** | | | | **3.31** | **3.86** |
+| CT | 2 | 2 | 1,236 | 5.49 | 7.55 |
+| IA | 19 | 15 | 1,765 | 1.55 | 2.28 |
+| IN | 12 | 11 | 2,504 | 3.68 | 2.97 |
+| MA | 3 | 3 | 1,132 | 3.86 | 6.85 |
+| MD | 6 | 6 | 2,051 | 3.22 | 5.61 |
+| MO | 13 | 12 | 1,905 | 2.00 | 2.15 |
+| NY | 12 | 12 | 2,646 | 3.40 | 1.89 |
+| OH | 11 | 11 | 2,333 | 3.43 | 2.17 |
+| PA | 14 | 13 | 3,229 | 3.16 | 3.37 |
+| **Mean** | | | | **3.31** | **3.87** |
 
 *Note.* Each row holds out one state entirely. The model is re-estimated on the remaining eight states, then within-state venue shares are predicted for the held-out state. MAPE is computed over the held-out state's markets.
 
@@ -289,30 +289,30 @@ Table 7 presents within-state share predictions for the 20 largest properties by
 
 | Property | State | Rev ($M) | State GGR ($M) | Actual (%) | Predicted (%) | Error (pp) |
 |---|---|---|---|---|---|---|
-| MGM National Harbor | MD | 884.5 | 2,051 | 43.12 | 47.61 | +4.49 |
-| Encore Boston Harbor | MA | 729.7 | 1,132 | 64.47 | 59.23 | −5.24 |
-| Mohegan Sun | CT | 722.7 | 1,236 | 58.47 | 53.16 | −5.31 |
-| Live! Casino & Hotel | MD | 705.4 | 2,051 | 34.39 | 25.72 | −8.67 |
-| Resorts World Casino NYC | NY | 645.0 | 2,646 | 24.37 | 36.41 | +12.04 |
-| Empire City Casino | NY | 613.7 | 2,646 | 23.19 | 21.27 | −1.92 |
-| Parx Casino and Racing | PA | 598.7 | 3,229 | 18.54 | 11.59 | −6.95 |
-| Wind Creek Bethlehem | PA | 515.8 | 3,229 | 15.98 | 11.56 | −4.42 |
-| Foxwoods Resort Casino | CT | 513.3 | 1,236 | 41.53 | 46.84 | +5.31 |
-| Hard Rock Casino N. Indiana | IN | 419.5 | 2,504 | 16.76 | 9.96 | −6.80 |
-| Rivers Casino Pittsburgh | PA | 355.0 | 3,229 | 11.00 | 6.10 | −4.90 |
-| Horseshoe Hammond | IN | 346.1 | 2,504 | 13.82 | 9.73 | −4.09 |
-| Horseshoe Indianapolis | IN | 341.8 | 2,504 | 13.65 | 10.52 | −3.13 |
-| Ameristar St. Charles | MO | 302.5 | 1,905 | 15.88 | 12.50 | −3.38 |
-| MGM Northfield Park | OH | 285.9 | 2,333 | 12.25 | 9.57 | −2.68 |
-| Hollywood Casino Columbus | OH | 263.6 | 2,333 | 11.30 | 16.94 | +5.64 |
-| JACK Cleveland Casino | OH | 262.4 | 2,333 | 11.25 | 10.63 | −0.62 |
-| MGM Springfield | MA | 259.1 | 1,132 | 22.89 | 28.65 | +5.76 |
-| Jake's 58 | NY | 256.6 | 2,646 | 9.70 | 16.42 | +6.72 |
-| Hard Rock Cincinnati | OH | 251.5 | 2,333 | 10.78 | 9.89 | −0.89 |
+| MGM National Harbor | MD | 884.5 | 2,051 | 43.12 | 47.33 | +4.21 |
+| Encore Boston Harbor | MA | 729.7 | 1,132 | 64.47 | 59.35 | −5.12 |
+| Mohegan Sun | CT | 722.7 | 1,236 | 58.47 | 53.23 | −5.24 |
+| Live! Casino & Hotel | MD | 705.4 | 2,051 | 34.39 | 25.31 | −9.08 |
+| Resorts World Casino NYC | NY | 645.0 | 2,646 | 24.37 | 36.26 | +11.89 |
+| Empire City Casino | NY | 613.7 | 2,646 | 23.19 | 21.25 | −1.94 |
+| Parx Casino and Racing | PA | 598.7 | 3,228 | 18.54 | 12.04 | −6.50 |
+| Wind Creek Bethlehem | PA | 515.8 | 3,228 | 15.98 | 11.34 | −4.64 |
+| Foxwoods Resort Casino | CT | 513.3 | 1,236 | 41.53 | 46.77 | +5.24 |
+| Hard Rock Casino N. Indiana | IN | 419.5 | 2,504 | 16.76 | 6.09 | −10.67 |
+| Rivers Casino Pittsburgh | PA | 355.0 | 3,228 | 11.00 | 6.34 | −4.66 |
+| Horseshoe Hammond | IN | 346.1 | 2,504 | 13.82 | 10.52 | −3.30 |
+| Horseshoe Indianapolis | IN | 341.8 | 2,504 | 13.65 | 10.79 | −2.86 |
+| Ameristar St. Charles | MO | 302.5 | 1,905 | 15.88 | 12.41 | −3.47 |
+| MGM Northfield Park | OH | 285.9 | 2,333 | 12.25 | 9.48 | −2.77 |
+| Hollywood Casino Columbus | OH | 263.6 | 2,333 | 11.30 | 17.05 | +5.75 |
+| JACK Cleveland Casino | OH | 262.4 | 2,333 | 11.25 | 10.90 | −0.35 |
+| MGM Springfield | MA | 259.1 | 1,132 | 22.89 | 28.37 | +5.48 |
+| Jake's 58 | NY | 256.6 | 2,646 | 9.70 | 15.73 | +6.03 |
+| Hard Rock Cincinnati | OH | 251.5 | 2,333 | 10.78 | 10.07 | −0.71 |
 
 *Note.* Predicted shares from the power decay gravity model. Within-state shares sum to 100% within each state. Error = predicted − actual. Full 92-property table in Appendix A.
 
-The model captures the broad distribution of revenues well, correctly identifying the dominant property in each state and appropriately scaling smaller venues. The largest absolute errors occur for properties whose competitive position reflects factors not in the model—for example, Resorts World Casino NYC (+12.04 pp) is a VLT-only facility in a dense urban market where the model's population-weighted demand index overpredicts share, and Live! Casino & Hotel Maryland (−8.67 pp) may benefit from brand loyalty and amenity quality not captured by the binary hotel indicator.
+The model captures the broad distribution of revenues well, correctly identifying the dominant property in each state and appropriately scaling smaller venues. The largest absolute errors occur for properties whose competitive position reflects factors not in the model—for example, Resorts World Casino NYC (+11.89 pp) is a VLT-only facility in a dense urban market where the model's population-weighted demand index overpredicts share, and Hard Rock Casino Northern Indiana (−10.67 pp) is a newly opened property (2021) whose market share may not yet have reached equilibrium.
 
 ### Robustness
 
@@ -324,14 +324,14 @@ The model captures the broad distribution of revenues well, correctly identifyin
 
 | Parameter | Estimate | *SE* | *t* |
 |---|---|---|---|
-| Intercept | 12.332 | 0.599 | 20.60 |
-| ln(*D*ⱼ) [demand elasticity] | 0.518 | 0.045 | 11.40 |
-| Hotel | 0.230 | 0.126 | 1.83 |
-| Tables | 0.266 | 0.172 | 1.55 |
+| Intercept | 12.065 | 0.610 | 19.77 |
+| ln(*D*ⱼ) [demand elasticity] | 0.536 | 0.046 | 11.69 |
+| Hotel | 0.230 | 0.129 | 1.79 |
+| Tables | 0.286 | 0.169 | 1.70 |
 
-*Note.* OLS regression of ln(Revenue) on ln(demand index) and supply controls. *n* = 85 markets. Exponential decay with *β* = 0.105. *R*² = .631, adjusted *R*² = .617.
+*Note.* OLS regression of ln(Revenue) on ln(demand index) and supply controls. *n* = 85 markets. Exponential decay with *β* = 0.103. *R*² = .630, adjusted *R*² = .617.
 
-The LN model's demand elasticity (*γ* = 0.518) is significantly less than unity (*t* = −10.62 for *H*₀: *γ* = 1), suggesting diminishing returns to demand—a feature the gravity model implicitly constrains away. Despite this, when LN predictions are converted to within-state shares, property-level MAPE (2.57 pp) is comparable to the gravity model (2.44 pp), indicating that both specifications capture similar competitive dynamics.
+The LN model's demand elasticity (*γ* = 0.536) is significantly less than unity (*t* = −10.11 for *H*₀: *γ* = 1), suggesting diminishing returns to demand—a feature the gravity model implicitly constrains away. Despite this, when LN predictions are converted to within-state shares, property-level MAPE (2.57 pp) is comparable to the gravity model (2.46 pp), indicating that both specifications capture similar competitive dynamics.
 
 #### *Model Without Iowa*
 
@@ -341,12 +341,12 @@ The LN model's demand elasticity (*γ* = 0.518) is significantly less than unity
 
 | Specification | *N* | *β* | *α*_H | *α*_T | *R*² | Prop MAPE |
 |---|---|---|---|---|---|---|
-| Nine-state (with Iowa) | 92 | 2.256 | 0.675 | 0.312 | .902 | 2.44 |
-| Eight-state (without Iowa) | 73 | 2.183 | 0.671 | 0.307 | .899 | 2.78 |
+| Nine-state (with Iowa) | 92 | 2.279 | 0.597 | 0.358 | .898 | 2.46 |
+| Eight-state (without Iowa) | 73 | 2.162 | 0.591 | 0.348 | .895 | 2.81 |
 
 *Note.* Both models use power decay. Prop MAPE in percentage points of within-state share.
 
-Parameter estimates are stable across specifications. The decay parameter shifts by only 3.2% (from 2.256 to 2.183), and attractiveness multipliers are virtually unchanged. The small increase in MAPE (0.34 pp) reflects the loss of 19 Iowa observations rather than any instability in the estimated relationship.
+Parameter estimates are stable across specifications. The decay parameter shifts by only 5.1% (from 2.279 to 2.162), and attractiveness multipliers are virtually unchanged. The small increase in MAPE (0.35 pp) reflects the loss of 19 Iowa observations rather than any instability in the estimated relationship.
 
 ---
 
@@ -354,23 +354,23 @@ Parameter estimates are stable across specifications. The decay parameter shifts
 
 ### Interpretation of Results
 
-The finding that power decay with *β* ≈ 2.26 best characterizes casino demand has several implications.
+The finding that power decay with *β* ≈ 2.28 best characterizes casino demand has several implications.
 
 **Local market dominance.** The power decay exponent implies that demand falls to approximately one fifth at twice the distance and one twelfth at three times the distance. Casino revenues are heavily concentrated among nearby residents, consistent with casinos functioning as local entertainment venues rather than destination attractions.
 
-**Supply-side differentiation matters.** The hotel multiplier (1.96×) and table game multiplier (1.37×) are both economically substantial. A full-service casino with both amenities is predicted to attract 2.68 times the demand of an otherwise identical slots-only facility without a hotel. This has direct implications for licensing decisions and capital investment: the model quantifies the competitive advantage conferred by amenity investment.
+**Supply-side differentiation matters.** The hotel multiplier (1.82×) and table game multiplier (1.43×) are both economically substantial. A full-service casino with both amenities is predicted to attract 2.60 times the demand of an otherwise identical slots-only facility without a hotel. This has direct implications for licensing decisions and capital investment: the model quantifies the competitive advantage conferred by amenity investment.
 
 **Within-state share as a forecasting tool.** The *R*² of .90 on within-state shares demonstrates that distance and two binary supply controls explain the vast majority of how state GGR is allocated across venues. The practical application is straightforward: for a state that reports only aggregate GGR, one can construct the gravity model's predicted within-state shares for each venue and multiply by the statewide total to obtain venue-level estimates. The LOSO results (3.31 pp mean error) provide a confidence bound for this exercise.
 
 ### Model Stability
 
-The LOOCV shrinkage of .018 (*R*² from .902 to .884) is small by any standard, indicating that the three-parameter model is not overfit. The LOSO results further confirm transferability: parameters estimated on eight states predict the ninth state's venue allocation to within 3.31 pp on average.
+The LOOCV shrinkage of .020 (*R*² from .898 to .879) is small by any standard, indicating that the three-parameter model is not overfit. The LOSO results further confirm transferability: parameters estimated on eight states predict the ninth state's venue allocation to within 3.31 pp on average.
 
-The robustness to Iowa's exclusion provides additional confidence. Iowa presents the most challenging data environment in the sample (tribal casinos with unobserved revenue, many small rural properties), yet its inclusion or exclusion shifts the decay parameter by less than 4%.
+The robustness to Iowa's exclusion provides additional confidence. Iowa presents the most challenging data environment in the sample (tribal casinos with unobserved revenue, many small rural properties), yet its inclusion or exclusion shifts the decay parameter by about 5%.
 
 ### Comparison to Prior Literature
 
-The estimated power decay exponent (*β* = 2.26) falls within Cesario's (1976) range of 1.5–2.5 for recreational travel. The dominance of power over exponential decay differs from some retail applications but is consistent with casino markets where some patrons travel considerable distances for resort-style properties, producing a heavier distance tail than the exponential form accommodates.
+The estimated power decay exponent (*β* = 2.28) falls within Cesario's (1976) range of 1.5–2.5 for recreational travel. The dominance of power over exponential decay differs from some retail applications but is consistent with casino markets where some patrons travel considerable distances for resort-style properties, producing a heavier distance tail than the exponential form accommodates.
 
 ### Limitations
 
@@ -392,11 +392,11 @@ Fifth, Iowa's three tribal casinos are included as supply-side competitors with 
 
 This study provides the largest multi-state empirical estimation of casino demand distance decay to date, using property-level revenue data from 92 venues across nine U.S. states totaling $18.8 billion in 2022 GGR. The key findings are:
 
-1. **Power distance decay** best characterizes casino demand (*R*² = .90 on within-state shares), with an exponent of *β* = 2.26 implying that demand falls with approximately the inverse square of distance.
+1. **Power distance decay** best characterizes casino demand (*R*² = .90 on within-state shares), with an exponent of *β* = 2.28 implying that demand falls with approximately the inverse square of distance.
 
-2. **Supply-side amenities** have large effects on predicted demand. Casinos with hotels attract 1.96 times more demand than those without; table game availability adds another 1.37× multiplier.
+2. **Supply-side amenities** have large effects on predicted demand. Casinos with hotels attract 1.82 times more demand than those without; table game availability adds another 1.43× multiplier.
 
-3. **The model is stable out of sample.** LOOCV shrinkage is only .018 (from *R*² = .90 to .88), and leave-one-state-out cross-validation demonstrates that the model can predict a new state's venue-level allocation to within 3.31 percentage points.
+3. **The model is stable out of sample.** LOOCV shrinkage is only .020 (from *R*² = .90 to .88), and leave-one-state-out cross-validation demonstrates that the model can predict a new state's venue-level allocation to within 3.31 percentage points.
 
 4. **Within-state shares provide a practical forecasting tool.** Given only a state's total GGR, the model's predicted shares yield venue-level revenue estimates—enabling analysis in jurisdictions that do not report property-level data.
 
@@ -438,98 +438,98 @@ Reilly, W. J. (1931). *The law of retail gravitation*. Knickerbocker Press.
 
 | Property | St | Rev ($M) | St Total ($M) | Actual (%) | Predicted (%) | Error (pp) |
 |---|---|---|---|---|---|---|
-| MGM National Harbor | MD | 884.5 | 2,051 | 43.12 | 47.61 | +4.49 |
-| Encore Boston Harbor | MA | 729.7 | 1,132 | 64.47 | 59.23 | −5.24 |
-| Mohegan Sun | CT | 722.7 | 1,236 | 58.47 | 53.16 | −5.31 |
-| Live! Casino & Hotel | MD | 705.4 | 2,051 | 34.39 | 25.72 | −8.67 |
-| Resorts World Casino NYC | NY | 645.0 | 2,646 | 24.37 | 36.41 | +12.04 |
-| Empire City Casino | NY | 613.7 | 2,646 | 23.19 | 21.27 | −1.92 |
-| Parx Casino and Racing | PA | 598.7 | 3,229 | 18.54 | 11.59 | −6.95 |
-| Wind Creek Bethlehem | PA | 515.8 | 3,229 | 15.98 | 11.56 | −4.42 |
-| Foxwoods Resort Casino | CT | 513.3 | 1,236 | 41.53 | 46.84 | +5.31 |
-| Hard Rock Casino N. Indiana | IN | 419.5 | 2,504 | 16.76 | 9.96 | −6.80 |
-| Rivers Casino Pittsburgh | PA | 355.0 | 3,229 | 11.00 | 6.10 | −4.90 |
-| Horseshoe Hammond | IN | 346.1 | 2,504 | 13.82 | 9.73 | −4.09 |
-| Horseshoe Indianapolis | IN | 341.8 | 2,504 | 13.65 | 10.52 | −3.13 |
-| Ameristar St. Charles | MO | 302.5 | 1,905 | 15.88 | 12.50 | −3.38 |
-| MGM Northfield Park | OH | 285.9 | 2,333 | 12.25 | 9.57 | −2.68 |
-| Hollywood Casino Columbus | OH | 263.6 | 2,333 | 11.30 | 16.94 | +5.64 |
-| JACK Cleveland Casino | OH | 262.4 | 2,333 | 11.25 | 10.63 | −0.62 |
-| MGM Springfield | MA | 259.1 | 1,132 | 22.89 | 28.65 | +5.76 |
-| Jake's 58 | NY | 256.6 | 2,646 | 9.70 | 16.42 | +6.72 |
-| Hard Rock Cincinnati | OH | 251.5 | 2,333 | 10.78 | 9.89 | −0.89 |
-| River City Casino | MO | 249.5 | 1,905 | 13.10 | 11.10 | −2.00 |
-| Caesars Southern Indiana | IN | 248.2 | 2,504 | 9.91 | 14.93 | +5.02 |
-| Harrah's Hoosier Park | IN | 245.6 | 2,504 | 9.81 | 7.65 | −2.16 |
-| Prairie Meadows Casino | IA | 235.0 | 1,765 | 13.31 | 14.67 | +1.36 |
-| Eldorado Scioto Downs | OH | 234.8 | 2,333 | 10.06 | 7.01 | −3.05 |
-| Hollywood Casino St. Louis | MO | 234.4 | 1,905 | 12.30 | 14.26 | +1.96 |
-| Resorts World Catskills | NY | 228.7 | 2,646 | 8.64 | 6.08 | −2.56 |
-| Hollywood Casino Toledo | OH | 227.7 | 2,333 | 9.76 | 9.84 | +0.08 |
-| Miami Valley Gaming | OH | 224.8 | 2,333 | 9.64 | 6.02 | −3.62 |
-| Live! Casino Philadelphia | PA | 222.4 | 3,229 | 6.89 | 6.65 | −0.24 |
-| Rivers Casino Philadelphia | PA | 216.7 | 3,229 | 6.71 | 6.48 | −0.23 |
-| Mohegan Sun Pocono | PA | 215.5 | 3,229 | 6.68 | 5.86 | −0.82 |
-| Horseshoe Casino Council Bluffs | IA | 211.1 | 1,765 | 11.96 | 10.57 | −1.39 |
-| Horseshoe Casino Baltimore | MD | 209.9 | 2,051 | 10.23 | 10.53 | +0.30 |
-| Ameristar Casino East Chicago | IN | 205.0 | 2,504 | 8.19 | 5.76 | −2.43 |
-| Rivers Casino Schenectady | NY | 201.9 | 2,646 | 7.63 | 3.95 | −3.68 |
-| Ameristar Casino Kansas City | MO | 198.7 | 1,905 | 10.43 | 8.18 | −2.25 |
-| Hollywood Casino Meadows | PA | 189.5 | 3,229 | 5.87 | 4.86 | −1.01 |
-| Ameristar Casino Council Bluffs | IA | 187.7 | 1,765 | 10.63 | 9.40 | −1.23 |
-| Mount Airy Casino Resort | PA | 184.2 | 3,229 | 5.71 | 7.11 | +1.40 |
-| Jack Thistledown | OH | 183.2 | 2,333 | 7.85 | 8.99 | +1.14 |
-| Hollywood Casino Penn National | PA | 180.6 | 3,229 | 5.59 | 5.85 | +0.26 |
-| Argosy Casino Riverside | MO | 177.1 | 1,905 | 9.30 | 9.37 | +0.07 |
-| Harrah's North Kansas City | MO | 176.8 | 1,905 | 9.28 | 7.50 | −1.78 |
-| Bally's Evansville | IN | 176.6 | 2,504 | 7.06 | 11.27 | +4.21 |
-| Harrah's Philadelphia | PA | 172.9 | 3,229 | 5.35 | 7.27 | +1.92 |
-| Hollywood Casino Lawrenceburg | IN | 170.2 | 2,504 | 6.80 | 6.99 | +0.19 |
-| del Lago Resort & Casino | NY | 163.2 | 2,646 | 6.17 | 2.41 | −3.76 |
-| Hollywood Gaming Mahoning Valley | OH | 159.4 | 2,333 | 6.83 | 5.74 | −1.09 |
-| Hollywood Gaming Dayton | OH | 150.9 | 2,333 | 6.47 | 8.30 | +1.83 |
-| Horseshoe St. Louis | MO | 150.5 | 1,905 | 7.90 | 10.63 | +2.73 |
-| Plainridge Park Casino | MA | 143.1 | 1,132 | 12.64 | 12.12 | −0.52 |
-| Saratoga Casino Hotel | NY | 141.1 | 2,646 | 5.33 | 3.65 | −1.68 |
-| Valley Forge Casino Resort | PA | 136.0 | 3,229 | 4.21 | 15.22 | +11.01 |
-| Blue Chip Casino | IN | 133.9 | 2,504 | 5.35 | 5.31 | −0.04 |
-| Riverside Casino & Golf Resort | IA | 129.9 | 1,765 | 7.36 | 4.73 | −2.63 |
-| Bally's Kansas City | MO | 119.9 | 1,905 | 6.29 | 4.93 | −1.36 |
-| Rhythm City Casino Resort | IA | 117.6 | 1,765 | 6.66 | 4.79 | −1.87 |
-| Finger Lakes Gaming | NY | 116.5 | 2,646 | 4.40 | 2.43 | −1.97 |
-| Live! Casino Pittsburgh | PA | 109.9 | 3,229 | 3.40 | 4.66 | +1.26 |
-| Presque Isle Downs & Casino | PA | 109.0 | 3,229 | 3.38 | 2.85 | −0.53 |
-| Tioga Downs Casino Resort | NY | 103.3 | 2,646 | 3.90 | 2.73 | −1.17 |
-| Diamond Jo Worth | IA | 102.9 | 1,765 | 5.83 | 3.93 | −1.90 |
-| Isle of Capri Casino Waterloo | IA | 100.0 | 1,765 | 5.67 | 6.90 | +1.23 |
-| Ocean Downs Casino | MD | 96.6 | 2,051 | 4.71 | 6.65 | +1.94 |
-| Hard Rock Hotel Sioux City | IA | 96.0 | 1,765 | 5.44 | 5.53 | +0.09 |
-| Grand Falls Casino Resort | IA | 95.0 | 1,765 | 5.38 | 5.42 | +0.04 |
-| Belterra Casino Resort | IN | 91.8 | 2,504 | 3.67 | 5.98 | +2.31 |
-| Hollywood Casino Perryville | MD | 90.5 | 2,051 | 4.41 | 4.67 | +0.26 |
-| Belterra Park Gaming | OH | 88.7 | 2,333 | 3.80 | 7.07 | +3.27 |
-| Isle of Capri Boonville | MO | 88.5 | 1,905 | 4.65 | 4.23 | −0.42 |
-| French Lick Resort Casino | IN | 80.3 | 2,504 | 3.21 | 5.51 | +2.30 |
-| Batavia Downs Gaming | NY | 77.3 | 2,646 | 2.92 | 1.13 | −1.79 |
-| Diamond Jo Casino Dubuque | IA | 74.2 | 1,765 | 4.21 | 3.72 | −0.49 |
-| Isle Casino Hotel Bettendorf | IA | 73.7 | 1,765 | 4.17 | 3.00 | −1.17 |
-| Harrah's Casino Council Bluffs | IA | 73.0 | 1,765 | 4.14 | 3.66 | −0.48 |
-| Century Casino Cape Girardeau | MO | 72.1 | 1,905 | 3.78 | 3.81 | +0.03 |
-| Hamburg Gaming | NY | 70.9 | 2,646 | 2.68 | 1.26 | −1.42 |
-| Rocky Gap Casino Resort | MD | 64.3 | 2,051 | 3.14 | 4.82 | +1.68 |
-| Q Casino | IA | 51.7 | 1,765 | 2.93 | 2.59 | −0.34 |
-| Lakeside Hotel Casino | IA | 51.1 | 1,765 | 2.89 | 3.77 | +0.88 |
-| Century Casino Caruthersville | MO | 48.3 | 1,905 | 2.54 | 6.40 | +3.86 |
-| St. Jo Frontier Casino | MO | 48.1 | 1,905 | 2.53 | 2.19 | −0.34 |
-| Catfish Bend Casino | IA | 44.9 | 1,765 | 2.54 | 5.04 | +2.50 |
-| Rising Star Casino Resort | IN | 44.5 | 2,504 | 1.78 | 6.39 | +4.61 |
-| Mark Twain Casino | MO | 38.5 | 1,905 | 2.02 | 4.90 | +2.88 |
-| Wild Rose Casino Jefferson | IA | 35.9 | 1,765 | 2.03 | 4.37 | +2.34 |
-| Wild Rose Casino Clinton | IA | 33.2 | 1,765 | 1.88 | 3.33 | +1.45 |
-| Wild Rose Casino Emmetsburg | IA | 30.9 | 1,765 | 1.75 | 2.26 | +0.51 |
-| Vernon Downs Casino Hotel | NY | 28.4 | 2,646 | 1.07 | 2.27 | +1.20 |
-| Lady Luck Casino Nemacolin | PA | 22.2 | 3,229 | 0.69 | 3.93 | +3.24 |
-| Casino Queen Marquette | IA | 21.4 | 1,765 | 1.21 | 2.33 | +1.12 |
+| MGM National Harbor | MD | 884.5 | 2,051 | 43.12 | 47.33 | +4.21 |
+| Encore Boston Harbor | MA | 729.7 | 1,132 | 64.47 | 59.35 | −5.12 |
+| Mohegan Sun | CT | 722.7 | 1,236 | 58.47 | 53.23 | −5.24 |
+| Live! Casino & Hotel | MD | 705.4 | 2,051 | 34.39 | 25.31 | −9.08 |
+| Resorts World Casino NYC | NY | 645.0 | 2,646 | 24.37 | 36.26 | +11.89 |
+| Empire City Casino | NY | 613.7 | 2,646 | 23.19 | 21.25 | −1.94 |
+| Parx Casino and Racing | PA | 598.7 | 3,228 | 18.54 | 12.04 | −6.50 |
+| Wind Creek Bethlehem | PA | 515.8 | 3,228 | 15.98 | 11.34 | −4.64 |
+| Foxwoods Resort Casino | CT | 513.3 | 1,236 | 41.53 | 46.77 | +5.24 |
+| Hard Rock Casino N. Indiana | IN | 419.5 | 2,504 | 16.76 | 6.09 | −10.67 |
+| Rivers Casino Pittsburgh | PA | 355.0 | 3,228 | 11.00 | 6.34 | −4.66 |
+| Horseshoe Hammond | IN | 346.1 | 2,504 | 13.82 | 10.52 | −3.30 |
+| Horseshoe Indianapolis | IN | 341.8 | 2,504 | 13.65 | 10.79 | −2.86 |
+| Ameristar St. Charles | MO | 302.5 | 1,905 | 15.88 | 12.41 | −3.47 |
+| MGM Northfield Park | OH | 285.9 | 2,333 | 12.25 | 9.48 | −2.77 |
+| Hollywood Casino Columbus | OH | 263.6 | 2,333 | 11.30 | 17.05 | +5.75 |
+| JACK Cleveland Casino | OH | 262.4 | 2,333 | 11.25 | 10.90 | −0.35 |
+| MGM Springfield | MA | 259.1 | 1,132 | 22.89 | 28.37 | +5.48 |
+| Jake's 58 | NY | 256.6 | 2,646 | 9.70 | 15.73 | +6.03 |
+| Hard Rock Cincinnati | OH | 251.5 | 2,333 | 10.78 | 10.07 | −0.71 |
+| River City Casino | MO | 249.5 | 1,905 | 13.10 | 11.01 | −2.09 |
+| Caesars Southern Indiana | IN | 248.2 | 2,504 | 9.91 | 15.49 | +5.58 |
+| Harrah's Hoosier Park | IN | 245.6 | 2,504 | 9.81 | 8.39 | −1.42 |
+| Prairie Meadows Casino | IA | 235.0 | 1,765 | 13.31 | 13.72 | +0.41 |
+| Eldorado Scioto Downs | OH | 234.8 | 2,333 | 10.06 | 6.80 | −3.26 |
+| Hollywood Casino St. Louis | MO | 234.4 | 1,905 | 12.30 | 14.18 | +1.88 |
+| Resorts World Catskills | NY | 228.7 | 2,646 | 8.64 | 5.82 | −2.82 |
+| Hollywood Casino Toledo | OH | 227.7 | 2,333 | 9.76 | 9.98 | +0.22 |
+| Miami Valley Gaming | OH | 224.8 | 2,333 | 9.64 | 5.90 | −3.74 |
+| Live! Casino Philadelphia | PA | 222.4 | 3,228 | 6.89 | 6.85 | −0.04 |
+| Rivers Casino Philadelphia | PA | 216.7 | 3,228 | 6.71 | 6.68 | −0.03 |
+| Mohegan Sun Pocono | PA | 215.5 | 3,228 | 6.68 | 5.74 | −0.94 |
+| Horseshoe Casino Council Bluffs | IA | 211.1 | 1,765 | 11.96 | 10.04 | −1.92 |
+| Horseshoe Casino Baltimore | MD | 209.9 | 2,051 | 10.23 | 10.95 | +0.72 |
+| Ameristar Casino East Chicago | IN | 205.0 | 2,504 | 8.19 | 6.23 | −1.96 |
+| Rivers Casino Schenectady | NY | 201.9 | 2,646 | 7.63 | 5.58 | −2.05 |
+| Ameristar Casino Kansas City | MO | 198.7 | 1,905 | 10.43 | 8.11 | −2.32 |
+| Hollywood Casino Meadows | PA | 189.5 | 3,228 | 5.87 | 4.76 | −1.11 |
+| Ameristar Casino Council Bluffs | IA | 187.7 | 1,765 | 10.63 | 8.93 | −1.70 |
+| Mount Airy Casino Resort | PA | 184.2 | 3,228 | 5.71 | 6.90 | +1.19 |
+| Jack Thistledown | OH | 183.2 | 2,333 | 7.85 | 8.86 | +1.01 |
+| Hollywood Casino Penn National | PA | 180.6 | 3,228 | 5.59 | 6.10 | +0.51 |
+| Argosy Casino Riverside | MO | 177.1 | 1,905 | 9.30 | 9.22 | −0.08 |
+| Harrah's North Kansas City | MO | 176.8 | 1,905 | 9.28 | 7.39 | −1.89 |
+| Bally's Evansville | IN | 176.6 | 2,504 | 7.06 | 11.66 | +4.60 |
+| Harrah's Philadelphia | PA | 172.9 | 3,228 | 5.35 | 7.52 | +2.17 |
+| Hollywood Casino Lawrenceburg | IN | 170.2 | 2,504 | 6.80 | 7.07 | +0.27 |
+| del Lago Resort & Casino | NY | 163.2 | 2,646 | 6.17 | 2.26 | −3.91 |
+| Hollywood Gaming Mahoning Valley | OH | 159.4 | 2,333 | 6.83 | 5.75 | −1.08 |
+| Hollywood Gaming Dayton | OH | 150.9 | 2,333 | 6.47 | 8.20 | +1.73 |
+| Horseshoe St. Louis | MO | 150.5 | 1,905 | 7.90 | 10.51 | +2.61 |
+| Plainridge Park Casino | MA | 143.1 | 1,132 | 12.64 | 12.28 | −0.36 |
+| Saratoga Casino Hotel | NY | 141.1 | 2,646 | 5.33 | 3.04 | −2.29 |
+| Valley Forge Casino Resort | PA | 136.0 | 3,228 | 4.21 | 14.83 | +10.62 |
+| Blue Chip Casino | IN | 133.9 | 2,504 | 5.35 | 5.51 | +0.16 |
+| Riverside Casino & Golf Resort | IA | 129.9 | 1,765 | 7.36 | 6.39 | −0.97 |
+| Bally's Kansas City | MO | 119.9 | 1,905 | 6.29 | 4.89 | −1.40 |
+| Rhythm City Casino Resort | IA | 117.6 | 1,765 | 6.66 | 4.22 | −2.44 |
+| Finger Lakes Gaming | NY | 116.5 | 2,646 | 4.40 | 2.34 | −2.06 |
+| Live! Casino Pittsburgh | PA | 109.9 | 3,228 | 3.40 | 4.85 | +1.45 |
+| Presque Isle Downs & Casino | PA | 109.0 | 3,228 | 3.38 | 2.17 | −1.21 |
+| Tioga Downs Casino Resort | NY | 103.3 | 2,646 | 3.90 | 2.63 | −1.27 |
+| Diamond Jo Worth | IA | 102.9 | 1,765 | 5.83 | 5.61 | −0.22 |
+| Isle of Capri Casino Waterloo | IA | 100.0 | 1,765 | 5.67 | 6.02 | +0.35 |
+| Ocean Downs Casino | MD | 96.6 | 2,051 | 4.71 | 6.88 | +2.17 |
+| Hard Rock Hotel Sioux City | IA | 96.0 | 1,765 | 5.44 | 4.91 | −0.53 |
+| Grand Falls Casino Resort | IA | 95.0 | 1,765 | 5.38 | 6.27 | +0.89 |
+| Belterra Casino Resort | IN | 91.8 | 2,504 | 3.67 | 6.10 | +2.43 |
+| Hollywood Casino Perryville | MD | 90.5 | 2,051 | 4.41 | 4.81 | +0.40 |
+| Belterra Park Gaming | OH | 88.7 | 2,333 | 3.80 | 7.01 | +3.21 |
+| Isle of Capri Boonville | MO | 88.5 | 1,905 | 4.65 | 4.41 | −0.24 |
+| French Lick Resort Casino | IN | 80.3 | 2,504 | 3.21 | 5.66 | +2.45 |
+| Batavia Downs Gaming | NY | 77.3 | 2,646 | 2.92 | 1.74 | −1.18 |
+| Diamond Jo Casino Dubuque | IA | 74.2 | 1,765 | 4.21 | 3.29 | −0.92 |
+| Isle Casino Hotel Bettendorf | IA | 73.7 | 1,765 | 4.17 | 2.64 | −1.53 |
+| Harrah's Casino Council Bluffs | IA | 73.0 | 1,765 | 4.14 | 3.47 | −0.67 |
+| Century Casino Cape Girardeau | MO | 72.1 | 1,905 | 3.78 | 3.94 | +0.16 |
+| Hamburg Gaming | NY | 70.9 | 2,646 | 2.68 | 1.22 | −1.46 |
+| Rocky Gap Casino Resort | MD | 64.3 | 2,051 | 3.14 | 4.71 | +1.57 |
+| Q Casino | IA | 51.7 | 1,765 | 2.93 | 2.29 | −0.64 |
+| Lakeside Hotel Casino | IA | 51.1 | 1,765 | 2.89 | 3.42 | +0.53 |
+| Century Casino Caruthersville | MO | 48.3 | 1,905 | 2.54 | 6.54 | +4.00 |
+| St. Jo Frontier Casino | MO | 48.1 | 1,905 | 2.53 | 2.26 | −0.27 |
+| Catfish Bend Casino | IA | 44.9 | 1,765 | 2.54 | 4.46 | +1.92 |
+| Rising Star Casino Resort | IN | 44.5 | 2,504 | 1.78 | 6.49 | +4.71 |
+| Mark Twain Casino | MO | 38.5 | 1,905 | 2.02 | 5.13 | +3.11 |
+| Wild Rose Casino Jefferson | IA | 35.9 | 1,765 | 2.03 | 3.84 | +1.81 |
+| Wild Rose Casino Clinton | IA | 33.2 | 1,765 | 1.88 | 5.11 | +3.23 |
+| Wild Rose Casino Emmetsburg | IA | 30.9 | 1,765 | 1.75 | 3.16 | +1.41 |
+| Vernon Downs Casino Hotel | NY | 28.4 | 2,646 | 1.07 | 2.13 | +1.06 |
+| Lady Luck Casino Nemacolin | PA | 22.2 | 3,228 | 0.69 | 3.88 | +3.19 |
+| Casino Queen Marquette | IA | 21.4 | 1,765 | 1.21 | 2.19 | +0.98 |
 
 *Note.* Within-state shares sum to 100% within each state. Properties sorted by revenue. Error = predicted − actual.
 

@@ -197,8 +197,26 @@ cat("Study region casinos:", nrow(casinos_study), "\n")
 
 cat("\n--- BUILDING SUPPLY-SIDE CONTROLS ---\n")
 
-# has_hotel: already loaded from casinodata
+# has_hotel: already loaded from casinodata, then override verified corrections.
+# The casinodata.rds hotel field has known inaccuracies for our 2022 study period.
 casinos_study$has_hotel <- casinos_study$hotel
+
+# --- Hotel overrides (verified against 2022 operational status) ---
+# Change hotel=1 → 0 (no on-site hotel during 2022):
+casinos_study$has_hotel[casinos_study$casino_id == 1060] <- 0  # Presque Isle Downs, Erie PA — no on-site hotel
+casinos_study$has_hotel[casinos_study$casino_id == 865]  <- 0  # Hard Rock Northern IN — hotel planned but paused Dec 2022
+
+# Change hotel=0 → 1 (on-site hotel operational during 2022):
+casinos_study$has_hotel[casinos_study$casino_id == 1167] <- 1  # Rivers Casino Schenectady NY — Landing Hotel (2017)
+casinos_study$has_hotel[casinos_study$casino_id == 83]   <- 1  # Batavia Downs Gaming NY — Hotel (2016)
+casinos_study$has_hotel[casinos_study$casino_id == 1162] <- 1  # River City Casino MO — 200-room hotel (2013)
+casinos_study$has_hotel[casinos_study$casino_id == 557]  <- 1  # Grand Falls Casino IA — 163-room hotel (2011)
+casinos_study$has_hotel[casinos_study$casino_id == 1155] <- 1  # Rhythm City Casino IA — 106-room hotel (2016)
+casinos_study$has_hotel[casinos_study$casino_id == 1170] <- 1  # Riverside Casino IA — 201-room hotel (2006)
+casinos_study$has_hotel[casinos_study$casino_id == 366]  <- 1  # Diamond Jo Worth IA — 102-room hotel (2006)
+casinos_study$has_hotel[casinos_study$casino_id == 1434] <- 1  # Wild Rose Clinton IA — 60-room hotel
+casinos_study$has_hotel[casinos_study$casino_id == 1435] <- 1  # Wild Rose Emmetsburg IA — 70-room hotel
+cat("  Applied 11 hotel overrides (2 set to 0, 9 set to 1)\n")
 
 # has_tables: Default to 1 for all casinos. Set to 0 for facilities known
 # to have NO table games based on revenue data (table_revenue_2022 == 0).
