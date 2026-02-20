@@ -1,0 +1,3 @@
+casino_id,name,city,state,facility_type,slots_revenue_2022,table_revenue_2022,total_revenue_2022,num_slots,num_tables,source
+905,Mohegan Sun,Uncasville,CT,casino,492896444,NA,492896444,NA,NA,CT DCP via data.ct.gov dataset i6ts-ib7c (slot win only)
+497,Foxwoods Resort Casino,Mashantucket,CT,casino,350067839,NA,350067839,NA,NA,CT DCP via data.ct.gov dataset i6ts-ib7c (slot win only)

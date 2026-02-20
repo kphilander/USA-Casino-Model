@@ -1,0 +1,4 @@
+casino_id,name,city,state,facility_type,slots_revenue_2022,table_revenue_2022,total_revenue_2022,num_slots,num_tables,source
+455,Encore Boston Harbor,Everett,MA,casino,397191632,332533140,729724773,NA,NA,MGC Annual Reports FY22+FY23 (CY2022 = Jan-Jun from FY22 + Jul-Dec from FY23)
+889,MGM Springfield,Springfield,MA,casino,205490721,53646738,259137459,NA,NA,MGC Annual Reports FY22+FY23 (CY2022 = Jan-Jun from FY22 + Jul-Dec from FY23)
+1037,Plainridge Park Casino,Plainville,MA,racino,143063201,0,143063201,NA,NA,MGC Annual Reports FY22+FY23 (CY2022 = Jan-Jun from FY22 + Jul-Dec from FY23)

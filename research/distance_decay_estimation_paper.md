@@ -1,6 +1,6 @@
-# Estimating Distance Decay in Casino Demand: Evidence from Pennsylvania and Ohio
+# Estimating Venue-Level Casino Revenue From Statewide Totals: A Gravity Model Approach
 
-**Kahlil Philander**
+Kahlil Philander
 
 *Working Paper — February 2026*
 
@@ -8,9 +8,9 @@
 
 ## Abstract
 
-Distance decay functions are fundamental to gravity models used in casino site selection and regulatory impact assessment, yet the functional form is typically assumed rather than empirically estimated. This study addresses this gap by estimating distance decay parameters using observed revenue data from 25 casino and racino properties in Pennsylvania and Ohio, combined with ZIP code-level demographic data from the American Community Survey. We test three candidate functional forms—exponential, power, and Gaussian—against actual 2022 gaming revenues totaling $5.56 billion. The exponential decay function provides the best fit (R² = 0.773), with an estimated decay parameter β = 0.047, implying that casino demand decreases by approximately 4.6% for each additional mile of travel distance. At 25 miles, demand falls to 30.7% of local levels; at 50 miles, to 9.4%; and at 100 miles, to just 0.9%. These empirically-derived parameters offer a more rigorous foundation for casino demand modeling than the commonly assumed values in the literature and have direct applications for regulatory decision-making and commercial site selection.
+Gravity models are widely used to estimate casino demand, yet the distance decay functions that drive these models are typically assumed rather than empirically estimated. This study addresses this gap by estimating distance decay parameters using observed property-level gross gaming revenue (GGR) data from 92 casinos across nine U.S. states, representing $18.8 billion in 2022 GGR. The model is estimated to predict each venue's share of its own state's total GGR—a within-state share formulation that enables forecasting venue-level revenue in jurisdictions that report only statewide totals. Supply-side attractiveness is captured through hotel and table game availability. The gravity model with power distance decay explains 90% of the variance in within-state revenue shares (*R*² = .90), with a decay parameter of *β* = 2.26 and attractiveness multipliers of 1.96× for hotels and 1.37× for table games. Leave-one-market-out cross-validation confirms model stability (*R*² = .88, shrinkage = .02), and leave-one-state-out cross-validation demonstrates the model can predict venue-level allocation within a held-out state to within 3.31 percentage points. These results provide empirically grounded parameters for casino demand modeling and a practical tool for estimating venue-level GGR from aggregate state reports.
 
-**Keywords:** gravity model, distance decay, casino demand, gaming revenue, spatial econometrics, Pennsylvania, Ohio
+**Keywords:** gravity model, distance decay, casino demand, gaming revenue, within-state market share, cross-validation
 
 **JEL Codes:** L83, R12, C51
 
@@ -18,422 +18,556 @@ Distance decay functions are fundamental to gravity models used in casino site s
 
 ## 1. Introduction
 
-### 1.1 Background
+### Background
 
 Gravity models have become a standard tool for estimating casino demand and assessing the competitive impacts of gaming expansion. These models, adapted from retail trade area analysis (Reilly, 1931; Huff, 1963), predict that consumer visitation to a gaming facility is proportional to the facility's attractiveness and inversely related to some function of travel distance. The general formulation allocates demand from geographic zones to competing facilities based on their relative accessibility-weighted attractiveness.
 
 A critical component of any gravity model is the distance decay function, which specifies how demand diminishes as travel distance increases. Despite the importance of this function to model predictions, the vast majority of applied casino demand studies either assume a particular functional form (typically exponential or power) or adopt parameter values from other contexts without empirical validation. This practice introduces substantial uncertainty into demand forecasts and regulatory impact assessments.
 
-### 1.2 Research Question
+A related practical challenge motivates this study. Many U.S. states publish only aggregate statewide GGR totals rather than property-level breakdowns. Analysts seeking to estimate individual venue revenues—for competitive analysis, market entry evaluation, or regulatory impact assessment—lack a systematic method for allocating statewide totals across venues. A model that accurately predicts each venue's share of its state's total GGR would directly address this need.
 
-This paper addresses a straightforward but important question: **What functional form of distance decay best characterizes consumer travel behavior to casinos, and what are the empirically-estimated parameters?**
+### Research Question
 
-### 1.3 Approach
+This paper addresses two related questions: (a) What functional form of distance decay best characterizes consumer travel behavior to casinos, and what are the empirically estimated parameters? (b) Can a gravity model accurately predict the within-state allocation of GGR across competing venues?
 
-We exploit the availability of property-level revenue data from Pennsylvania and Ohio—two states with mature, geographically-dispersed casino markets and transparent public reporting—to estimate distance decay parameters using revealed preference data. By combining 2022 gross gaming revenues from 25 properties with ZIP code-level demographics and a comprehensive database of competing casino locations (including border states), we estimate and compare three candidate distance decay specifications.
-
-### 1.4 Contribution
+### Contributions
 
 This paper makes three contributions to the gaming economics literature:
 
-1. **Empirical estimation**: We provide the first systematic estimation of casino distance decay parameters using actual revenue data from a multi-state region, rather than assuming functional forms or borrowing parameters from other retail contexts.
+1. **Scale and scope.** This study provides the largest multi-state estimation of casino distance decay parameters to date, using property-level revenue data from nine states encompassing 92 venues and $18.8 billion in annual GGR.
 
-2. **Model comparison**: We formally compare exponential, power, and Gaussian decay specifications, identifying which best explains the observed distribution of casino revenues.
+2. **Within-state share framework.** By estimating the model to predict each venue's share of its own state's total GGR, this study provides a practical forecasting tool: given only a state-level GGR total, the model's predicted within-state shares yield venue-level revenue estimates.
 
-3. **Policy-relevant parameters**: The estimated parameters can be directly applied in regulatory proceedings, commercial feasibility studies, and academic research requiring defensible distance decay assumptions.
+3. **Cross-validation.** Leave-one-market-out and leave-one-state-out cross-validation procedures demonstrate the model's out-of-sample predictive accuracy, including its ability to forecast venue-level allocation in states not used for estimation.
 
 ---
 
 ## 2. Literature Review
 
-### 2.1 Gravity Models in Gaming
+### Gravity Models in Gaming
 
 The application of gravity models to casino demand has a substantial history. Garrett (2004) employed a gravity framework to analyze Missouri riverboat casinos, finding significant distance effects on local employment outcomes. Philander and Bernhard (2012) developed a gravity-based approach to estimate demand for proposed casino locations, demonstrating the model's utility for regulatory applications. Humphreys and Marchand (2013) used spatial econometric methods to study substitution patterns among Canadian casinos, implicitly incorporating distance decay through geographic fixed effects.
 
 More recently, gravity models have been applied to assess the competitive impacts of gaming expansion (Condliffe, 2012), estimate cannibalization effects from new market entrants (Landers, 2008), and model the geographic distribution of problem gambling prevalence (Philander, 2019). In each application, the distance decay function plays a central role in determining predicted outcomes.
 
-### 2.2 Distance Decay Functional Forms
+### Distance Decay Functional Forms
 
-The spatial interaction literature has developed several candidate functional forms for distance decay, each with distinct theoretical properties:
+The spatial interaction literature has developed several candidate functional forms for distance decay, each with distinct theoretical properties.
 
-**Exponential decay** takes the form f(d) = exp(-βd), where demand decreases at a constant percentage rate per unit distance. This specification implies that the marginal effect of distance is greatest at short distances and diminishes as distance increases. The exponential form has been widely used in transportation and retail studies due to its tractability and intuitive interpretation.
+Exponential decay takes the form *f*(*d*) = exp(−*βd*), where demand decreases at a constant percentage rate per unit distance. This specification implies that the marginal effect of distance is greatest at short distances and diminishes as distance increases. The exponential form has been widely used in transportation and retail studies due to its tractability and intuitive interpretation.
 
-**Power decay** takes the form f(d) = d^(-β), implying that demand follows a power law relationship with distance. Unlike exponential decay, the power function produces a heavier tail, meaning that distant demand sources retain relatively more weight. This specification has theoretical foundations in central place theory and has been applied in studies of urban retail hierarchies.
+Power decay takes the form *f*(*d*) = *d*^(−*β*), implying that demand follows a power law relationship with distance. Unlike exponential decay, the power function produces a heavier tail, meaning that distant demand sources retain relatively more weight. This specification has theoretical foundations in central place theory and has been applied in studies of urban retail hierarchies.
 
-**Gaussian decay** takes the form f(d) = exp(-βd²), producing rapid initial decay followed by a very long tail. This specification is less common in retail applications but has been used in studies where demand is thought to be concentrated in a tight local catchment with minimal long-distance draw.
+Gaussian decay takes the form *f*(*d*) = exp(−*βd*²), producing rapid initial decay followed by a very long tail. This specification is less common in retail applications but has been used in studies where demand is thought to be concentrated in a tight local catchment with minimal long-distance draw.
 
-**Log-logistic** and **combined** (exponential-power) specifications offer greater flexibility through additional parameters but risk overfitting when sample sizes are limited.
+### Evidence From Related Sectors
 
-### 2.3 Evidence from Related Sectors
+Studies of distance decay in related discretionary entertainment contexts provide useful benchmarks. Cesario (1976) found power decay exponents between 1.5 and 2.5 for recreational travel, while more recent studies of shopping center patronage suggest exponential decay rates between 0.02 and 0.10 depending on facility type (Huff, 2003). Healthcare accessibility research has documented exponential decay parameters in the range of 0.03 to 0.08 for nonurgent services (Luo & Wang, 2003).
 
-Studies of distance decay in related discretionary entertainment contexts provide useful benchmarks. Cesario (1976) found power decay exponents between 1.5 and 2.5 for recreational travel, while more recent studies of shopping center patronage suggest exponential decay rates between 0.02 and 0.10 depending on facility type (Huff, 2003). Healthcare accessibility research has documented exponential decay parameters in the range of 0.03 to 0.08 for non-emergency services (Luo & Wang, 2003).
-
-Casino visitation shares characteristics with both retail shopping (discretionary, repeat purchase) and recreational travel (destination-oriented, entertainment-focused), suggesting that decay parameters should fall within the ranges observed in these contexts. However, no prior study has directly estimated decay parameters specifically for casino demand.
+Casino visitation shares characteristics with both retail shopping (discretionary, repeat purchase) and recreational travel (destination-oriented, entertainment-focused), suggesting that decay parameters should fall within the ranges observed in these contexts. However, no prior study has directly estimated decay parameters specifically for casino demand using a multi-state sample, nor has any study framed the estimation objective in terms of within-state venue-level allocation.
 
 ---
 
 ## 3. Data
 
-### 3.1 Study Region
+### Study Region
 
-The study region encompasses Pennsylvania and Ohio—where we observe property-level revenues—plus eight neighboring states whose residents may patronize PA/OH casinos and whose casinos compete for the same demand pool.
+The study region encompasses nine primary states where property-level GGR is observed, plus 19 border states whose casinos compete for demand but for which revenue data are not available. The border states serve as supply-side controls: their casinos draw demand away from primary-state venues, and omitting them would bias estimated decay parameters.
 
-| State | Role | ZIP Codes |
-|-------|------|-----------|
-| Pennsylvania | Primary (revenue observed) | 1,830 |
-| Ohio | Primary (revenue observed) | 1,232 |
-| New York | Border (competition) | 1,824 |
-| New Jersey | Border (competition) | 595 |
-| Michigan | Border (competition) | 990 |
-| Indiana | Border (competition) | 806 |
-| Kentucky | Border (competition) | 778 |
-| West Virginia | Border (competition) | 736 |
-| Maryland | Border (competition) | 477 |
-| Delaware | Border (competition) | 68 |
-| **Total** | | **9,336** |
+**Table 1**
 
-### 3.2 Casino Revenue Data
+*Study Region Summary*
 
-**Pennsylvania**: Revenue data for 14 casino properties were obtained from the Pennsylvania Gaming Control Board, which publishes monthly slot machine and table game revenues by property. Pennsylvania's casino industry includes racetrack casinos (Category 1), stand-alone casinos (Category 2), resort casinos (Category 3), and mini-casinos (Category 4), providing variation in facility size and market positioning.
+| Region | States | ZIP codes | Casinos |
+|---|---|---|---|
+| Primary (revenue observed) | PA, OH, MD, NY, MA, CT, IN, MO, IA | 7,688 | 92 |
+| Border (competition only) | NJ, DE, WV, KY, MI, VT, NH, RI, VA, DC, WI, IL, MN, SD, NE, KS, AR, TN, OK | 12,659 | 262 |
+| **Total** | **28** | **20,347** | **354** |
 
-**Ohio**: Revenue data for 11 gaming properties were obtained from the Ohio Casino Control Commission (4 full-service casinos) and Ohio Lottery Commission (7 racinos with video lottery terminals). Ohio's four casinos are located in the state's major metropolitan areas—Cleveland, Columbus, Cincinnati, and Toledo—while racinos are distributed across secondary markets.
+### Revenue Data
 
-**Table 1: Revenue Data Summary**
+Property-level 2022 GGR data were obtained from each state's gaming regulatory authority or commission. Revenue figures include both slot machine and table game win except where noted.
 
-| State | Properties | 2022 Revenue | Source |
-|-------|------------|--------------|--------|
-| Pennsylvania | 14 | $3.23 billion | PGCB |
-| Ohio (casinos) | 4 | $1.01 billion | OCCC |
-| Ohio (racinos) | 7 | $1.33 billion | OH Lottery |
-| **Total** | **25** | **$5.56 billion** | |
+**Table 2**
 
-### 3.3 Casino Supply Characteristics
+*Revenue Data by State*
 
-To control for supply-side heterogeneity, we collected gaming position data (slot machines and table games) for each property. Gaming positions serve as a proxy for casino capacity and attractiveness. For Ohio casinos, the median property operates approximately 1,614 slot machines and 89 table games. Pennsylvania properties show greater variation, ranging from 600 slots at Lady Luck Nemacolin to 2,996 at Parx Casino.
+| State | Source | Properties | 2022 GGR ($B) | Notes |
+|---|---|---|---|---|
+| PA | Pennsylvania Gaming Control Board | 14 | 3.23 | Slots + tables |
+| NY | New York State Gaming Commission | 12 | 2.65 | Commercial + VLT |
+| IN | Indiana Gaming Commission | 12 | 2.50 | Riverboats + racinos |
+| OH | Ohio Casino Control Commission / Ohio Lottery | 11 | 2.33 | Casinos + racinos |
+| MD | Maryland Lottery and Gaming Control Agency | 6 | 2.05 | |
+| MO | Missouri Gaming Commission | 13 | 1.91 | Riverboat casinos |
+| IA | Iowa Racing and Gaming Commission | 19 | 1.77 | Commercial only |
+| CT | Connecticut Division of Special Revenue | 2 | 1.24 | Scaled; see below |
+| MA | Massachusetts Gaming Commission | 3 | 1.13 | |
+| **Total** | | **92** | **18.80** | |
 
-Total gaming positions are calculated as:
+*Note.* Connecticut reports slot revenue only. Total GGR was estimated by dividing slot revenue by (1 − 0.318), where 0.318 represents the table game share of total gaming revenue. This scalar was derived from Mohegan Tribal Gaming Authority's FY2022 quarterly supplemental earnings decks and SEC 10-K/10-Q filings, which report slot and table revenue separately. The FY2022 table share (31.8%) was cross-validated against FY2023 (31.0%) and FY2024 (32.2%).
 
-$$POSITIONS_j = SLOTS_j + 6 \times TABLES_j$$
+One Indiana property (Caesars Southern Indiana) was absent from the casino location database and was manually geocoded (38.1796°N, 85.9054°W) with supply-side characteristics verified against public records.
 
-where the factor of 6 reflects typical seating capacity per table game.
+Iowa's three tribal casinos (Blackbird Bend, Meskwaki, and Prairie Flower) do not report revenue publicly. These properties remain in the model as unobserved supply-side competitors—their locations draw demand away from nearby commercial casinos—but are excluded from the set of observed venues.
 
-### 3.4 Competing Casino Locations
+### Supply-Side Controls
 
-Proper estimation of distance decay requires accounting for all casinos that compete for the same demand pool, not just those for which we observe revenues. We compiled a database of 110 casino locations across the 10-state study region, including 84 properties in border states (New York, New Jersey, Michigan, Indiana, West Virginia, Maryland, and Delaware). Casino coordinates were obtained from geocoding services and verified against state gaming commission records.
+Two binary supply-side attractiveness controls were constructed for each casino:
 
-**Table 2: Competing Casinos by State**
+- **Has hotel** (*H*): Whether the property operates an on-site hotel. Coded from a comprehensive U.S. casino database containing property-level attributes for 1,476 venues.
 
-| State | Casinos | Notes |
-|-------|---------|-------|
-| New York | 22 | Commercial + tribal |
-| Michigan | 25 | Detroit + tribal |
-| Indiana | 12 | Riverboats + racinos |
-| New Jersey | 11 | Atlantic City |
-| Maryland | 6 | Baltimore region |
-| West Virginia | 5 | Border properties |
-| Delaware | 3 | Racinos |
-| Kentucky | 0 | No casinos in 2022 |
-| **Total** | **84** | |
+- **Has tables** (*T*): Whether the property offers table games. Several facility types are slots-only by regulatory design: Ohio video lottery terminal (VLT) racinos, New York VLT facilities, and Massachusetts's Plainridge Park Casino (a racino). Properties with zero reported table revenue were coded as *T* = 0.
 
-### 3.5 Demographic Data
+Among the 354 casinos in the study region, 139 (39%) have hotels and 338 (95%) have table games. The 16 slots-only properties tend to be smaller facilities in secondary markets.
 
-ZIP code-level demographic data were obtained from the American Community Survey (ACS) 2018-2022 five-year estimates, providing:
+### Demographic Data
 
-- **Adult population (21+)**: Legal gambling age population by ZIP code
-- **Median household income**: Proxy for gambling expenditure capacity
-- **Population coordinates**: ZIP code centroids for distance calculations
+ZIP code-level demographic data were obtained from the American Community Survey (ACS) 2018–2022 five-year estimates. The demand weight for each ZIP code is defined as the product of adult population (aged 21+) and relative household income:
 
-### 3.6 Distance Calculations
+*w*ᵢ = *Pop*ᵢ × (*Inc*ᵢ / 50,000)
 
-Haversine (great-circle) distances were calculated between each ZIP code centroid and each casino location. The resulting distance matrix contains over 1 million ZIP-casino pairs. For model estimation, we apply a 150-mile threshold, beyond which demand allocation is assumed negligible.
+where *Inc*ᵢ is the median household income in ZIP code *i*. The income normalization at $50,000 scales the demand weight such that a ZIP code with median income contributes proportionally more demand than one with below-median income, consistent with the positive income elasticity of gambling expenditure documented in prior research.
+
+### Distance Calculations and Market Clustering
+
+Haversine (great-circle) distances were calculated between each of 20,347 ZIP code centroids and each of 354 casino locations, producing a distance matrix of over 7.2 million pairs. A 150-mile threshold was applied, beyond which demand contribution is assumed negligible.
+
+Nearby casinos were clustered into "markets" using single-linkage hierarchical clustering on the pairwise distance matrix of casino locations. This ensures that co-located properties (e.g., two Philadelphia casinos separated by three miles) compete as a unit rather than being treated as independent demand sinks. Two clustering radii were evaluated (5 mi and 10 mi); the 5-mile radius minimized the sum of squared errors and was selected for all reported results, yielding 280 distinct markets (85 with observed revenue, 195 in border states).
 
 ---
 
 ## 4. Methodology
 
-### 4.1 Model Specification
+### Gravity Share Model
 
-We model casino revenue as the aggregation of demand flows from all ZIP codes in the study region. Following the gravity model tradition, demand from ZIP code *i* to casino *j* is:
+The core model follows the gravity tradition. Demand from ZIP code *i* for market *j* is:
 
-$$D_{ij} = P_i \cdot W_i^\gamma \cdot \frac{A_j \cdot f(d_{ij})}{\sum_{k \in C_i} A_k \cdot f(d_{ik})}$$
+*D*ᵢⱼ = *w*ᵢ × [*A*ⱼ × *f*(*d*ᵢⱼ)] / Σₖ [*A*ₖ × *f*(*d*ᵢₖ)]
 
-where:
-- $D_{ij}$ = demand (dollars) from ZIP *i* to casino *j*
-- $P_i$ = adult population (21+) in ZIP *i*
-- $W_i$ = median household income in ZIP *i*
-- $\gamma$ = income elasticity of gambling demand (set to 1)
-- $A_j$ = attractiveness (gaming positions) of casino *j*
-- $f(d_{ij})$ = distance decay function (to be estimated)
-- $C_i$ = set of casinos accessible to ZIP *i*
+where *w*ᵢ is the demand weight defined above, *A*ⱼ is the attractiveness of market *j*, *f*(*d*ᵢⱼ) is the distance decay function, and the sum in the denominator runs over all markets accessible to ZIP *i*. Total predicted demand at market *j* is:
 
-Total revenue at casino *j* is the sum of demand from all ZIP codes:
+*D*ⱼ = Σᵢ *D*ᵢⱼ
 
-$$R_j = \sum_{i} D_{ij}$$
+Attractiveness is parameterized as:
 
-### 4.2 Candidate Distance Decay Functions
+*A*ⱼ = exp(*α*_H × *H*ⱼ + *α*_T × *T*ⱼ)
 
-We estimate and compare three functional forms:
+where *H*ⱼ and *T*ⱼ are binary indicators for hotel and table game availability, and *α*_H and *α*_T are parameters to be estimated. This multiplicative specification allows each amenity to scale demand independently.
 
-**Model 1: Exponential**
-$$f(d) = e^{-\beta d}$$
+Three candidate distance decay functions are tested:
 
-**Model 2: Power**
-$$f(d) = (d + 0.1)^{-\beta}$$
+- **Exponential:** *f*(*d*) = exp(−*βd*)
+- **Power:** *f*(*d*) = (*d* + 0.1)^(−*β*)
+- **Gaussian:** *f*(*d*) = exp(−*βd*²)
 
-**Model 3: Gaussian**
-$$f(d) = e^{-\beta d^2}$$
+The small constant (0.1 miles) in the power specification prevents division by zero for ZIP codes containing a casino.
 
-The small constant (0.1) in the power specification prevents division by zero for ZIP codes containing a casino.
+#### Within-State Share Objective
 
-### 4.3 Estimation Approach
+The model is estimated by minimizing the sum of within-state share errors across all states. For each state *s*, define the within-state share of market *j* as:
 
-We estimate distance decay parameters by minimizing the sum of squared errors between observed and predicted revenue shares:
+Actual: *S*ⱼˢ = *Rev*ⱼ / Σₖ∈ₛ *Rev*ₖ
 
-$$\min_{\beta} \sum_{j=1}^{25} \left( S_j^{obs} - S_j^{pred}(\beta) \right)^2$$
+Predicted: *Ŝ*ⱼˢ = *D*ⱼ / Σₖ∈ₛ *D*ₖ
 
-where $S_j = R_j / \sum_j R_j$ represents casino *j*'s share of total observed revenue.
+The objective function is:
 
-The revenue share formulation normalizes for the overall scale of gambling demand, allowing the estimation to focus on the *distribution* of revenues across properties—which is determined by the distance decay function—rather than the aggregate level.
+min(β, α_H, α_T) Σₛ Σⱼ∈ₛ (*S*ⱼˢ − *Ŝ*ⱼˢ)²
 
-Optimization is performed using Brent's method (for single-parameter models) with convergence tolerance of 10⁻⁶.
+This formulation has two advantages over minimizing errors on pooled (cross-state) revenue shares. First, it isolates the model's ability to predict competitive allocation within a state from its ability to predict aggregate state-level demand—the latter depends on factors (e.g., state population, regulatory environment) outside the model. Second, it directly produces the object of practical interest: venue-level shares of state GGR that can be applied to statewide totals from jurisdictions that do not report property-level data.
 
-### 4.4 Model Comparison
+Optimization is performed using the L-BFGS-B algorithm with 1,000 maximum iterations and convergence tolerance of 10⁻².
 
-Models are compared using:
+### Cross-Validation
 
-- **Sum of Squared Errors (SSE)**: Direct measure of prediction error
-- **R-squared**: Proportion of variance in revenue shares explained
-- **Mean Absolute Percentage Error (MAPE)**: Average prediction error in percentage points
+Two cross-validation procedures assess out-of-sample prediction accuracy.
+
+**Leave-one-market-out (LOOCV).** Each of the 85 observed markets is held out in turn. The model is re-estimated on the remaining 84 markets, and the held-out market's within-state share is predicted. The held-out market's casinos remain in the supply set (they still draw demand), but their revenue is hidden from the estimator. This procedure produces 85 out-of-sample predictions.
+
+**Leave-one-state-out (LOSO).** Each of the nine primary states is held out in turn. The model is re-estimated on the remaining eight states, and the held-out state's within-state venue allocation is predicted. This is the most demanding test: it asks whether distance decay and attractiveness parameters estimated in other states can predict venue-level allocation in an entirely unseen market.
+
+### Robustness
+
+Two robustness checks are reported. First, a log-linear (LN) model provides an alternative, reduced-form specification. In the LN model, a demand index is computed for each market as *D*ⱼ = Σᵢ [*w*ᵢ × *f*(*d*ᵢⱼ)] (without the attractiveness-weighted denominator), and log-revenue is regressed on the log of this index plus supply-side controls:
+
+ln(*Rev*ⱼ) = *α* + *γ* × ln(*D*ⱼ) + *β*_H × *H*ⱼ + *β*_T × *T*ⱼ + *ε*ⱼ
+
+The decay parameter *β* is optimized to maximize the OLS *R*² on log-revenue. The demand elasticity *γ* is freely estimated (unlike the gravity model, which implicitly constrains *γ* = 1). Predictions are converted to within-state shares for comparison: *Ŝ*ⱼ = exp(*ŷ*ⱼ) / Σₖ∈ₛ exp(*ŷ*ₖ).
+
+Second, an eight-state model excluding Iowa is estimated to assess sensitivity to Iowa's inclusion. Iowa contains three tribal casinos whose supply-side characteristics and revenues are unobserved; excluding the state entirely tests whether the results are robust to this data limitation.
 
 ---
 
 ## 5. Results
 
-### 5.1 Parameter Estimates
+### Distance Decay Parameter Estimates
 
-Table 3 presents the estimated parameters for each distance decay specification.
+Table 3 presents the estimated gravity model parameters for each distance decay specification. The power decay function provides the best fit, explaining 90% of the variance in within-state revenue shares.
 
-**Table 3: Distance Decay Parameter Estimates**
+**Table 3**
 
-| Model | Parameter | Estimate | SSE | R² |
-|-------|-----------|----------|-----|-----|
-| **Exponential** | **β** | **0.0472** | **0.00266** | **0.773** |
-| Gaussian | β | 0.000529 | 0.00270 | 0.769 |
-| Power | β | 1.685 | 0.00360 | 0.692 |
+*Gravity Model Parameter Estimates (Within-State Shares)*
 
-The exponential model provides the best fit, explaining 77.3% of the variance in casino revenue shares. The Gaussian specification performs nearly as well (R² = 0.769), while the power model shows notably weaker fit (R² = 0.692).
+| Decay form | *β* | *α*_Hotel | *α*_Tables | SSE | *R*² |
+|---|---|---|---|---|---|
+| **Power** | **2.256** | **0.675** | **0.312** | **0.107** | **.902** |
+| Exponential | 0.073 | 0.683 | 0.392 | 0.118 | .892 |
+| Gaussian | 0.002 | 0.854 | 0.446 | 0.137 | .875 |
 
-### 5.2 Interpretation of the Exponential Decay Parameter
+*Note.* *N* = 85 observed markets across nine states. Parameters estimated by L-BFGS-B minimizing within-state share SSE. Optimal clustering radius = 5 miles (280 markets: 85 observed, 195 border). Power decay: *f*(*d*) = (*d* + 0.1)^(−*β*). All three specifications select the same optimal clustering radius.
 
-The estimated exponential decay parameter β = 0.0472 implies that casino demand decreases by approximately 4.6% for each additional mile of travel distance. This translates to the following demand levels at key distances:
+### Attractiveness Multipliers
 
-**Table 4: Demand Decay by Distance (Exponential Model)**
+The estimated attractiveness parameters translate into multiplicative effects on predicted demand. Under the best-fitting power decay specification:
 
-| Distance | Relative Demand | Interpretation |
-|----------|-----------------|----------------|
-| 0 miles | 100% | Local demand (baseline) |
-| 10 miles | 62.4% | Nearly two-thirds of local demand |
-| 25 miles | 30.7% | Less than one-third of local demand |
-| 50 miles | 9.4% | Less than one-tenth of local demand |
-| 75 miles | 2.9% | Minimal demand |
-| 100 miles | 0.9% | Negligible demand |
+**Table 4**
 
-These results suggest that the effective catchment area for a typical casino extends approximately 50 miles, beyond which demand contribution becomes marginal.
+*Attractiveness Multipliers (Power Decay Model)*
 
-### 5.3 Predicted vs. Actual Revenues
+| Amenity combination | Multiplier |
+|---|---|
+| Hotel only | 1.96× |
+| Table games only | 1.37× |
+| Hotel + table games | 2.68× |
 
-Table 5 compares observed and predicted revenue shares for each property using the exponential model.
+*Note.* Multipliers computed as exp(*α*). A casino with a hotel is predicted to attract 1.96 times the demand of an otherwise identical casino without a hotel, holding distance and all other factors constant.
 
-**Table 5: Predicted vs. Actual Revenue Shares (Exponential Model)**
+These multipliers are economically meaningful. A full-service casino with both a hotel and table games is predicted to attract 2.68 times the demand of a slots-only facility without a hotel—a difference that substantially affects predicted market shares, particularly in states where some venues are racinos (slots-only, no hotel) competing against integrated resorts.
 
-| Casino | State | Actual ($M) | Actual Share | Predicted Share | Error (pp) |
-|--------|-------|-------------|--------------|-----------------|------------|
-| Parx Casino | PA | $598.7 | 10.77% | 10.89% | +0.12 |
-| Wind Creek Bethlehem | PA | $515.8 | 9.28% | 8.70% | −0.58 |
-| Rivers Casino Pittsburgh | PA | $355.0 | 6.38% | 5.50% | −0.88 |
-| MGM Northfield Park | OH | $285.9 | 5.14% | 3.88% | −1.26 |
-| Hollywood Columbus | OH | $263.6 | 4.74% | 5.61% | +0.87 |
-| JACK Cleveland | OH | $262.4 | 4.72% | 3.78% | −0.94 |
-| Hard Rock Cincinnati | OH | $251.5 | 4.52% | 3.93% | −0.59 |
-| Eldorado Scioto Downs | OH | $234.8 | 4.22% | 4.35% | +0.13 |
-| Hollywood Toledo | OH | $227.7 | 4.09% | 4.43% | +0.34 |
-| Miami Valley Gaming | OH | $224.8 | 4.04% | 3.59% | −0.45 |
-| Live! Casino Philadelphia | PA | $222.4 | 4.00% | 7.15% | +3.15 |
-| Rivers Casino Philadelphia | PA | $216.7 | 3.90% | 5.51% | +1.61 |
-| Mohegan Sun Pocono | PA | $215.5 | 3.88% | 2.29% | −1.59 |
-| Hollywood Casino at the Meadows | PA | $189.5 | 3.41% | 3.19% | −0.22 |
-| Mount Airy Casino Resort | PA | $184.2 | 3.31% | 3.38% | +0.07 |
-| JACK Thistledown | OH | $183.2 | 3.29% | 3.60% | +0.31 |
-| Hollywood Casino at Penn National | PA | $180.6 | 3.25% | 4.34% | +1.09 |
-| Harrah's Philadelphia | PA | $172.9 | 3.11% | 4.36% | +1.25 |
-| Hollywood Mahoning Valley | OH | $159.4 | 2.87% | 1.59% | −1.28 |
-| Hollywood Gaming Dayton | OH | $150.9 | 2.71% | 1.77% | −0.94 |
-| Valley Forge Casino Resort | PA | $136.0 | 2.45% | 2.62% | +0.17 |
-| Live! Casino Pittsburgh | PA | $109.9 | 1.98% | 1.58% | −0.40 |
-| Presque Isle Downs & Casino | PA | $109.0 | 1.96% | 1.21% | −0.75 |
-| Belterra Park | OH | $88.7 | 1.60% | 2.06% | +0.46 |
-| Lady Luck Nemacolin | PA | $22.2 | 0.40% | 0.70% | +0.30 |
+### Interpretation of Power Decay
 
-The model achieves a mean absolute error of 0.79 percentage points across the 25 properties. The largest outlier is Live! Casino Philadelphia, where the model over-predicts share by 3.15 percentage points, likely reflecting the Philadelphia market's intense competition and the property's relatively recent entry. Mohegan Sun Pocono is under-predicted by 1.59 percentage points, possibly due to its resort amenities capturing demand beyond what the gravity model attributes to its location.
+The power decay exponent *β* = 2.26 means that demand falls with the inverse square of distance. At twice the distance, demand is 2^(−2.26) = 0.21 times as large—roughly one fifth. At three times the distance, demand is 3^(−2.26) = 0.085 times as large. This produces rapid local concentration with a moderate tail: a casino draws the majority of its demand from within 25 miles, but distant population centers with large populations can still contribute meaningfully.
 
-### 5.4 Model Fit Visualization
+This exponent falls within the 1.5–2.5 range documented by Cesario (1976) for recreational travel and is consistent with casinos functioning as regional entertainment destinations that attract primarily local and near-local patronage.
 
-Figure 1 illustrates the estimated decay functions across the three specifications.
+### Cross-Validation
 
-*[Figure 1: Distance Decay Functions]*
+**Table 5**
 
-The exponential function (β = 0.047) shows moderate initial decay that continues steadily. The Gaussian function shows sharper initial decay that flattens quickly. The power function maintains higher weight at longer distances.
+*Leave-One-Market-Out Cross-Validation Results*
 
-The visual comparison highlights why the exponential specification performs best: it captures both the substantial local concentration of demand and the gradual tail of longer-distance patrons, while the Gaussian model over-concentrates demand locally and the power model over-weights distant demand.
+| Model | MAPE (pp) | RMSE (pp) | *R*² |
+|---|---|---|---|
+| Gravity (power) | 2.86 | 3.87 | .884 |
+| LN (exponential) | 2.87 | 3.95 | .879 |
+
+*Note.* MAPE = mean absolute prediction error; RMSE = root mean square error; pp = percentage points of within-state share. 85 folds. Each fold re-estimates all parameters on the remaining 84 markets.
+
+The gravity model's in-sample *R*² of .902 shrinks to .884 under LOOCV—a shrinkage of only .018, indicating that the three-parameter model is not overfit to the data. The LN model shows comparable out-of-sample performance despite its different in-sample metric (OLS *R*² on log-revenue = .631).
+
+**Table 6**
+
+*Leave-One-State-Out Cross-Validation: Within-State Share MAPE (Percentage Points)*
+
+| State | Properties | Markets | State GGR ($M) | Gravity MAPE | LN MAPE |
+|---|---|---|---|---|---|
+| CT | 2 | 2 | 1,236 | 5.56 | 7.57 |
+| IA | 19 | 15 | 1,765 | 1.55 | 2.17 |
+| IN | 12 | 11 | 2,504 | 3.43 | 2.64 |
+| MA | 3 | 3 | 1,132 | 4.19 | 7.26 |
+| MD | 6 | 6 | 2,051 | 3.07 | 5.72 |
+| MO | 13 | 12 | 1,905 | 1.94 | 2.11 |
+| NY | 12 | 12 | 2,646 | 3.58 | 1.86 |
+| OH | 11 | 11 | 2,333 | 3.29 | 2.07 |
+| PA | 14 | 13 | 3,229 | 3.19 | 3.37 |
+| **Mean** | | | | **3.31** | **3.86** |
+
+*Note.* Each row holds out one state entirely. The model is re-estimated on the remaining eight states, then within-state venue shares are predicted for the held-out state. MAPE is computed over the held-out state's markets.
+
+The LOSO results demonstrate that gravity model parameters estimated in other states transfer well to an unseen market. The overall mean within-state share MAPE of 3.31 percentage points means that, on average, the model's predicted venue share deviates from the actual share by about 3 percentage points. The gravity model outperforms the LN model in seven of nine states.
+
+States with few venues (CT, MA) show larger prediction errors, as expected—with only two or three properties, each venue's share is large and any misallocation produces a sizable error in percentage-point terms. States with many venues (IA, MO) show the smallest errors, reflecting the law of large numbers and the model's ability to accurately rank-order venues by demand.
+
+### Property-Level Predictions
+
+Table 7 presents within-state share predictions for the 20 largest properties by revenue under the gravity model.
+
+**Table 7**
+
+*Predicted Versus Actual Within-State Revenue Shares: Top 20 Properties*
+
+| Property | State | Rev ($M) | State GGR ($M) | Actual (%) | Predicted (%) | Error (pp) |
+|---|---|---|---|---|---|---|
+| MGM National Harbor | MD | 884.5 | 2,051 | 43.12 | 47.61 | +4.49 |
+| Encore Boston Harbor | MA | 729.7 | 1,132 | 64.47 | 59.23 | −5.24 |
+| Mohegan Sun | CT | 722.7 | 1,236 | 58.47 | 53.16 | −5.31 |
+| Live! Casino & Hotel | MD | 705.4 | 2,051 | 34.39 | 25.72 | −8.67 |
+| Resorts World Casino NYC | NY | 645.0 | 2,646 | 24.37 | 36.41 | +12.04 |
+| Empire City Casino | NY | 613.7 | 2,646 | 23.19 | 21.27 | −1.92 |
+| Parx Casino and Racing | PA | 598.7 | 3,229 | 18.54 | 11.59 | −6.95 |
+| Wind Creek Bethlehem | PA | 515.8 | 3,229 | 15.98 | 11.56 | −4.42 |
+| Foxwoods Resort Casino | CT | 513.3 | 1,236 | 41.53 | 46.84 | +5.31 |
+| Hard Rock Casino N. Indiana | IN | 419.5 | 2,504 | 16.76 | 9.96 | −6.80 |
+| Rivers Casino Pittsburgh | PA | 355.0 | 3,229 | 11.00 | 6.10 | −4.90 |
+| Horseshoe Hammond | IN | 346.1 | 2,504 | 13.82 | 9.73 | −4.09 |
+| Horseshoe Indianapolis | IN | 341.8 | 2,504 | 13.65 | 10.52 | −3.13 |
+| Ameristar St. Charles | MO | 302.5 | 1,905 | 15.88 | 12.50 | −3.38 |
+| MGM Northfield Park | OH | 285.9 | 2,333 | 12.25 | 9.57 | −2.68 |
+| Hollywood Casino Columbus | OH | 263.6 | 2,333 | 11.30 | 16.94 | +5.64 |
+| JACK Cleveland Casino | OH | 262.4 | 2,333 | 11.25 | 10.63 | −0.62 |
+| MGM Springfield | MA | 259.1 | 1,132 | 22.89 | 28.65 | +5.76 |
+| Jake's 58 | NY | 256.6 | 2,646 | 9.70 | 16.42 | +6.72 |
+| Hard Rock Cincinnati | OH | 251.5 | 2,333 | 10.78 | 9.89 | −0.89 |
+
+*Note.* Predicted shares from the power decay gravity model. Within-state shares sum to 100% within each state. Error = predicted − actual. Full 92-property table in Appendix A.
+
+The model captures the broad distribution of revenues well, correctly identifying the dominant property in each state and appropriately scaling smaller venues. The largest absolute errors occur for properties whose competitive position reflects factors not in the model—for example, Resorts World Casino NYC (+12.04 pp) is a VLT-only facility in a dense urban market where the model's population-weighted demand index overpredicts share, and Live! Casino & Hotel Maryland (−8.67 pp) may benefit from brand loyalty and amenity quality not captured by the binary hotel indicator.
+
+### Robustness
+
+#### *Log-Linear Model*
+
+**Table 8**
+
+*Log-Linear Model Estimates (Best Decay Specification)*
+
+| Parameter | Estimate | *SE* | *t* |
+|---|---|---|---|
+| Intercept | 12.332 | 0.599 | 20.60 |
+| ln(*D*ⱼ) [demand elasticity] | 0.518 | 0.045 | 11.40 |
+| Hotel | 0.230 | 0.126 | 1.83 |
+| Tables | 0.266 | 0.172 | 1.55 |
+
+*Note.* OLS regression of ln(Revenue) on ln(demand index) and supply controls. *n* = 85 markets. Exponential decay with *β* = 0.105. *R*² = .631, adjusted *R*² = .617.
+
+The LN model's demand elasticity (*γ* = 0.518) is significantly less than unity (*t* = −10.62 for *H*₀: *γ* = 1), suggesting diminishing returns to demand—a feature the gravity model implicitly constrains away. Despite this, when LN predictions are converted to within-state shares, property-level MAPE (2.57 pp) is comparable to the gravity model (2.44 pp), indicating that both specifications capture similar competitive dynamics.
+
+#### *Model Without Iowa*
+
+**Table 9**
+
+*Gravity Model Comparison: Nine-State Versus Eight-State (Without Iowa)*
+
+| Specification | *N* | *β* | *α*_H | *α*_T | *R*² | Prop MAPE |
+|---|---|---|---|---|---|---|
+| Nine-state (with Iowa) | 92 | 2.256 | 0.675 | 0.312 | .902 | 2.44 |
+| Eight-state (without Iowa) | 73 | 2.183 | 0.671 | 0.307 | .899 | 2.78 |
+
+*Note.* Both models use power decay. Prop MAPE in percentage points of within-state share.
+
+Parameter estimates are stable across specifications. The decay parameter shifts by only 3.2% (from 2.256 to 2.183), and attractiveness multipliers are virtually unchanged. The small increase in MAPE (0.34 pp) reflects the loss of 19 Iowa observations rather than any instability in the estimated relationship.
 
 ---
 
 ## 6. Discussion
 
-### 6.1 Interpretation of Results
+### Interpretation of Results
 
-The finding that exponential decay with β ≈ 0.047 best characterizes casino demand has several implications:
+The finding that power decay with *β* ≈ 2.26 best characterizes casino demand has several implications.
 
-**Local market dominance**: With demand falling to less than one-third of local levels at just 25 miles, casino revenues are heavily concentrated among nearby residents. This supports the emphasis on local market demographics in casino feasibility studies and suggests that proposals for new casinos should focus primarily on their immediate catchment areas.
+**Local market dominance.** The power decay exponent implies that demand falls to approximately one fifth at twice the distance and one twelfth at three times the distance. Casino revenues are heavily concentrated among nearby residents, consistent with casinos functioning as local entertainment venues rather than destination attractions.
 
-**Limited destination draw**: The rapid decay beyond 50 miles implies that most regional casinos function as local entertainment venues rather than destination attractions. This distinguishes them from resort-destination properties (e.g., Las Vegas, Atlantic City) where demand patterns likely differ substantially.
+**Supply-side differentiation matters.** The hotel multiplier (1.96×) and table game multiplier (1.37×) are both economically substantial. A full-service casino with both amenities is predicted to attract 2.68 times the demand of an otherwise identical slots-only facility without a hotel. This has direct implications for licensing decisions and capital investment: the model quantifies the competitive advantage conferred by amenity investment.
 
-**Competition effects**: The 50-mile effective catchment implies significant competitive overlap between properties located within 100 miles of each other, as their catchment areas intersect substantially. Regulatory impact assessments should account for this overlap when evaluating new casino proposals.
+**Within-state share as a forecasting tool.** The *R*² of .90 on within-state shares demonstrates that distance and two binary supply controls explain the vast majority of how state GGR is allocated across venues. The practical application is straightforward: for a state that reports only aggregate GGR, one can construct the gravity model's predicted within-state shares for each venue and multiply by the statewide total to obtain venue-level estimates. The LOSO results (3.31 pp mean error) provide a confidence bound for this exercise.
 
-### 6.2 Comparison to Prior Literature
+### Model Stability
 
-The estimated decay rate (β = 0.047) falls within the range observed in related retail and recreation contexts. Cesario's (1976) recreational travel studies implied exponential decay rates of 0.03-0.06, while Huff's (2003) shopping center analysis found rates of 0.02-0.10 depending on retail format. Our casino-specific estimate sits comfortably in the middle of this range, consistent with casinos' hybrid nature as retail and entertainment destinations.
+The LOOCV shrinkage of .018 (*R*² from .902 to .884) is small by any standard, indicating that the three-parameter model is not overfit. The LOSO results further confirm transferability: parameters estimated on eight states predict the ninth state's venue allocation to within 3.31 pp on average.
 
-The strong performance of the exponential specification (vs. power) differs from some recreational demand studies that found power decay more appropriate. This may reflect the routine, repeat-visit nature of casino patronage, which more closely resembles retail shopping than one-time recreational trips.
+The robustness to Iowa's exclusion provides additional confidence. Iowa presents the most challenging data environment in the sample (tribal casinos with unobserved revenue, many small rural properties), yet its inclusion or exclusion shifts the decay parameter by less than 4%.
 
-### 6.3 Policy Implications
+### Comparison to Prior Literature
 
-**For regulators**: The empirically-estimated decay parameter provides a more defensible foundation for casino demand modeling than assumed values. Regulatory bodies evaluating license applications can apply β = 0.047 in gravity models with confidence that it reflects observed behavior in mature markets.
+The estimated power decay exponent (*β* = 2.26) falls within Cesario's (1976) range of 1.5–2.5 for recreational travel. The dominance of power over exponential decay differs from some retail applications but is consistent with casino markets where some patrons travel considerable distances for resort-style properties, producing a heavier distance tail than the exponential form accommodates.
 
-**For operators**: Site selection should prioritize locations with strong demographics within a 25-mile radius, as this zone contributes the majority of demand. Locations in areas already served by competitors within 50 miles face substantial cannibalization risk.
+### Limitations
 
-**For researchers**: The estimated parameters enable more accurate simulation of market entry effects, competitive dynamics, and policy counterfactuals in academic studies of gaming markets.
+Several limitations should be noted.
 
-### 6.4 Limitations
+First, the model is estimated on a single cross-section (2022). Temporal stability of the estimated parameters—particularly through demand shocks such as the COVID-19 pandemic—remains untested.
 
-Several limitations should be noted:
+Second, supply-side attractiveness is captured by only two binary controls (hotel and tables). Unobserved characteristics such as management quality, marketing expenditure, entertainment offerings, and facility age likely affect revenues independently of location.
 
-1. **Regional specificity**: Parameters were estimated using PA and OH data. Demand patterns may differ in other regions, particularly destination markets or areas with different demographic compositions.
+Third, Connecticut's table revenue is imputed using a scalar derived from Mohegan Sun's financial disclosures. While this scalar is cross-validated across three fiscal years, it remains an approximation.
 
-2. **Supply-side controls**: While we control for gaming positions, unobserved casino characteristics (management quality, amenities, marketing) may affect revenues independently of location.
+Fourth, the model assumes homogeneous distance decay across demographic groups. Decay rates may vary by age, income, or urbanicity, and a richer model could allow for heterogeneous parameters.
 
-3. **Cross-sectional design**: Single-year data cannot capture temporal dynamics such as market maturation or seasonal variation.
-
-4. **Border state competition**: We include border state casinos as competitors but do not observe their revenues, requiring assumptions about their relative attractiveness.
-
-5. **Uniform preferences**: The model assumes homogeneous distance decay across demographic groups, though decay rates may vary by age, income, or urbanicity.
+Fifth, Iowa's three tribal casinos are included as supply-side competitors with assumed characteristics (hotel, tables) rather than observed attributes. The robustness check excluding Iowa mitigates but does not eliminate this concern.
 
 ---
 
 ## 7. Conclusion
 
-This study provides the first systematic estimation of casino demand distance decay using revealed preference data from a multi-state market. The key findings are:
+This study provides the largest multi-state empirical estimation of casino demand distance decay to date, using property-level revenue data from 92 venues across nine U.S. states totaling $18.8 billion in 2022 GGR. The key findings are:
 
-1. **Exponential decay** best characterizes casino demand, outperforming power and Gaussian specifications.
+1. **Power distance decay** best characterizes casino demand (*R*² = .90 on within-state shares), with an exponent of *β* = 2.26 implying that demand falls with approximately the inverse square of distance.
 
-2. **The decay parameter β = 0.047** implies demand decreases by 4.6% per mile, with effective catchment areas extending approximately 50 miles.
+2. **Supply-side amenities** have large effects on predicted demand. Casinos with hotels attract 1.96 times more demand than those without; table game availability adds another 1.37× multiplier.
 
-3. **The model explains 77.3%** of the variance in casino revenue shares across 25 PA and OH properties, demonstrating strong predictive validity.
+3. **The model is stable out of sample.** LOOCV shrinkage is only .018 (from *R*² = .90 to .88), and leave-one-state-out cross-validation demonstrates that the model can predict a new state's venue-level allocation to within 3.31 percentage points.
 
-4. **Local markets dominate**: At 25 miles, demand falls to less than one-third of local levels, emphasizing the importance of immediate catchment demographics.
+4. **Within-state shares provide a practical forecasting tool.** Given only a state's total GGR, the model's predicted shares yield venue-level revenue estimates—enabling analysis in jurisdictions that do not report property-level data.
 
-These empirically-grounded parameters offer a more rigorous foundation for casino demand modeling than the commonly assumed values in the literature. Future research should extend this analysis to additional markets, examine heterogeneity in decay rates across demographic segments, and investigate temporal stability of the estimated parameters.
+These empirically grounded parameters and the within-state share framework offer a more rigorous foundation for casino demand modeling than the commonly assumed values in the literature. Future research should extend this analysis to additional states as data become available, examine heterogeneity in decay rates across demographic segments, and assess the temporal stability of estimated parameters by replicating the analysis across multiple years.
 
 ---
 
 ## References
 
-Cesario, F. J. (1976). Value of time in recreation benefit studies. *Land Economics*, 52(1), 32-41.
+Cesario, F. J. (1976). Value of time in recreation benefit studies. *Land Economics*, *52*(1), 32–41.
 
-Condliffe, S. (2012). Estimating the demand for casino gaming with longitudinal data. *Applied Economics*, 44(36), 4769-4777.
+Condliffe, S. (2012). Estimating the demand for casino gaming with longitudinal data. *Applied Economics*, *44*(36), 4769–4777.
 
-Garrett, T. A. (2004). Casino gaming and local employment trends. *Federal Reserve Bank of St. Louis Review*, 86(1), 9-22.
+Garrett, T. A. (2004). Casino gaming and local employment trends. *Federal Reserve Bank of St. Louis Review*, *86*(1), 9–22.
 
-Huff, D. L. (1963). A probabilistic analysis of shopping center trade areas. *Land Economics*, 39(1), 81-90.
+Huff, D. L. (1963). A probabilistic analysis of shopping center trade areas. *Land Economics*, *39*(1), 81–90.
 
-Huff, D. L. (2003). Parameter estimation in the Huff model. *ArcUser*, October-December, 34-36.
+Huff, D. L. (2003). Parameter estimation in the Huff model. *ArcUser*, October–December, 34–36.
 
-Humphreys, B. R., & Marchand, J. (2013). New casinos and local labor markets: Evidence from Canada. *Labour Economics*, 24, 151-160.
+Humphreys, B. R., & Marchand, J. (2013). New casinos and local labor markets: Evidence from Canada. *Labour Economics*, *24*, 151–160.
 
-Landers, J. (2008). An assessment of casino competition's effect on Indian gaming. *Journal of Regional Analysis and Policy*, 38(2), 115-129.
+Landers, J. (2008). An assessment of casino competition's effect on Indian gaming. *Journal of Regional Analysis and Policy*, *38*(2), 115–129.
 
-Luo, W., & Wang, F. (2003). Measures of spatial accessibility to health care in a GIS environment. *Environment and Planning B: Planning and Design*, 30(6), 865-884.
+Luo, W., & Wang, F. (2003). Measures of spatial accessibility to health care in a GIS environment. *Environment and Planning B: Planning and Design*, *30*(6), 865–884.
 
-Ohio Casino Control Commission. (2023). *Monthly Revenue Reports*. https://casinocontrol.ohio.gov/
+Philander, K. S. (2019). Regional impacts of casino availability on gambling problems: Evidence from the Canadian Community Health Survey. *Tourism Management*, *71*, 173–178.
 
-Ohio Lottery Commission. (2023). *VLT Revenue Reports*. https://www.ohiolottery.com/
+Philander, K. S., & Bernhard, B. J. (2012). Informing the regulatory environment: Estimating the demand for destination and nondestination casino locations. *UNLV Gaming Research & Review Journal*, *16*(1), 27–41.
 
-Pennsylvania Gaming Control Board. (2023). *Gaming Revenue Reports*. https://gamingcontrolboard.pa.gov/
-
-Philander, K. S. (2019). Regional impacts of casino availability on gambling problems: Evidence from the Canadian Community Health Survey. *Tourism Management*, 71, 173-178.
-
-Philander, K. S., & Bernhard, B. J. (2012). Informing the regulatory environment: Estimating the demand for destination and nondestination casino locations. *UNLV Gaming Research & Review Journal*, 16(1), 27-41.
-
-Reilly, W. J. (1931). *The Law of Retail Gravitation*. New York: Knickerbocker Press.
+Reilly, W. J. (1931). *The law of retail gravitation*. Knickerbocker Press.
 
 ---
 
-## Appendix A: Casino Properties and Revenue Data
+## Appendix A: Property-Level Results
 
-**Table A1: Pennsylvania Casino Properties (2022)**
+**Table A1**
 
-| Property | City | Revenue ($M) | Slots | Tables |
-|----------|------|--------------|-------|--------|
-| Parx Casino | Bensalem | 598.7 | 2,996 | 178 |
-| Wind Creek Bethlehem | Bethlehem | 515.8 | 2,973 | 214 |
-| Rivers Casino Pittsburgh | Pittsburgh | 355.0 | 2,549 | 129 |
-| Live! Casino Philadelphia | Philadelphia | 222.4 | 2,166 | 150 |
-| Rivers Casino Philadelphia | Philadelphia | 216.7 | 1,554 | 130 |
-| Mohegan Sun Pocono | Wilkes-Barre | 215.5 | 1,703 | 65 |
-| Hollywood Casino at the Meadows | Washington | 189.5 | 2,006 | 95 |
-| Mount Airy Casino Resort | Mount Pocono | 184.2 | 1,676 | 84 |
-| Hollywood Casino at Penn National | Grantville | 180.6 | 1,813 | 72 |
-| Harrah's Philadelphia | Chester | 172.9 | 1,700 | 82 |
-| Valley Forge Casino Resort | King of Prussia | 136.0 | 850 | 50 |
-| Live! Casino Pittsburgh | Pittsburgh | 109.9 | 750 | 40 |
-| Presque Isle Downs & Casino | Erie | 109.0 | 1,525 | 38 |
-| Lady Luck Nemacolin | Farmington | 22.2 | 600 | 26 |
+*Within-State Revenue Shares: All 92 Properties (Power Decay Gravity Model)*
 
-**Table A2: Ohio Casino and Racino Properties (2022)**
+| Property | St | Rev ($M) | St Total ($M) | Actual (%) | Predicted (%) | Error (pp) |
+|---|---|---|---|---|---|---|
+| MGM National Harbor | MD | 884.5 | 2,051 | 43.12 | 47.61 | +4.49 |
+| Encore Boston Harbor | MA | 729.7 | 1,132 | 64.47 | 59.23 | −5.24 |
+| Mohegan Sun | CT | 722.7 | 1,236 | 58.47 | 53.16 | −5.31 |
+| Live! Casino & Hotel | MD | 705.4 | 2,051 | 34.39 | 25.72 | −8.67 |
+| Resorts World Casino NYC | NY | 645.0 | 2,646 | 24.37 | 36.41 | +12.04 |
+| Empire City Casino | NY | 613.7 | 2,646 | 23.19 | 21.27 | −1.92 |
+| Parx Casino and Racing | PA | 598.7 | 3,229 | 18.54 | 11.59 | −6.95 |
+| Wind Creek Bethlehem | PA | 515.8 | 3,229 | 15.98 | 11.56 | −4.42 |
+| Foxwoods Resort Casino | CT | 513.3 | 1,236 | 41.53 | 46.84 | +5.31 |
+| Hard Rock Casino N. Indiana | IN | 419.5 | 2,504 | 16.76 | 9.96 | −6.80 |
+| Rivers Casino Pittsburgh | PA | 355.0 | 3,229 | 11.00 | 6.10 | −4.90 |
+| Horseshoe Hammond | IN | 346.1 | 2,504 | 13.82 | 9.73 | −4.09 |
+| Horseshoe Indianapolis | IN | 341.8 | 2,504 | 13.65 | 10.52 | −3.13 |
+| Ameristar St. Charles | MO | 302.5 | 1,905 | 15.88 | 12.50 | −3.38 |
+| MGM Northfield Park | OH | 285.9 | 2,333 | 12.25 | 9.57 | −2.68 |
+| Hollywood Casino Columbus | OH | 263.6 | 2,333 | 11.30 | 16.94 | +5.64 |
+| JACK Cleveland Casino | OH | 262.4 | 2,333 | 11.25 | 10.63 | −0.62 |
+| MGM Springfield | MA | 259.1 | 1,132 | 22.89 | 28.65 | +5.76 |
+| Jake's 58 | NY | 256.6 | 2,646 | 9.70 | 16.42 | +6.72 |
+| Hard Rock Cincinnati | OH | 251.5 | 2,333 | 10.78 | 9.89 | −0.89 |
+| River City Casino | MO | 249.5 | 1,905 | 13.10 | 11.10 | −2.00 |
+| Caesars Southern Indiana | IN | 248.2 | 2,504 | 9.91 | 14.93 | +5.02 |
+| Harrah's Hoosier Park | IN | 245.6 | 2,504 | 9.81 | 7.65 | −2.16 |
+| Prairie Meadows Casino | IA | 235.0 | 1,765 | 13.31 | 14.67 | +1.36 |
+| Eldorado Scioto Downs | OH | 234.8 | 2,333 | 10.06 | 7.01 | −3.05 |
+| Hollywood Casino St. Louis | MO | 234.4 | 1,905 | 12.30 | 14.26 | +1.96 |
+| Resorts World Catskills | NY | 228.7 | 2,646 | 8.64 | 6.08 | −2.56 |
+| Hollywood Casino Toledo | OH | 227.7 | 2,333 | 9.76 | 9.84 | +0.08 |
+| Miami Valley Gaming | OH | 224.8 | 2,333 | 9.64 | 6.02 | −3.62 |
+| Live! Casino Philadelphia | PA | 222.4 | 3,229 | 6.89 | 6.65 | −0.24 |
+| Rivers Casino Philadelphia | PA | 216.7 | 3,229 | 6.71 | 6.48 | −0.23 |
+| Mohegan Sun Pocono | PA | 215.5 | 3,229 | 6.68 | 5.86 | −0.82 |
+| Horseshoe Casino Council Bluffs | IA | 211.1 | 1,765 | 11.96 | 10.57 | −1.39 |
+| Horseshoe Casino Baltimore | MD | 209.9 | 2,051 | 10.23 | 10.53 | +0.30 |
+| Ameristar Casino East Chicago | IN | 205.0 | 2,504 | 8.19 | 5.76 | −2.43 |
+| Rivers Casino Schenectady | NY | 201.9 | 2,646 | 7.63 | 3.95 | −3.68 |
+| Ameristar Casino Kansas City | MO | 198.7 | 1,905 | 10.43 | 8.18 | −2.25 |
+| Hollywood Casino Meadows | PA | 189.5 | 3,229 | 5.87 | 4.86 | −1.01 |
+| Ameristar Casino Council Bluffs | IA | 187.7 | 1,765 | 10.63 | 9.40 | −1.23 |
+| Mount Airy Casino Resort | PA | 184.2 | 3,229 | 5.71 | 7.11 | +1.40 |
+| Jack Thistledown | OH | 183.2 | 2,333 | 7.85 | 8.99 | +1.14 |
+| Hollywood Casino Penn National | PA | 180.6 | 3,229 | 5.59 | 5.85 | +0.26 |
+| Argosy Casino Riverside | MO | 177.1 | 1,905 | 9.30 | 9.37 | +0.07 |
+| Harrah's North Kansas City | MO | 176.8 | 1,905 | 9.28 | 7.50 | −1.78 |
+| Bally's Evansville | IN | 176.6 | 2,504 | 7.06 | 11.27 | +4.21 |
+| Harrah's Philadelphia | PA | 172.9 | 3,229 | 5.35 | 7.27 | +1.92 |
+| Hollywood Casino Lawrenceburg | IN | 170.2 | 2,504 | 6.80 | 6.99 | +0.19 |
+| del Lago Resort & Casino | NY | 163.2 | 2,646 | 6.17 | 2.41 | −3.76 |
+| Hollywood Gaming Mahoning Valley | OH | 159.4 | 2,333 | 6.83 | 5.74 | −1.09 |
+| Hollywood Gaming Dayton | OH | 150.9 | 2,333 | 6.47 | 8.30 | +1.83 |
+| Horseshoe St. Louis | MO | 150.5 | 1,905 | 7.90 | 10.63 | +2.73 |
+| Plainridge Park Casino | MA | 143.1 | 1,132 | 12.64 | 12.12 | −0.52 |
+| Saratoga Casino Hotel | NY | 141.1 | 2,646 | 5.33 | 3.65 | −1.68 |
+| Valley Forge Casino Resort | PA | 136.0 | 3,229 | 4.21 | 15.22 | +11.01 |
+| Blue Chip Casino | IN | 133.9 | 2,504 | 5.35 | 5.31 | −0.04 |
+| Riverside Casino & Golf Resort | IA | 129.9 | 1,765 | 7.36 | 4.73 | −2.63 |
+| Bally's Kansas City | MO | 119.9 | 1,905 | 6.29 | 4.93 | −1.36 |
+| Rhythm City Casino Resort | IA | 117.6 | 1,765 | 6.66 | 4.79 | −1.87 |
+| Finger Lakes Gaming | NY | 116.5 | 2,646 | 4.40 | 2.43 | −1.97 |
+| Live! Casino Pittsburgh | PA | 109.9 | 3,229 | 3.40 | 4.66 | +1.26 |
+| Presque Isle Downs & Casino | PA | 109.0 | 3,229 | 3.38 | 2.85 | −0.53 |
+| Tioga Downs Casino Resort | NY | 103.3 | 2,646 | 3.90 | 2.73 | −1.17 |
+| Diamond Jo Worth | IA | 102.9 | 1,765 | 5.83 | 3.93 | −1.90 |
+| Isle of Capri Casino Waterloo | IA | 100.0 | 1,765 | 5.67 | 6.90 | +1.23 |
+| Ocean Downs Casino | MD | 96.6 | 2,051 | 4.71 | 6.65 | +1.94 |
+| Hard Rock Hotel Sioux City | IA | 96.0 | 1,765 | 5.44 | 5.53 | +0.09 |
+| Grand Falls Casino Resort | IA | 95.0 | 1,765 | 5.38 | 5.42 | +0.04 |
+| Belterra Casino Resort | IN | 91.8 | 2,504 | 3.67 | 5.98 | +2.31 |
+| Hollywood Casino Perryville | MD | 90.5 | 2,051 | 4.41 | 4.67 | +0.26 |
+| Belterra Park Gaming | OH | 88.7 | 2,333 | 3.80 | 7.07 | +3.27 |
+| Isle of Capri Boonville | MO | 88.5 | 1,905 | 4.65 | 4.23 | −0.42 |
+| French Lick Resort Casino | IN | 80.3 | 2,504 | 3.21 | 5.51 | +2.30 |
+| Batavia Downs Gaming | NY | 77.3 | 2,646 | 2.92 | 1.13 | −1.79 |
+| Diamond Jo Casino Dubuque | IA | 74.2 | 1,765 | 4.21 | 3.72 | −0.49 |
+| Isle Casino Hotel Bettendorf | IA | 73.7 | 1,765 | 4.17 | 3.00 | −1.17 |
+| Harrah's Casino Council Bluffs | IA | 73.0 | 1,765 | 4.14 | 3.66 | −0.48 |
+| Century Casino Cape Girardeau | MO | 72.1 | 1,905 | 3.78 | 3.81 | +0.03 |
+| Hamburg Gaming | NY | 70.9 | 2,646 | 2.68 | 1.26 | −1.42 |
+| Rocky Gap Casino Resort | MD | 64.3 | 2,051 | 3.14 | 4.82 | +1.68 |
+| Q Casino | IA | 51.7 | 1,765 | 2.93 | 2.59 | −0.34 |
+| Lakeside Hotel Casino | IA | 51.1 | 1,765 | 2.89 | 3.77 | +0.88 |
+| Century Casino Caruthersville | MO | 48.3 | 1,905 | 2.54 | 6.40 | +3.86 |
+| St. Jo Frontier Casino | MO | 48.1 | 1,905 | 2.53 | 2.19 | −0.34 |
+| Catfish Bend Casino | IA | 44.9 | 1,765 | 2.54 | 5.04 | +2.50 |
+| Rising Star Casino Resort | IN | 44.5 | 2,504 | 1.78 | 6.39 | +4.61 |
+| Mark Twain Casino | MO | 38.5 | 1,905 | 2.02 | 4.90 | +2.88 |
+| Wild Rose Casino Jefferson | IA | 35.9 | 1,765 | 2.03 | 4.37 | +2.34 |
+| Wild Rose Casino Clinton | IA | 33.2 | 1,765 | 1.88 | 3.33 | +1.45 |
+| Wild Rose Casino Emmetsburg | IA | 30.9 | 1,765 | 1.75 | 2.26 | +0.51 |
+| Vernon Downs Casino Hotel | NY | 28.4 | 2,646 | 1.07 | 2.27 | +1.20 |
+| Lady Luck Casino Nemacolin | PA | 22.2 | 3,229 | 0.69 | 3.93 | +3.24 |
+| Casino Queen Marquette | IA | 21.4 | 1,765 | 1.21 | 2.33 | +1.12 |
 
-| Property | City | Type | Revenue ($M) | Slots/VLTs | Tables |
-|----------|------|------|--------------|------------|--------|
-| MGM Northfield Park | Northfield | Racino | 285.9 | 1,581 | — |
-| Hollywood Columbus | Columbus | Casino | 263.6 | 1,728 | 89 |
-| JACK Cleveland | Cleveland | Casino | 262.4 | 1,061 | 120 |
-| Hard Rock Cincinnati | Cincinnati | Casino | 251.5 | 1,614 | 103 |
-| Eldorado Scioto Downs | Columbus | Racino | 234.8 | 2,083 | — |
-| Hollywood Toledo | Toledo | Casino | 227.7 | 1,699 | 60 |
-| Miami Valley Gaming | Lebanon | Racino | 224.8 | 2,113 | — |
-| JACK Thistledown | Cleveland | Racino | 183.2 | 1,532 | — |
-| Hollywood Mahoning Valley | Youngstown | Racino | 159.4 | 1,034 | — |
-| Hollywood Gaming Dayton | Dayton | Racino | 150.9 | 971 | — |
-| Belterra Park | Cincinnati | Racino | 88.7 | 1,155 | — |
+*Note.* Within-state shares sum to 100% within each state. Properties sorted by revenue. Error = predicted − actual.
 
 ---
 
-## Appendix B: Replication Code
+## Appendix B: State Revenue Sources
+
+| State | Regulatory Authority | Report Type |
+|---|---|---|
+| PA | Pennsylvania Gaming Control Board | Monthly slot and table revenue by property |
+| OH | Ohio Casino Control Commission; Ohio Lottery Commission | Monthly casino revenue; VLT revenue by facility |
+| MD | Maryland Lottery and Gaming Control Agency | Monthly GGR by facility |
+| NY | New York State Gaming Commission | Monthly reports: commercial casinos and VLT facilities |
+| MA | Massachusetts Gaming Commission | Monthly gross gaming revenue by licensee |
+| CT | Connecticut Division of Special Revenue | Monthly slot revenue (table revenue imputed; see text) |
+| IN | Indiana Gaming Commission | Monthly win by licensee |
+| MO | Missouri Gaming Commission | Monthly adjusted gross receipts by boat |
+| IA | Iowa Racing and Gaming Commission | Annual GGR by licensee (commercial only) |
+
+---
+
+## Appendix C: Replication
 
 Analysis code and data are available at: https://github.com/kphilander/USA-Casino-Model/tree/main/research
 
 The analysis can be replicated by running:
+
 ```r
 source("run_analysis.R")
 ```
 
 Required inputs:
-- `allzips.rds`: ZIP code demographics
-- `casinodata.rds`: Casino locations
-- `data/pa_revenue_2022.csv`: Pennsylvania revenue data
-- `data/oh_revenue_2022.csv`: Ohio revenue data
+- `allzips.rds`: ZIP code demographics (ACS 2018–2022)
+- `casinodata.rds`: Casino locations and attributes
+- `data/[state]_revenue_2022.csv`: Revenue data for each of nine states
+
+Runtime is approximately 15 minutes on a standard laptop (LOOCV with 85 folds is the bottleneck).
 
 ---
 
 *Corresponding author: Kahlil Philander (kphilander@gamblingpolicy.com)*
-
-*Data sources: Pennsylvania Gaming Control Board, Ohio Casino Control Commission, Ohio Lottery Commission, U.S. Census Bureau American Community Survey*

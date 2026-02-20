@@ -1,0 +1,13 @@
+casino_id,name,city,state,facility_type,slots_revenue_2022,table_revenue_2022,total_revenue_2022,num_slots,num_tables,source
+865,Hard Rock Casino Northern Indiana,Gary,IN,casino,285972549,133516441,419488989,1721,76,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+656,Horseshoe Hammond,Hammond,IN,casino,263448804,82634854,346083658,1729,78,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+664,Horseshoe Indianapolis,Shelbyville,IN,racino,288966895,52863709,341830603,1554,91,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+9999,Caesars Southern Indiana,Elizabeth,IN,casino,192067770,56136378,248204148,1057,86,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+648,Harrahs Hoosier Park,Anderson,IN,racino,220056144,25529371,245585515,1274,31,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+39,Ameristar Casino East Chicago,East Chicago,IN,casino,164823385,40126940,204950325,1299,43,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+1380,Ballys Evansville,Evansville,IN,casino,152806836,23827829,176634665,948,30,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+638,Hollywood Casino Lawrenceburg,Lawrenceburg,IN,casino,140678391,29564836,170243226,1352,60,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+129,Blue Chip Casino,Michigan City,IN,casino,124071780,9806216,133877995,1411,30,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+93,Belterra Casino Resort,Florence,IN,casino,79559139,12214136,91773274,868,25,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+501,French Lick Resort Casino,French Lick,IN,casino,70668139,9667792,80335931,736,28,Indiana Gaming Commission monthly Excel reports (in.gov/igc)
+1160,Rising Star Casino Resort,Rising Sun,IN,casino,41390186,3072125,44462311,617,16,Indiana Gaming Commission monthly Excel reports (in.gov/igc)

@@ -1,0 +1,13 @@
+casino_id,name,city,state,facility_type,slots_revenue_2022,table_revenue_2022,total_revenue_2022,num_slots,num_tables,source
+1154,Resorts World Catskills,Monticello,NY,casino,121289014,101338756,228695970,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov)
+1167,Rivers Casino & Resort Schenectady,Schenectady,NY,casino,147812525,45396381,201852331,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov)
+353,del Lago Resort & Casino,Waterloo,NY,casino,125920050,32515394,163162032,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov)
+1360,Tioga Downs Casino Resort,Nichols,NY,casino,89946497,11968428,103309766,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov)
+1153,Resorts World Casino NYC,Jamaica,NY,racino,644969365,0,644969365,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov) VLT net win only
+453,Empire City Casino,Yonkers,NY,racino,613720364,0,613720364,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov) VLT net win only
+710,Jake's 58,Islandia,NY,racino,256627270,0,256627270,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov) VLT net win only
+1209,Saratoga Casino Hotel,Saratoga Springs,NY,racino,141056619,0,141056619,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov) VLT net win only
+470,Finger Lakes Gaming & Racetrack,Farmington,NY,racino,116459247,0,116459247,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov) VLT net win only
+83,Batavia Downs Gaming,Batavia,NY,racino,77342580,0,77342580,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov) VLT net win only
+580,Hamburg Gaming,Hamburg,NY,racino,70868926,0,70868926,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov) VLT net win only
+1399,Vernon Downs Casino Hotel,Vernon,NY,racino,28372467,0,28372467,NA,NA,NYS Gaming Commission monthly Excel (gaming.ny.gov) VLT net win only

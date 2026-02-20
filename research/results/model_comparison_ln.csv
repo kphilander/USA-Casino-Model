@@ -1,0 +1,3 @@
+"Specification","N","Decay","Beta","gamma","Hotel","Tables","R2(ln)","Adj-R2(ln)","WS Prop MAPE"
+"9-State Model (with Iowa)",92,"exponential",0.1049,0.5176,0.2299,0.2657,0.6307,0.617,2.57
+"8-State Model (without Iowa)",73,"exponential",0.077,0.554,0.1879,0.2476,0.5563,0.5361,2.91
