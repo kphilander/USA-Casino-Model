@@ -127,7 +127,7 @@ casinos_study$has_tables[casinos_study$casino_id %in% slots_only_ids] <- 0
 casinos_study$observed <- casinos_study$casino_id %in% revenue_data$casino_id
 
 # ---- Convenience gaming filter ----
-# Remove bars, gas stations, truck stops, etc. (see run_analysis.R for methodology)
+# Remove bars, gas stations, truck stops, etc. (see build_data.R for full methodology)
 casinos_study$is_convenience <- 0
 # OK: Gasinos, Travel Plazas, Trading Posts, Gaming Centers
 ok_conv <- casinos_study$state == "OK" &
@@ -138,10 +138,33 @@ ok_gc <- casinos_study$state == "OK" &
 casinos_study$is_convenience[ok_conv | ok_gc] <- 1
 # CA: Yokut Gas Station (1468), Bear River Pump & Play (89)
 casinos_study$is_convenience[casinos_study$casino_id %in% c(1468, 89)] <- 1
-# NH: All charitable gaming
+# NH: All properties are charitable gaming
 casinos_study$is_convenience[casinos_study$state == "NH"] <- 1
 # PA: Hollywood Casino OTB (639)
 casinos_study$is_convenience[casinos_study$casino_id == 639] <- 1
+# MT: ALL properties are bars/taverns — Montana has zero traditional casinos
+casinos_study$is_convenience[casinos_study$state == "MT"] <- 1
+# NV: Chain tavern gaming + truck stops (restricted licensees)
+nv_mask <- casinos_study$state == "NV"
+nv_chains <- nv_mask & grepl("(?i)^(Dotty'?s|PT'?s |Sierra Gold|Jackpot Joanie|Jackpot Crossing|Sean Patrick|Village Pub|Wildfire)", casinos_study$name, perl = TRUE)
+nv_truck <- nv_mask & grepl("(?i)(travel plaza|travel stop|travel center|flying j|pilot travel|love'?s travel)", casinos_study$name, perl = TRUE)
+nv_alamo <- nv_mask & grepl("^Alamo Casino", casinos_study$name)
+casinos_study$is_convenience[nv_chains | nv_truck | nv_alamo] <- 1
+casinos_study$is_convenience[casinos_study$casino_id %in% c(107, 335, 890, 903)] <- 1
+# LA: Cash Magic chain + truck plazas
+la_mask <- casinos_study$state == "LA"
+la_conv <- la_mask & grepl("(?i)(cash magic|truck plaza|travel plaza)", casinos_study$name, perl = TRUE)
+casinos_study$is_convenience[la_conv] <- 1
+casinos_study$is_convenience[casinos_study$casino_id %in% c(813, 815)] <- 1
+# ND: All commercial properties are bars/hotels with charitable gaming
+casinos_study$is_convenience[casinos_study$state == "ND" & casinos_study$tribal == "Commercial"] <- 1
+# NM: Travel centers
+casinos_study$is_convenience[casinos_study$state == "NM" &
+  grepl("(?i)travel center", casinos_study$name, perl = TRUE)] <- 1
+# FL: Cruise ship
+casinos_study$is_convenience[casinos_study$casino_id == 191] <- 1
+# WY: Smokeshop
+casinos_study$is_convenience[casinos_study$casino_id == 18] <- 1
 casinos_study <- casinos_study[casinos_study$is_convenience == 0, ]
 
 # ---- Haversine and decay functions ----

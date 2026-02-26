@@ -173,8 +173,17 @@ cat("  Casinos:", nrow(casinos_study), "(", sum(casinos_study$tribal == "Commerc
 
 # ---- Convenience gaming filter ----
 # Remove properties that are bars, gas stations, truck stops, etc. with
-# incidental gaming — not actual casinos. See run_analysis.R for full methodology.
+# incidental gaming — not actual casinos/cardrooms. AGA commercial GGR
+# excludes convenience gaming revenue, so including these venues distorts
+# both supply-side competition and revenue allocation.
+#
+# Methodology: state-specific rules + name-pattern matching.
+# See run_analysis.R Section 3b for the 10-model-state methodology.
+# Below extends the filter to ALL remaining US states.
+
 casinos_study$is_convenience <- 0
+
+# --- STUDY REGION STATES (from run_analysis.R) ---
 
 # OK: Gasinos, Travel Plazas, Trading Posts, Gaming Centers (without "Casino")
 ok_conv <- casinos_study$state == "OK" &
@@ -193,8 +202,71 @@ casinos_study$is_convenience[casinos_study$state == "NH"] <- 1
 # PA: Hollywood Casino OTB (639) — satellite betting parlor
 casinos_study$is_convenience[casinos_study$casino_id == 639] <- 1
 
+# --- REMAINING US STATES ---
+
+# MONTANA: ALL properties are bars/taverns/saloons with gaming machines.
+# Montana has NO traditional casinos. State law allows up to 20 video
+# gaming machines per liquor-licensed establishment. The AGA explicitly
+# excludes Montana from its commercial casino counts.
+casinos_study$is_convenience[casinos_study$state == "MT"] <- 1
+
+# NEVADA: NV has ~200 full (nonrestricted) casinos but also ~2,450
+# restricted gaming locations (bars, taverns, grocery stores, truck stops)
+# with up to 15 slot machines each. The AGA excludes restricted locations.
+# Flag identifiable chain tavern gaming + truck stops:
+nv_mask <- casinos_study$state == "NV"
+# Chain tavern gaming operations (all are restricted licensees):
+nv_chains <- nv_mask & grepl("(?i)^(Dotty'?s|PT'?s |Sierra Gold|Jackpot Joanie|Jackpot Crossing|Sean Patrick|Village Pub|Wildfire)", casinos_study$name, perl = TRUE)
+casinos_study$is_convenience[nv_chains] <- 1
+# Truck stops and travel plazas:
+nv_truck <- nv_mask & grepl("(?i)(travel plaza|travel stop|travel center|flying j|pilot travel|love'?s travel)", casinos_study$name, perl = TRUE)
+casinos_study$is_convenience[nv_truck] <- 1
+# Alamo Casino chain (truck stop casinos at Petro/TA stops):
+nv_alamo <- nv_mask & grepl("^Alamo Casino", casinos_study$name)
+casinos_study$is_convenience[nv_alamo] <- 1
+# Explicitly named bars/pubs/lounges that are restricted gaming:
+nv_bars <- nv_mask & casinos_study$casino_id %in% c(
+  107,   # Big Dogs Draft House
+  335,   # Crossroads Video Poker Lounge
+  890,   # Michael Gaughan Airport Slots (airport slot concession)
+  903    # Moapa Paiute Travel Plaza and Casino
+)
+casinos_study$is_convenience[nv_bars] <- 1
+
+# LOUISIANA: Cash Magic chain = truck stop video poker (up to 50 machines).
+# Also flag standalone truck plazas with gaming.
+la_mask <- casinos_study$state == "LA"
+la_conv <- la_mask & grepl("(?i)(cash magic|truck plaza|travel plaza)", casinos_study$name, perl = TRUE)
+casinos_study$is_convenience[la_conv] <- 1
+# Lucky Longhorn Casino & Lucky Magnolia Truck Plaza (truck stop gaming)
+casinos_study$is_convenience[casinos_study$casino_id %in% c(813, 815)] <- 1
+
+# NORTH DAKOTA: All 20 "commercial" properties are bars, hotels, and
+# restaurants with charitable gaming (pull-tabs, blackjack with $25 max).
+# ND has NO commercial casinos. Only the 5 tribal casinos are real.
+nd_commercial <- casinos_study$state == "ND" & casinos_study$tribal == "Commercial"
+casinos_study$is_convenience[nd_commercial] <- 1
+
+# NEW MEXICO: Travel centers with gaming
+nm_tc <- casinos_study$state == "NM" &
+  grepl("(?i)travel center", casinos_study$name, perl = TRUE)
+casinos_study$is_convenience[nm_tc] <- 1
+
+# FLORIDA: Cruise ship (not a land-based casino)
+casinos_study$is_convenience[casinos_study$casino_id == 191] <- 1  # Carnival Cruise Lines Vista
+
+# WYOMING: Smokeshop with gaming (not a casino)
+casinos_study$is_convenience[casinos_study$casino_id == 18] <- 1   # 789 Smokeshop & Casino
+
+# --- Print summary ---
+conv_by_state <- tapply(casinos_study$is_convenience, casinos_study$state,
+                        function(x) sum(x == 1))
+conv_by_state <- conv_by_state[conv_by_state > 0]
 n_conv <- sum(casinos_study$is_convenience == 1)
 cat("  Convenience gaming flagged:", n_conv, "properties\n")
+for (st in names(sort(conv_by_state, decreasing = TRUE))) {
+  cat("    ", st, ":", conv_by_state[st], "\n")
+}
 casinos_study <- casinos_study[casinos_study$is_convenience == 0, ]
 cat("  After filtering:", nrow(casinos_study), "casinos\n")
 
