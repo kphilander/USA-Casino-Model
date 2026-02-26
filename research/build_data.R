@@ -233,13 +233,21 @@ nv_bars <- nv_mask & casinos_study$casino_id %in% c(
 )
 casinos_study$is_convenience[nv_bars] <- 1
 
-# LOUISIANA: Cash Magic chain = truck stop video poker (up to 50 machines).
-# Also flag standalone truck plazas with gaming.
-la_mask <- casinos_study$state == "LA"
-la_conv <- la_mask & grepl("(?i)(cash magic|truck plaza|travel plaza)", casinos_study$name, perl = TRUE)
-casinos_study$is_convenience[la_conv] <- 1
-# Lucky Longhorn Casino & Lucky Magnolia Truck Plaza (truck stop gaming)
-casinos_study$is_convenience[casinos_study$casino_id %in% c(813, 815)] <- 1
+# LOUISIANA: Whitelist approach — only riverboats, racinos, tribals, and
+# Harrah's NOLA are actual casinos. Everything else is video poker bars,
+# Cash Magic truck stops, or truck plaza gaming (LA allows up to 50 VLTs
+# per qualified truck stop/bar). AGA commercial GGR excludes these.
+la_legit_ids <- c(
+  35, 92, 139, 140,        # Amelia Belle, Belle of BR, Boomtown Bossier, Boomtown Harvey
+  322, 339, 1016,           # Coushatta, Cypress Bayou, Paragon (tribal)
+  363, 446, 541, 602,       # Diamond Jacks, Eldorado, Golden Nugget, Harrah's NOLA
+  629, 653, 678,            # Hollywood BR, Horseshoe Bossier, Isle of Capri
+  749, 827, 870,            # L'Auberge BR, L'Auberge LC, Margaritaville
+  458, 460,                 # Evangeline Downs, Fair Grounds (racinos)
+  1196, 1371                # Sam's Town, Treasure Chest
+)
+la_convenience <- casinos_study$state == "LA" & !casinos_study$casino_id %in% la_legit_ids
+casinos_study$is_convenience[la_convenience] <- 1
 
 # NORTH DAKOTA: All 20 "commercial" properties are bars, hotels, and
 # restaurants with charitable gaming (pull-tabs, blackjack with $25 max).

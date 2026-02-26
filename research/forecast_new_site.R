@@ -151,11 +151,11 @@ nv_truck <- nv_mask & grepl("(?i)(travel plaza|travel stop|travel center|flying 
 nv_alamo <- nv_mask & grepl("^Alamo Casino", casinos_study$name)
 casinos_study$is_convenience[nv_chains | nv_truck | nv_alamo] <- 1
 casinos_study$is_convenience[casinos_study$casino_id %in% c(107, 335, 890, 903)] <- 1
-# LA: Cash Magic chain + truck plazas
-la_mask <- casinos_study$state == "LA"
-la_conv <- la_mask & grepl("(?i)(cash magic|truck plaza|travel plaza)", casinos_study$name, perl = TRUE)
-casinos_study$is_convenience[la_conv] <- 1
-casinos_study$is_convenience[casinos_study$casino_id %in% c(813, 815)] <- 1
+# LA: Whitelist — only riverboats, racinos, tribals, Harrah's NOLA
+la_legit_ids <- c(35, 92, 139, 140, 322, 339, 1016, 363, 446, 541, 602,
+                  629, 653, 678, 749, 827, 870, 458, 460, 1196, 1371)
+la_convenience <- casinos_study$state == "LA" & !casinos_study$casino_id %in% la_legit_ids
+casinos_study$is_convenience[la_convenience] <- 1
 # ND: All commercial properties are bars/hotels with charitable gaming
 casinos_study$is_convenience[casinos_study$state == "ND" & casinos_study$tribal == "Commercial"] <- 1
 # NM: Travel centers
