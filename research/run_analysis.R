@@ -321,6 +321,81 @@ cat("    WA:", sum(casinos_study$is_cardroom == 1 & casinos_study$state == "WA")
 cat("    CA:", sum(casinos_study$is_cardroom == 1 & casinos_study$state == "CA"), "\n")
 
 # =============================================================================
+# 3b. CONVENIENCE GAMING FILTER
+# =============================================================================
+# Flag properties that are not actual casinos/cardrooms but rather bars,
+# restaurants, gas stations, truck stops, bowling alleys, or other convenience
+# gaming locations that happen to have a few gaming machines or tables.
+# These distort the gravity model because:
+#   (a) They inflate competitive supply in their area
+#   (b) AGA state GGR figures exclude convenience gaming revenue, so
+#       allocating AGA totals across convenience venues is incorrect
+#
+# Methodology: state-specific rules + name-pattern matching.
+# Properties are flagged (is_convenience=1) and excluded from the model.
+
+cat("\n--- CONVENIENCE GAMING FILTER ---\n")
+casinos_study$is_convenience <- 0
+
+# --- Oklahoma: "Gasinos" (gas station gaming), Travel Plazas, Trading Posts ---
+# Oklahoma tribal gaming includes many small convenience-gaming locations:
+# gas stations with gaming machines ("Gasinos"), travel plazas/truck stops
+# with gaming, and trading posts with a few machines.
+# These are NOT traditional casinos and are not included in AGA commercial GGR.
+ok_convenience_patterns <- "(?i)(gasino|travel plaza|travel stop|travel center|trading post)"
+ok_mask <- casinos_study$state == "OK" &
+  grepl(ok_convenience_patterns, casinos_study$name, perl = TRUE)
+casinos_study$is_convenience[ok_mask] <- 1
+
+# Also flag OK "Gaming Center" properties that are just small slot parlors
+# (but NOT properties with "Casino" in their name, which are larger operations)
+ok_gaming_center <- casinos_study$state == "OK" &
+  grepl("Gaming Center", casinos_study$name, ignore.case = TRUE) &
+  !grepl("Casino", casinos_study$name, ignore.case = TRUE)
+casinos_study$is_convenience[ok_gaming_center] <- 1
+
+cat("  OK convenience:", sum(casinos_study$is_convenience == 1 & casinos_study$state == "OK"),
+    "properties flagged\n")
+if (any(ok_mask | ok_gaming_center)) {
+  flagged_ok <- casinos_study$name[casinos_study$state == "OK" & casinos_study$is_convenience == 1]
+  cat("    ", paste(flagged_ok, collapse = "\n     "), "\n")
+}
+
+# --- California: Yokut Gas Station is a gas station, not a casino ---
+casinos_study$is_convenience[casinos_study$casino_id == 1468] <- 1  # Yokut Gas Station
+# Bear River Pump & Play is a gas station/convenience store with a few machines
+casinos_study$is_convenience[casinos_study$casino_id == 89] <- 1    # Bear River Pump & Play
+cat("  CA convenience:", sum(casinos_study$is_convenience == 1 & casinos_study$state == "CA"),
+    "properties flagged\n")
+
+# --- New Hampshire: All properties are charitable gaming operations ---
+# NH has no commercial casinos. Its 8 "casinos" are small charitable gaming
+# venues (billiard clubs, poker rooms, sports bars) authorized under NH law.
+# These are not recognized by the AGA as commercial casinos and generate
+# minimal gaming revenue. Flagging all NH properties.
+nh_mask <- casinos_study$state == "NH"
+casinos_study$is_convenience[nh_mask] <- 1
+cat("  NH convenience:", sum(nh_mask), "properties flagged (all charitable gaming)\n")
+
+# --- Pennsylvania: Hollywood Casino Off Track Betting ---
+# ID 639 is an OTB/satellite betting parlor, not a full casino.
+casinos_study$is_convenience[casinos_study$casino_id == 639] <- 1
+cat("  PA convenience: 1 property flagged (Hollywood Casino OTB)\n")
+
+# --- Minnesota: Small cardroom operations at racetracks ---
+# Canterbury Park and Running Aces are primarily racetracks with small card rooms.
+# They are not traditional casinos. However, they do draw some gaming demand,
+# so we keep them in the model as supply competitors.
+
+# --- Summary ---
+n_convenience <- sum(casinos_study$is_convenience == 1)
+cat("  TOTAL convenience flagged:", n_convenience, "properties\n")
+
+# Remove convenience gaming properties from the study dataset
+casinos_study <- casinos_study[casinos_study$is_convenience == 0, ]
+cat("  Casinos after removing convenience gaming:", nrow(casinos_study), "\n")
+
+# =============================================================================
 # 4. HAVERSINE DISTANCE FUNCTION
 # =============================================================================
 

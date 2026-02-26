@@ -1,113 +1,112 @@
 "Property","City","State","Revenue_M","State_Total_M","Actual_WS_Pct","Gravity_WS_Pct","LN_WS_Pct","Gravity_Error_pp","LN_Error_pp","NA","NA","NA"
-"MGM National Harbor","Oxon Hill","MD",884.5,2051,43.12,44.7,32.81,42.45,1531.3,1.58,-10.31,-0.67
-"Encore Boston Harbor","Everett","MA",729.7,1132,64.47,57.7,53.13,55,689.4,-6.77,-11.34,-9.47
-"Mohegan Sun","Uncasville","CT",722.7,1236,58.47,52.34,50.62,52.83,185.8,-6.13,-7.85,-5.64
-"Live! Casino & Hotel","Hanover","MD",705.4,2051,34.39,25.77,25.09,22.74,718.9,-8.62,-9.3,-11.65
-"Resorts World Casino NYC","Jamaica","NY",645,2646,24.37,34.18,39.72,38.04,1971.6,9.81,15.35,13.67
-"Empire City Casino","Yonkers","NY",613.7,2646,23.19,20.56,24.4,23.68,1110.4,-2.63,1.21,0.49
-"Parx Casino and Racing","Bensalem","PA",598.7,3228,18.54,11.1,14.99,13.69,442.5,-7.44,-3.55,-4.85
-"Wind Creek Bethlehem","Bethlehem","PA",515.8,3228,15.98,11.88,9.76,9.63,289,-4.1,-6.22,-6.35
-"Foxwoods Resort Casino","Mashantucket","CT",513.3,1236,41.53,47.66,49.38,47.17,162,6.13,7.85,5.64
-"Hard Rock Casino Northern Indiana","Gary","IN",419.5,2503,16.76,6.47,11.71,8.8,155.4,-10.29,-5.05,-7.96
-"Rivers Casino Pittsburgh","Pittsburgh","PA",355,3228,11,5.73,6.29,6.93,194,-5.27,-4.71,-4.07
-"Horseshoe Hammond","Hammond","IN",346.1,2503,13.82,10.34,13.72,8.88,173.4,-3.48,-0.1,-4.94
-"Horseshoe Indianapolis","Shelbyville","IN",341.8,2503,13.65,10,11.14,9.32,166.8,-3.65,-2.51,-4.33
-"Ameristar Casino St. Charles","St. Charles","MO",302.5,1905,15.88,12.15,10.77,11.56,127.6,-3.73,-5.11,-4.32
-"MGM Northfield Park","Northfield","OH",285.9,2333,12.25,9.24,9.17,9.18,155.7,-3.01,-3.08,-3.07
-"Hollywood Casino Columbus","Columbus","OH",263.6,2333,11.3,16.22,18.92,15.43,292.3,4.92,7.62,4.13
-"JACK Cleveland Casino","Cleveland","OH",262.4,2333,11.25,10.83,9.31,10.18,176.7,-0.42,-1.94,-1.07
-"MGM Springfield","Springfield","MA",259.1,1132,22.89,29.38,24.41,27.23,294.3,6.49,1.52,4.34
-"Jake's 58","Islandia","NY",256.6,2646,9.7,15.88,11.87,13.3,552.4,6.18,2.17,3.6
-"Hard Rock Cincinnati","Cincinnati","OH",251.5,2333,10.78,10.26,8.44,10.38,180.7,-0.52,-2.34,-0.4
-"River City Casino","St. Louis","MO",249.5,1905,13.1,11.23,13.54,10.58,114.7,-1.87,0.44,-2.52
-"Caesars Southern Indiana","Elizabeth","IN",248.2,2503,9.91,14.4,7.55,15.57,310.4,4.49,-2.36,5.66
-"Harrahs Hoosier Park","Anderson","IN",245.6,2503,9.81,7.11,5.63,10.45,191.5,-2.7,-4.18,0.64
-"Eldorado Scioto Downs","Columbus","OH",234.8,2333,10.06,7.16,6.55,7.05,113.3,-2.9,-3.51,-3.01
-"Hollywood Casino St. Louis","Maryland Heights","MO",234.4,1905,12.3,13.98,16.86,13.51,154.3,1.68,4.56,1.21
-"Resorts World Catskills","Monticello","NY",228.7,2646,8.64,6.88,4.83,4.98,167.9,-1.76,-3.81,-3.66
-"Hollywood Casino Toledo","Toledo","OH",227.7,2333,9.76,9.97,6.09,10.48,183,0.21,-3.67,0.72
-"Miami Valley Gaming","Lebanon","OH",224.8,2333,9.64,6.38,7.41,6.6,104.5,-3.26,-2.23,-3.04
-"Live! Casino Philadelphia","Philadelphia","PA",222.4,3228,6.89,6.44,8.62,7.72,255,-0.45,1.73,0.83
-"Rivers Casino Philadelphia","Philadelphia","PA",216.7,3228,6.71,6.28,8.4,7.52,248.5,-0.43,1.69,0.81
-"Mohegan Sun Pocono","Wilkes-Barre","PA",215.5,3228,6.68,6.4,6.58,5.18,136.4,-0.28,-0.1,-1.5
-"Horseshoe Casino Baltimore","Baltimore","MD",209.9,2051,10.23,11.22,17.46,14.66,422.5,0.99,7.23,4.43
-"Ameristar Casino East Chicago","East Chicago","IN",205,2503,8.19,6.12,8.13,5.26,102.7,-2.07,-0.06,-2.93
-"Rivers Casino & Resort Schenectady","Schenectady","NY",201.9,2646,7.63,6.03,4.61,5.17,175.8,-1.6,-3.02,-2.46
-"Ameristar Casino Kansas City","Kansas City","MO",198.7,1905,10.43,7.66,7.5,7.13,78.6,-2.77,-2.93,-3.3
-"Hollywood Casino at the Meadows","Washington","PA",189.5,3228,5.87,4.99,3.68,3.82,94.2,-0.88,-2.19,-2.05
-"Mount Airy Casino Resort","Mount Pocono","PA",184.2,3228,5.71,7.97,6.95,6.03,163.8,2.26,1.24,0.32
-"Jack Thistledown","Cleveland","OH",183.2,2333,7.85,9,11.95,8.77,147.5,1.15,4.1,0.92
-"Hollywood Casino at Penn National","Grantville","PA",180.6,3228,5.59,5.49,4.27,7.11,200,-0.1,-1.32,1.52
-"Argosy Casino Riverside","Riverside","MO",177.1,1905,9.3,9.34,9.77,8.31,85.6,0.04,0.47,-0.99
-"Harrahs North Kansas City","North Kansas City","MO",176.8,1905,9.28,7.65,8.55,6.85,67.8,-1.63,-0.73,-2.43
-"Ballys Evansville","Evansville","IN",176.6,2503,7.06,11.35,6.37,12.14,229.6,4.29,-0.69,5.08
-"Harrah's Philadelphia Casino & Racetrack","Chester","PA",172.9,3228,5.35,7.78,9.14,9.31,277.2,2.43,3.79,3.96
-"Hollywood Casino Lawrenceburg","Lawrenceburg","IN",170.2,2503,6.8,7.73,8.26,6.49,107.6,0.93,1.46,-0.31
-"del Lago Resort & Casino","Waterloo","NY",163.2,2646,6.17,2.44,1.41,1.86,50.9,-3.73,-4.76,-4.31
-"Hollywood Gaming at Mahoning Valley","Youngstown","OH",159.4,2333,6.83,5.72,6.36,5.71,87.7,-1.11,-0.47,-1.12
-"Hollywood Gaming at Dayton","Dayton","OH",150.9,2333,6.47,8.05,6.99,8.22,136.3,1.58,0.52,1.75
-"Horseshoe St. Louis","St. Louis","MO",150.5,1905,7.9,10.73,12.97,9.94,106.4,2.83,5.07,2.04
-"Plainridge Park Casino","Plainville","MA",143.1,1132,12.64,12.93,22.46,17.77,175.4,0.29,9.82,5.13
-"Saratoga Casino Hotel","Saratoga Springs","NY",141.1,2646,5.33,3.43,3.12,3,91,-1.9,-2.21,-2.33
-"Valley Forge Casino Resort","King of Prussia","PA",136,3228,4.21,15.16,12.35,11.89,373,10.95,8.14,7.68
-"Blue Chip Casino","Michigan City","IN",133.9,2503,5.35,6.7,10.27,5.13,80.9,1.35,4.92,-0.22
-"Ballys Kansas City","Kansas City","MO",119.9,1905,6.29,4.62,4.53,4.3,47.4,-1.67,-1.76,-1.99
-"Finger Lakes Gaming & Racetrack","Farmington","NY",116.5,2646,4.4,2.1,1.6,2.75,82,-2.3,-2.8,-1.65
-"Live! Casino Pittsburgh","Pittsburgh","PA",109.9,3228,3.4,4.56,4.75,5.44,144.6,1.16,1.35,2.04
-"Presque Isle Downs & Casino","Erie","PA",109,3228,3.38,2.1,1.9,2.36,52.5,-1.28,-1.48,-1.02
-"Tioga Downs Casino Resort","Nichols","NY",103.3,2646,3.9,2.93,1.94,2.34,67.3,-0.97,-1.96,-1.56
-"Ocean Downs Casino","Berlin","MD",96.6,2051,4.71,7.18,5.21,8.94,232.2,2.47,0.5,4.23
-"Belterra Casino Resort","Florence","IN",91.8,2503,3.67,6.64,5.86,5.93,96.5,2.97,2.19,2.26
-"Hollywood Casino Perryville","Perryville","MD",90.5,2051,4.41,5.68,13.46,6.8,166.7,1.27,9.05,2.39
-"Belterra Park Gaming & Entertainment","Cincinnati","OH",88.7,2333,3.8,7.16,8.81,7.99,131.7,3.36,5.01,4.19
-"Isle of Capri Boonville","Boonville","MO",88.5,1905,4.65,3.81,1.74,5.21,48.6,-0.84,-2.91,0.56
-"French Lick Resort Casino","French Lick","IN",80.3,2503,3.21,5.97,3.88,5.88,95.5,2.76,0.67,2.67
-"Batavia Downs Gaming","Batavia","NY",77.3,2646,2.92,1.89,1.73,1.47,38.4,-1.03,-1.19,-1.45
-"Century Casino Cape Girardeau","Cape Girardeau","MO",72.1,1905,3.78,4.04,3.76,5.09,47.3,0.26,-0.02,1.31
-"Hamburg Gaming","Hamburg","NY",70.9,2646,2.68,1.33,3.41,1.51,39.6,-1.35,0.73,-1.17
-"Rocky Gap Casino Resort","Flintstone","MD",64.3,2051,3.14,5.46,5.96,4.4,98.3,2.32,2.82,1.26
-"Century Casino Caruthersville","Caruthersville","MO",48.3,1905,2.54,6.57,1.15,7.59,76.8,4.03,-1.39,5.05
-"St. Jo Frontier Casino","St. Joseph","MO",48.1,1905,2.53,2.43,3.73,3.03,25.2,-0.1,1.2,0.5
-"Rising Star Casino Resort","Rising Sun","IN",44.5,2503,1.78,7.16,7.47,6.14,100.5,5.38,5.69,4.36
-"Mark Twain Casino","La Grange","MO",38.5,1905,2.02,5.77,5.13,6.89,68.3,3.75,3.11,4.87
-"Vernon Downs Casino Hotel","Vernon","NY",28.4,2646,1.07,2.34,1.36,1.88,51.7,1.27,0.29,0.81
-"Lady Luck Casino Nemacolin","Farmington","PA",22.2,3228,0.69,4.12,2.3,3.39,81.6,3.43,1.61,2.7
-"Fortune Casino Renton","Renton","WA",20,220,9.09,2.74,0.71,2.72,6.6,-6.35,-8.38,-6.37
-"Roman Casino","Seattle","WA",14.1,220,6.39,13.1,3.97,13.26,35.2,6.71,-2.42,6.87
-"Fortune Casino Tukwila","Tukwila","WA",14,220,6.37,1.92,0.5,1.9,4.6,-4.45,-5.87,-4.47
-"Last Frontier","LaCenter","WA",12,220,5.43,9.71,5.61,10.88,142.5,4.28,0.18,5.45
-"Great American Casino Everett","Everett","WA",11.8,220,5.34,6.38,27.43,4.46,42.2,1.04,22.09,-0.88
-"Casino Caribbean Kirkland","Kirkland","WA",11.1,220,5.05,8.36,2.94,8.49,22,3.31,-2.11,3.44
-"Crazy Moose Casino Pasco","Pasco","WA",9.9,220,4.49,1.54,0.22,1.63,3.2,-2.95,-4.27,-2.86
-"Macau Casino Lakewood","Lakewood","WA",9.6,220,4.34,4.25,14.16,4.2,43,-0.09,9.82,-0.14
-"Great American Casino Tukwila","Tukwila","WA",7.7,220,3.5,1.05,0.27,1.05,2.5,-2.45,-3.23,-2.45
-"Black Pearl Restaurant and Card Room","Spokane","WA",7.6,220,3.46,3.01,0.71,3.43,7.3,-0.45,-2.75,-0.03
-"The Palace LaCenter","LaCenter","WA",7.5,220,3.38,6.05,3.49,6.78,88.8,2.67,0.11,3.4
-"Fortune Casino Lacey","Lacey","WA",6.7,220,3.03,3.97,15.29,3.92,36.1,0.94,12.26,0.89
-"Silver Dollar Casino Renton","Renton","WA",6.6,220,3.01,0.91,0.24,0.9,2.2,-2.1,-2.77,-2.11
-"Coyote Bobs","Kennewick","WA",5.8,220,2.63,0.9,0.13,0.96,1.9,-1.73,-2.5,-1.67
-"Casino Caribbean Yakima","Yakima","WA",5.7,220,2.58,1.14,0.27,1.1,2,-1.44,-2.31,-1.48
-"Macau Casino Tukwila","Tukwila","WA",5.6,220,2.54,0.77,0.2,0.76,1.8,-1.77,-2.34,-1.78
-"Roxys Bar and Grill","Seattle","WA",5.4,220,2.46,0.74,0.19,0.73,1.8,-1.72,-2.27,-1.73
-"Nob Hill Casino","Yakima","WA",5.2,220,2.37,1.05,0.25,1.01,1.8,-1.32,-2.12,-1.36
-"Crazy Moose Casino Mountlake Terrace","Mountlake Terrace","WA",5.2,220,2.37,4.19,1.37,4.38,10.5,1.82,-1,2.01
-"All Star Casino","Silverdale","WA",4.7,220,2.12,3.34,1.32,3.23,6.4,1.22,-0.8,1.11
-"Great American Casino Lakewood","Lakewood","WA",4.6,220,2.09,2.05,6.83,2.03,20.7,-0.04,4.74,-0.06
-"Caribbean Cardroom","Kirkland","WA",4.4,220,1.99,3.29,1.16,3.34,8.6,1.3,-0.83,1.35
-"Jokers Casino Sports Bar and Fiesta","Richland","WA",4.4,220,1.97,0.68,0.1,0.72,1.4,-1.29,-1.87,-1.25
-"Silver Dollar Casino Mill Creek","Mill Creek","WA",4.3,220,1.95,3.45,1.13,3.6,8.6,1.5,-0.82,1.65
-"Silver Dollar Casino SeaTac","SeaTac","WA",4.3,220,1.97,0.59,0.15,0.59,1.4,-1.38,-1.82,-1.38
-"Buzz Inn Steakhouse East Wenatchee","East Wenatchee","WA",3.5,220,1.6,0.76,0.21,0.73,1.2,-0.84,-1.39,-0.87
-"Clearwater Saloon and Casino","Wenatchee","WA",3.4,220,1.54,0.73,0.2,0.7,1.2,-0.81,-1.34,-0.84
-"New Phoenix","LaCenter","WA",3.4,220,1.53,2.74,1.58,3.07,40.2,1.21,0.05,1.54
-"Lilac Lanes and Casino","Spokane","WA",2.5,220,1.16,1,0.24,1.15,2.4,-0.16,-0.92,-0.01
-"Slo Pitch Pub and Eatery","Bellingham","WA",2.3,220,1.06,1.79,0.69,1.91,3.4,0.73,-0.37,0.85
-"Papas Casino Restaurant and Lounge","Moses Lake","WA",1.8,220,0.83,1.05,0.36,1.01,1.6,0.22,-0.47,0.18
-"Lancer Lanes Restaurant and Casino","Clarkston","WA",1.4,220,0.65,1.45,1.91,1.1,7.7,0.8,1.26,0.45
-"Wild Goose Casino","Ellensburg","WA",1,220,0.45,1.34,0.34,1.26,2,0.89,-0.11,0.81
-"Riverside Casino","Tukwila","WA",0.8,220,0.36,0.11,0.03,0.11,0.3,-0.25,-0.33,-0.25
-"Zs Restaurant at Zeppoz","Pullman","WA",0.7,220,0.32,1,0.27,1.07,1.7,0.68,-0.05,0.75
-"RCs at Valley Lanes","Sunnyside","WA",0.6,220,0.28,2.51,4.77,1.46,10.9,2.23,4.49,1.18
-"Chips Casino Lakewood","Lakewood","WA",0.3,220,0.14,0.14,0.45,0.13,1.4,0,0.31,-0.01
-"Palace Casino Lakewood","Lakewood","WA",0.2,220,0.08,0.08,0.26,0.08,0.8,0,0.18,0
-"Goldies Shoreline Casino","Shoreline","WA",0.2,220,0.08,0.15,0.05,0.15,0.4,0.07,-0.03,0.07
+"MGM National Harbor","Oxon Hill","MD",884.5,2051,43.12,43.58,36.78,41.51,1429,0.46,-6.34,-1.61
+"Encore Boston Harbor","Everett","MA",729.7,1132,64.47,60.42,55.73,58.31,1008.8,-4.05,-8.74,-6.16
+"Mohegan Sun","Uncasville","CT",722.7,1236,58.47,52.08,49.79,52.59,212.9,-6.39,-8.68,-5.88
+"Live! Casino & Hotel","Hanover","MD",705.4,2051,34.39,25.48,24.63,22.48,687.9,-8.91,-9.76,-11.91
+"Resorts World Casino NYC","Jamaica","NY",645,2646,24.37,33.51,29.97,37.35,1820.5,9.14,5.6,12.98
+"Empire City Casino","Yonkers","NY",613.7,2646,23.19,20.33,16.77,23.35,1039.7,-2.86,-6.42,0.16
+"Parx Casino and Racing","Bensalem","PA",598.7,3228,18.54,11.88,9.17,14.8,439,-6.66,-9.37,-3.74
+"Wind Creek Bethlehem","Bethlehem","PA",515.8,3228,15.98,12.54,11.52,10.41,288.6,-3.44,-4.46,-5.57
+"Foxwoods Resort Casino","Mashantucket","CT",513.3,1236,41.53,47.92,50.21,47.41,188.2,6.39,8.68,5.88
+"Hard Rock Casino Northern Indiana","Gary","IN",419.5,2503,16.76,6.76,7.39,9,153.7,-10,-9.37,-7.76
+"Rivers Casino Pittsburgh","Pittsburgh","PA",355,3228,11,5.98,9.97,7.33,189.9,-5.02,-1.03,-3.67
+"Horseshoe Hammond","Hammond","IN",346.1,2503,13.82,10.12,12.07,8.73,162.2,-3.7,-1.75,-5.09
+"Horseshoe Indianapolis","Shelbyville","IN",341.8,2503,13.65,9.83,12.44,9.23,158.4,-3.82,-1.21,-4.42
+"Ameristar Casino St. Charles","St. Charles","MO",302.5,1905,15.88,12.02,9.84,11.47,122.9,-3.86,-6.04,-4.41
+"MGM Northfield Park","Northfield","OH",285.9,2333,12.25,9.09,9.91,9.06,148.7,-3.16,-2.34,-3.19
+"Hollywood Casino Columbus","Columbus","OH",263.6,2333,11.3,16.24,13.08,15.56,283.4,4.94,1.78,4.26
+"JACK Cleveland Casino","Cleveland","OH",262.4,2333,11.25,10.99,10.15,10.35,174.3,-0.26,-1.1,-0.9
+"MGM Springfield","Springfield","MA",259.1,1132,22.89,26.61,27.37,23.98,349.6,3.72,4.48,1.09
+"Jake's 58","Islandia","NY",256.6,2646,9.7,15.29,12.7,12.91,513,5.59,3,3.21
+"Hard Rock Cincinnati","Cincinnati","OH",251.5,2333,10.78,10.5,9.95,10.57,178.8,-0.28,-0.83,-0.21
+"River City Casino","St. Louis","MO",249.5,1905,13.1,11.17,13.68,10.52,110.8,-1.93,0.58,-2.58
+"Caesars Southern Indiana","Elizabeth","IN",248.2,2503,9.91,14.36,9.46,15.58,295.8,4.45,-0.45,5.67
+"Harrahs Hoosier Park","Anderson","IN",245.6,2503,9.81,7.28,6.25,10.66,188.1,-2.53,-3.56,0.85
+"Eldorado Scioto Downs","Columbus","OH",234.8,2333,10.06,7.05,4.52,6.93,108.1,-3.01,-5.54,-3.13
+"Hollywood Casino St. Louis","Maryland Heights","MO",234.4,1905,12.3,13.86,16.95,13.44,148.4,1.56,4.65,1.14
+"Resorts World Catskills","Monticello","NY",228.7,2646,8.64,6.97,3.73,5.02,166.4,-1.67,-4.91,-3.62
+"Hollywood Casino Toledo","Toledo","OH",227.7,2333,9.76,10.13,7.26,10.61,179.5,0.37,-2.5,0.85
+"Miami Valley Gaming","Lebanon","OH",224.8,2333,9.64,6.37,5.74,6.54,100.8,-3.27,-3.9,-3.1
+"Live! Casino Philadelphia","Philadelphia","PA",222.4,3228,6.89,6.86,8.31,8.31,251.4,-0.03,1.42,1.42
+"Rivers Casino Philadelphia","Philadelphia","PA",216.7,3228,6.71,6.68,8.09,8.1,245,-0.03,1.38,1.39
+"Mohegan Sun Pocono","Wilkes-Barre","PA",215.5,3228,6.68,6.92,8.46,5.75,142,0.24,1.78,-0.93
+"Horseshoe Casino Baltimore","Baltimore","MD",209.9,2051,10.23,11.78,18.42,15.2,431.4,1.55,8.19,4.97
+"Ameristar Casino East Chicago","East Chicago","IN",205,2503,8.19,5.99,7.15,5.17,96.1,-2.2,-1.04,-3.02
+"Rivers Casino & Resort Schenectady","Schenectady","NY",201.9,2646,7.63,6.81,8.2,5.91,202.2,-0.82,0.57,-1.72
+"Ameristar Casino Kansas City","Kansas City","MO",198.7,1905,10.43,7.54,7.77,7.08,75.7,-2.89,-2.66,-3.35
+"Hollywood Casino at the Meadows","Washington","PA",189.5,3228,5.87,5.06,6.45,3.94,90.5,-0.81,0.58,-1.93
+"Mount Airy Casino Resort","Mount Pocono","PA",184.2,3228,5.71,8.51,4.16,6.56,166.4,2.8,-1.55,0.85
+"Jack Thistledown","Cleveland","OH",183.2,2333,7.85,8.87,12.81,8.65,140.8,1.02,4.96,0.8
+"Argosy Casino Riverside","Riverside","MO",177.1,1905,9.3,9.25,10.34,8.25,82.9,-0.05,1.04,-1.05
+"Harrahs North Kansas City","North Kansas City","MO",176.8,1905,9.28,7.6,11.22,6.81,66,-1.68,1.94,-2.47
+"Ballys Evansville","Evansville","IN",176.6,2503,7.06,11.38,15.21,12.16,220.1,4.32,8.15,5.1
+"Harrah's Philadelphia Casino & Racetrack","Chester","PA",172.9,3228,5.35,8.51,7.92,10.24,283,3.16,2.57,4.89
+"Hollywood Casino Lawrenceburg","Lawrenceburg","IN",170.2,2503,6.8,7.73,6.61,6.47,103.7,0.93,-0.19,-0.33
+"del Lago Resort & Casino","Waterloo","NY",163.2,2646,6.17,2.41,3.72,1.83,50.1,-3.76,-2.45,-4.34
+"Hollywood Gaming at Mahoning Valley","Youngstown","OH",159.4,2333,6.83,5.64,7.81,5.64,84.6,-1.19,0.98,-1.19
+"Hollywood Gaming at Dayton","Dayton","OH",150.9,2333,6.47,7.97,8.42,8.15,131,1.5,1.95,1.68
+"Horseshoe St. Louis","St. Louis","MO",150.5,1905,7.9,10.66,11.39,9.87,102.7,2.76,3.49,1.97
+"Plainridge Park Casino","Plainville","MA",143.1,1132,12.64,12.97,16.9,17.71,243.6,0.33,4.26,5.07
+"Saratoga Casino Hotel","Saratoga Springs","NY",141.1,2646,5.33,4.07,6.3,3.68,114.9,-1.26,0.97,-1.65
+"Valley Forge Casino Resort","King of Prussia","PA",136,3228,4.21,15.78,11.83,12.71,365.8,11.57,7.62,8.5
+"Blue Chip Casino","Michigan City","IN",133.9,2503,5.35,6.69,10.63,5.06,77.3,1.34,5.28,-0.29
+"Ballys Kansas City","Kansas City","MO",119.9,1905,6.29,4.55,4.69,4.27,45.7,-1.74,-1.6,-2.02
+"Finger Lakes Gaming & Racetrack","Farmington","NY",116.5,2646,4.4,2.08,3.22,2.72,80.1,-2.32,-1.18,-1.68
+"Live! Casino Pittsburgh","Pittsburgh","PA",109.9,3228,3.4,4.79,6.93,5.76,142.5,1.39,3.53,2.36
+"Presque Isle Downs & Casino","Erie","PA",109,3228,3.38,2.21,5.15,2.5,52.5,-1.17,1.77,-0.88
+"Tioga Downs Casino Resort","Nichols","NY",103.3,2646,3.9,3.04,2.18,2.43,70,-0.86,-1.72,-1.47
+"Ocean Downs Casino","Berlin","MD",96.6,2051,4.71,7.33,6.74,8.92,228.5,2.62,2.03,4.21
+"Belterra Casino Resort","Florence","IN",91.8,2503,3.67,6.67,2.47,5.93,93.4,3,-1.2,2.26
+"Hollywood Casino Perryville","Perryville","MD",90.5,2051,4.41,6.22,8.56,7.4,183,1.81,4.15,2.99
+"Belterra Park Gaming & Entertainment","Cincinnati","OH",88.7,2333,3.8,7.15,10.36,7.93,126.9,3.35,6.56,4.13
+"Isle of Capri Boonville","Boonville","MO",88.5,1905,4.65,3.93,1.24,5.36,49.6,-0.72,-3.41,0.71
+"French Lick Resort Casino","French Lick","IN",80.3,2503,3.21,6,4.48,5.88,92.6,2.79,1.27,2.67
+"Batavia Downs Gaming","Batavia","NY",77.3,2646,2.92,1.81,3.56,1.41,36.5,-1.11,0.64,-1.51
+"Century Casino Cape Girardeau","Cape Girardeau","MO",72.1,1905,3.78,4.17,5.52,5.18,47.7,0.39,1.74,1.4
+"Hamburg Gaming","Hamburg","NY",70.9,2646,2.68,1.33,6.83,1.49,39,-1.35,4.15,-1.19
+"Rocky Gap Casino Resort","Flintstone","MD",64.3,2051,3.14,5.6,4.87,4.49,100.8,2.46,1.73,1.35
+"Century Casino Caruthersville","Caruthersville","MO",48.3,1905,2.54,6.69,0.93,7.66,76,4.15,-1.61,5.12
+"St. Jo Frontier Casino","St. Joseph","MO",48.1,1905,2.53,2.53,4.62,3.09,25.7,0,2.09,0.56
+"Rising Star Casino Resort","Rising Sun","IN",44.5,2503,1.78,7.19,5.84,6.13,97.2,5.41,4.06,4.35
+"Mark Twain Casino","La Grange","MO",38.5,1905,2.02,6.02,1.81,7.01,68.3,4,-0.21,4.99
+"Vernon Downs Casino Hotel","Vernon","NY",28.4,2646,1.07,2.35,2.83,1.89,51.8,1.28,1.76,0.82
+"Lady Luck Casino Nemacolin","Farmington","PA",22.2,3228,0.69,4.29,2.04,3.58,80.8,3.6,1.35,2.89
+"Fortune Casino Renton","Renton","WA",20,220,9.09,2.74,0.44,2.72,6.5,-6.35,-8.65,-6.37
+"Roman Casino","Seattle","WA",14.1,220,6.39,13.06,2.39,13.25,34.1,6.67,-4,6.86
+"Fortune Casino Tukwila","Tukwila","WA",14,220,6.37,1.92,0.31,1.9,4.5,-4.45,-6.06,-4.47
+"Last Frontier","LaCenter","WA",12,220,5.43,9.58,4.94,10.87,136.8,4.15,-0.49,5.44
+"Great American Casino Everett","Everett","WA",11.8,220,5.34,6.21,29.38,4.36,40.7,0.87,24.04,-0.98
+"Casino Caribbean Kirkland","Kirkland","WA",11.1,220,5.05,8.34,1.48,8.49,21.4,3.29,-3.57,3.44
+"Crazy Moose Casino Pasco","Pasco","WA",9.9,220,4.49,1.54,0.4,1.64,3.2,-2.95,-4.09,-2.85
+"Macau Casino Lakewood","Lakewood","WA",9.6,220,4.34,4.27,17.14,4.21,42.3,-0.07,12.8,-0.13
+"Great American Casino Tukwila","Tukwila","WA",7.7,220,3.5,1.06,0.17,1.05,2.5,-2.44,-3.33,-2.45
+"Black Pearl Restaurant and Card Room","Spokane","WA",7.6,220,3.46,3.04,0.93,3.45,7.3,-0.42,-2.53,-0.01
+"The Palace LaCenter","LaCenter","WA",7.5,220,3.38,5.97,3.08,6.77,85.2,2.59,-0.3,3.39
+"Fortune Casino Lacey","Lacey","WA",6.7,220,3.03,4.07,17.16,3.95,36.1,1.04,14.13,0.92
+"Silver Dollar Casino Renton","Renton","WA",6.6,220,3.01,0.91,0.14,0.9,2.1,-2.1,-2.87,-2.11
+"Coyote Bobs","Kennewick","WA",5.8,220,2.63,0.9,0.24,0.96,1.9,-1.73,-2.39,-1.67
+"Casino Caribbean Yakima","Yakima","WA",5.7,220,2.58,1.17,0.38,1.1,2,-1.41,-2.2,-1.48
+"Macau Casino Tukwila","Tukwila","WA",5.6,220,2.54,0.77,0.12,0.76,1.8,-1.77,-2.42,-1.78
+"Roxys Bar and Grill","Seattle","WA",5.4,220,2.46,0.74,0.12,0.73,1.7,-1.72,-2.34,-1.73
+"Nob Hill Casino","Yakima","WA",5.2,220,2.37,1.08,0.35,1.02,1.8,-1.29,-2.02,-1.35
+"Crazy Moose Casino Mountlake Terrace","Mountlake Terrace","WA",5.2,220,2.37,4.22,0.93,4.39,10.3,1.85,-1.44,2.02
+"All Star Casino","Silverdale","WA",4.7,220,2.12,3.44,0.84,3.26,6.4,1.32,-1.28,1.14
+"Great American Casino Lakewood","Lakewood","WA",4.6,220,2.09,2.06,8.27,2.03,20.4,-0.03,6.18,-0.06
+"Caribbean Cardroom","Kirkland","WA",4.4,220,1.99,3.28,0.58,3.34,8.4,1.29,-1.41,1.35
+"Jokers Casino Sports Bar and Fiesta","Richland","WA",4.4,220,1.97,0.68,0.18,0.72,1.4,-1.29,-1.79,-1.25
+"Silver Dollar Casino Mill Creek","Mill Creek","WA",4.3,220,1.95,3.47,0.77,3.62,8.5,1.52,-1.18,1.67
+"Silver Dollar Casino SeaTac","SeaTac","WA",4.3,220,1.97,0.59,0.09,0.59,1.4,-1.38,-1.88,-1.38
+"Buzz Inn Steakhouse East Wenatchee","East Wenatchee","WA",3.5,220,1.6,0.77,0.33,0.73,1.2,-0.83,-1.27,-0.87
+"Clearwater Saloon and Casino","Wenatchee","WA",3.4,220,1.54,0.74,0.31,0.71,1.2,-0.8,-1.23,-0.83
+"New Phoenix","LaCenter","WA",3.4,220,1.53,2.71,1.4,3.07,38.6,1.18,-0.13,1.54
+"Lilac Lanes and Casino","Spokane","WA",2.5,220,1.16,1.02,0.31,1.15,2.4,-0.14,-0.85,-0.01
+"Slo Pitch Pub and Eatery","Bellingham","WA",2.3,220,1.06,1.82,1.03,1.92,3.4,0.76,-0.03,0.86
+"Papas Casino Restaurant and Lounge","Moses Lake","WA",1.8,220,0.83,1.07,0.73,1.01,1.6,0.24,-0.1,0.18
+"Lancer Lanes Restaurant and Casino","Clarkston","WA",1.4,220,0.65,1.43,0.62,1.08,7.7,0.78,-0.03,0.43
+"Wild Goose Casino","Ellensburg","WA",1,220,0.45,1.38,0.04,1.27,2.1,0.93,-0.41,0.82
+"Riverside Casino","Tukwila","WA",0.8,220,0.36,0.11,0.02,0.11,0.3,-0.25,-0.34,-0.25
+"Zs Restaurant at Zeppoz","Pullman","WA",0.7,220,0.32,1.02,0.64,1.08,1.7,0.7,0.32,0.76
+"RCs at Valley Lanes","Sunnyside","WA",0.6,220,0.28,2.46,2.86,1.42,10.7,2.18,2.58,1.14
+"Chips Casino Lakewood","Lakewood","WA",0.3,220,0.14,0.14,0.55,0.13,1.4,0,0.41,-0.01
+"Palace Casino Lakewood","Lakewood","WA",0.2,220,0.08,0.08,0.32,0.08,0.8,0,0.24,0
+"Goldies Shoreline Casino","Shoreline","WA",0.2,220,0.08,0.15,0.03,0.15,0.4,0.07,-0.05,0.07

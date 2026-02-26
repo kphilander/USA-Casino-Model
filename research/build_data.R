@@ -171,6 +171,33 @@ cat("  Cardrooms (is_cardroom=1):", sum(casinos_study$is_cardroom),
 cat("  Casinos:", nrow(casinos_study), "(", sum(casinos_study$tribal == "Commercial"),
     "commercial,", sum(casinos_study$tribal == "Tribal"), "tribal )\n")
 
+# ---- Convenience gaming filter ----
+# Remove properties that are bars, gas stations, truck stops, etc. with
+# incidental gaming — not actual casinos. See run_analysis.R for full methodology.
+casinos_study$is_convenience <- 0
+
+# OK: Gasinos, Travel Plazas, Trading Posts, Gaming Centers (without "Casino")
+ok_conv <- casinos_study$state == "OK" &
+  grepl("(?i)(gasino|travel plaza|travel stop|travel center|trading post)", casinos_study$name, perl = TRUE)
+ok_gc <- casinos_study$state == "OK" &
+  grepl("Gaming Center", casinos_study$name, ignore.case = TRUE) &
+  !grepl("Casino", casinos_study$name, ignore.case = TRUE)
+casinos_study$is_convenience[ok_conv | ok_gc] <- 1
+
+# CA: Yokut Gas Station (1468), Bear River Pump & Play (89)
+casinos_study$is_convenience[casinos_study$casino_id %in% c(1468, 89)] <- 1
+
+# NH: All properties are charitable gaming (not commercial casinos)
+casinos_study$is_convenience[casinos_study$state == "NH"] <- 1
+
+# PA: Hollywood Casino OTB (639) — satellite betting parlor
+casinos_study$is_convenience[casinos_study$casino_id == 639] <- 1
+
+n_conv <- sum(casinos_study$is_convenience == 1)
+cat("  Convenience gaming flagged:", n_conv, "properties\n")
+casinos_study <- casinos_study[casinos_study$is_convenience == 0, ]
+cat("  After filtering:", nrow(casinos_study), "casinos\n")
+
 # ---- Haversine function ----
 haversine <- function(lon1, lat1, lon2, lat2) {
   R <- 3959
@@ -280,9 +307,9 @@ cat("  Allocating AGA state revenue to markets...\n")
 
 decay_power <- function(d, beta) (d + 0.1)^(-beta)
 
-cg_beta    <- 2.6845
-cg_a_hotel <- 0.232
-cg_a_table <- 0.418
+cg_beta    <- 2.6738
+cg_a_hotel <- 0.207
+cg_a_table <- 0.452
 MAX_DIST   <- 150
 
 # Compute baseline gravity demand indices for all markets
@@ -429,11 +456,11 @@ if (wa_total > 0) {
 # ---- Model parameters ----
 # From 10-state CG model (power decay) with is_cardroom indicator
 model_params <- list(
-  cg_beta      = 2.6845,
-  cg_a_hotel   = 0.232,
-  cg_a_table   = 0.418,
-  cg_intercept = 5.459,
-  cg_gamma     = 1.009,
+  cg_beta      = 2.6738,
+  cg_a_hotel   = 0.207,
+  cg_a_table   = 0.452,
+  cg_intercept = 5.624,
+  cg_gamma     = 0.995,
   cg_cardroom_delta = -1.851,
   MAX_DIST     = 150,
   # Duan (1983) smearing estimator for retransformation bias correction.
@@ -442,7 +469,7 @@ model_params <- list(
   # Computed from OLS residuals of the 10-state CG model (N=104 markets).
   # For calibrated states this cancels out (same factor in numerator/denominator),
   # but matters for uncalibrated states where raw model predictions are used.
-  cg_duan_smear = 1.2800
+  cg_duan_smear = 1.2833
 )
 
 # ---- Save bundle ----

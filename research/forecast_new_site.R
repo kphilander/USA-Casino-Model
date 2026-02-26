@@ -126,6 +126,24 @@ casinos_study$has_tables[casinos_study$casino_id %in% slots_only_ids] <- 0
 
 casinos_study$observed <- casinos_study$casino_id %in% revenue_data$casino_id
 
+# ---- Convenience gaming filter ----
+# Remove bars, gas stations, truck stops, etc. (see run_analysis.R for methodology)
+casinos_study$is_convenience <- 0
+# OK: Gasinos, Travel Plazas, Trading Posts, Gaming Centers
+ok_conv <- casinos_study$state == "OK" &
+  grepl("(?i)(gasino|travel plaza|travel stop|travel center|trading post)", casinos_study$name, perl = TRUE)
+ok_gc <- casinos_study$state == "OK" &
+  grepl("Gaming Center", casinos_study$name, ignore.case = TRUE) &
+  !grepl("Casino", casinos_study$name, ignore.case = TRUE)
+casinos_study$is_convenience[ok_conv | ok_gc] <- 1
+# CA: Yokut Gas Station (1468), Bear River Pump & Play (89)
+casinos_study$is_convenience[casinos_study$casino_id %in% c(1468, 89)] <- 1
+# NH: All charitable gaming
+casinos_study$is_convenience[casinos_study$state == "NH"] <- 1
+# PA: Hollywood Casino OTB (639)
+casinos_study$is_convenience[casinos_study$casino_id == 639] <- 1
+casinos_study <- casinos_study[casinos_study$is_convenience == 0, ]
+
 # ---- Haversine and decay functions ----
 haversine <- function(lon1, lat1, lon2, lat2) {
   R <- 3959
@@ -211,13 +229,13 @@ for (j in 1:n_mkts) {
 # ---- Competitive Gravity Revenue Model Parameters ----
 # From 10-State Model estimation (run_analysis.R) with is_cardroom indicator
 # Best model: Power decay
-cg_beta    <- 2.6845    # distance decay exponent
-cg_a_hotel <- 0.232     # hotel attractiveness coefficient
-cg_a_table <- 0.418     # tables attractiveness coefficient
-cg_intercept <- 5.459   # OLS intercept
-cg_gamma     <- 1.009   # demand elasticity
+cg_beta    <- 2.6738    # distance decay exponent
+cg_a_hotel <- 0.207     # hotel attractiveness coefficient
+cg_a_table <- 0.452     # tables attractiveness coefficient
+cg_intercept <- 5.624   # OLS intercept
+cg_gamma     <- 0.995   # demand elasticity
 cg_cardroom_delta <- -1.851  # cardroom revenue discount [exp(-1.85) = 15.7% of full-casino]
-cg_duan_smear <- 1.2800 # Duan (1983) retransformation bias correction
+cg_duan_smear <- 1.2833 # Duan (1983) retransformation bias correction
 
 MAX_DIST <- 150  # miles cutoff
 
