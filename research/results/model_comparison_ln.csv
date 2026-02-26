@@ -1,3 +1,3 @@
-"Specification","N","Decay","Beta","gamma","Hotel","Tables","R2(ln)","Adj-R2(ln)","WS Prop MAPE"
-"9-State Model (with Iowa)",92,"exponential",0.1032,0.5361,0.2296,0.2858,0.6302,0.6165,2.57
-"8-State Model (without Iowa)",73,"exponential",0.075,0.5606,0.1425,0.2816,0.5523,0.5319,2.96
+"Specification","N","Decay","Beta","gamma","Hotel","Tables","Cardroom","R2(ln)","Adj-R2(ln)","WS Prop MAPE"
+"10-State Model (with Iowa + WA)",131,"power",1.4845,0.7304,0.4297,-0.1209,-2.6976,0.6543,0.6403,3.02
+"9-State Model (without Iowa, with WA)",112,"power",1.3619,0.8309,0.2934,-0.1376,-2.6094,0.6694,0.6536,3.23

@@ -1,0 +1,3 @@
+"Specification","States","N_Props","Best Model","Beta","Alpha_H","Alpha_T","R2","Mkt MAPE","Prop MAPE"
+"9-State Model (with Iowa)","9 (incl IA)",92,"Power",1.3646,0.3192,0.8842,0.5731,0.49,0.45
+"8-State Model (without Iowa)","8 (excl IA)",73,"Power",1.37,0.3278,0.8645,0.5821,0.57,0.54

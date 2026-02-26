@@ -1,0 +1,92 @@
+"Property","City","State","Revenue_M","Actual_Share_Pct","Predicted_Share_Pct","Error_pp"
+"MGM National Harbor","Oxon Hill","MD",884.5,4.77,5.97,1.2
+"Encore Boston Harbor","Everett","MA",729.7,3.93,3.34,-0.59
+"Mohegan Sun","Uncasville","CT",722.7,3.9,1.9,-2
+"Live! Casino & Hotel","Hanover","MD",705.4,3.8,3.79,-0.01
+"Resorts World Casino NYC","Jamaica","NY",645,3.48,4.62,1.14
+"Empire City Casino","Yonkers","NY",613.7,3.31,2.97,-0.34
+"Parx Casino and Racing","Bensalem","PA",598.7,3.23,2.51,-0.72
+"Wind Creek Bethlehem","Bethlehem","PA",515.8,2.78,2.56,-0.22
+"Foxwoods Resort Casino","Mashantucket","CT",513.3,2.77,1.79,-0.98
+"Hard Rock Casino Northern Indiana","Gary","IN",419.5,2.26,1.44,-0.82
+"Rivers Casino Pittsburgh","Pittsburgh","PA",355,1.91,1.12,-0.79
+"Horseshoe Hammond","Hammond","IN",346.1,1.87,1.15,-0.72
+"Horseshoe Indianapolis","Shelbyville","IN",341.8,1.84,1.32,-0.52
+"Ameristar Casino St. Charles","St. Charles","MO",302.5,1.63,0.9,-0.73
+"MGM Northfield Park","Northfield","OH",285.9,1.54,0.62,-0.92
+"Hollywood Casino Columbus","Columbus","OH",263.6,1.42,1.68,0.26
+"JACK Cleveland Casino","Cleveland","OH",262.4,1.41,1.31,-0.1
+"MGM Springfield","Springfield","MA",259.1,1.4,2.23,0.83
+"Jake's 58","Islandia","NY",256.6,1.38,2.08,0.7
+"Hard Rock Cincinnati","Cincinnati","OH",251.5,1.36,1.36,0
+"River City Casino","St. Louis","MO",249.5,1.34,0.88,-0.46
+"Harrahs Hoosier Park","Anderson","IN",245.6,1.32,1,-0.32
+"Prairie Meadows Casino","Altoona","IA",235,1.27,0.35,-0.92
+"Eldorado Scioto Downs","Columbus","OH",234.8,1.27,0.5,-0.77
+"Hollywood Casino St. Louis","Maryland Heights","MO",234.4,1.26,1.05,-0.21
+"Resorts World Catskills","Monticello","NY",228.7,1.23,1.97,0.74
+"Hollywood Casino Toledo","Toledo","OH",227.7,1.23,1.14,-0.09
+"Miami Valley Gaming","Lebanon","OH",224.8,1.21,0.52,-0.69
+"Live! Casino Philadelphia","Philadelphia","PA",222.4,1.2,1.39,0.19
+"Rivers Casino Philadelphia","Philadelphia","PA",216.7,1.17,1.35,0.18
+"Mohegan Sun Pocono","Wilkes-Barre","PA",215.5,1.16,1.57,0.41
+"Horseshoe Casino Council Bluffs","Council Bluffs","IA",211.1,1.14,0.31,-0.83
+"Horseshoe Casino Baltimore","Baltimore","MD",209.9,1.13,2.17,1.04
+"Ameristar Casino East Chicago","East Chicago","IN",205,1.1,0.68,-0.42
+"Rivers Casino & Resort Schenectady","Schenectady","NY",201.9,1.09,1.19,0.1
+"Ameristar Casino Kansas City","Kansas City","MO",198.7,1.07,0.52,-0.55
+"Hollywood Casino at the Meadows","Washington","PA",189.5,1.02,0.98,-0.04
+"Ameristar Casino Council Bluffs","Council Bluffs","IA",187.7,1.01,0.28,-0.73
+"Mount Airy Casino Resort","Mount Pocono","PA",184.2,0.99,1.98,0.99
+"Jack Thistledown","Cleveland","OH",183.2,0.99,0.63,-0.36
+"Hollywood Casino at Penn National","Grantville","PA",180.6,0.97,1.27,0.3
+"Argosy Casino Riverside","Riverside","MO",177.1,0.95,0.69,-0.26
+"Harrahs North Kansas City","North Kansas City","MO",176.8,0.95,0.59,-0.36
+"Ballys Evansville","Evansville","IN",176.6,0.95,1.75,0.8
+"Harrah's Philadelphia Casino & Racetrack","Chester","PA",172.9,0.93,2,1.07
+"Hollywood Casino Lawrenceburg","Lawrenceburg","IN",170.2,0.92,1.32,0.4
+"del Lago Resort & Casino","Waterloo","NY",163.2,0.88,0.57,-0.31
+"Hollywood Gaming at Mahoning Valley","Youngstown","OH",159.4,0.86,0.39,-0.47
+"Hollywood Gaming at Dayton","Dayton","OH",150.9,0.81,0.59,-0.22
+"Horseshoe St. Louis","St. Louis","MO",150.5,0.81,0.85,0.04
+"Plainridge Park Casino","Plainville","MA",143.1,0.77,0.65,-0.12
+"Saratoga Casino Hotel","Saratoga Springs","NY",141.1,0.76,0.53,-0.23
+"Valley Forge Casino Resort","King of Prussia","PA",136,0.73,2.98,2.25
+"Blue Chip Casino","Michigan City","IN",133.9,0.72,1,0.28
+"Riverside Casino and Golf Resort","Riverside","IA",129.9,0.7,0.27,-0.43
+"Ballys Kansas City","Kansas City","MO",119.9,0.65,0.31,-0.34
+"Rhythm City Casino Resort","Davenport","IA",117.6,0.63,0.23,-0.4
+"Finger Lakes Gaming & Racetrack","Farmington","NY",116.5,0.63,0.29,-0.34
+"Live! Casino Pittsburgh","Pittsburgh","PA",109.9,0.59,0.96,0.37
+"Presque Isle Downs & Casino","Erie","PA",109,0.59,0.63,0.04
+"Tioga Downs Casino Resort","Nichols","NY",103.3,0.56,0.76,0.2
+"Diamond Jo Worth","Northwood","IA",102.9,0.55,0.29,-0.26
+"Isle Casino Hotel Waterloo","Waterloo","IA",100,0.54,0.21,-0.33
+"Ocean Downs Casino","Berlin","MD",96.6,0.52,1.48,0.96
+"Hard Rock Hotel Casino Sioux City","Sioux City","IA",96,0.52,0.23,-0.29
+"Grand Falls Casino Resort","Larchwood","IA",95,0.51,0.18,-0.33
+"Belterra Casino Resort","Florence","IN",91.8,0.49,1.27,0.78
+"Hollywood Casino Perryville","Perryville","MD",90.5,0.49,1.43,0.94
+"Belterra Park Gaming & Entertainment","Cincinnati","OH",88.7,0.48,0.57,0.09
+"Isle of Capri Boonville","Boonville","MO",88.5,0.48,0.31,-0.17
+"French Lick Resort Casino","French Lick","IN",80.3,0.43,1.14,0.71
+"Batavia Downs Gaming","Batavia","NY",77.3,0.42,0.19,-0.23
+"Diamond Jo Casino Dubuque","Dubuque","IA",74.2,0.4,0.19,-0.21
+"Isle of Capri Casino Bettendorf","Bettendorf","IA",73.7,0.4,0.34,-0.06
+"Harrahs Council Bluffs","Council Bluffs","IA",73,0.39,0.31,-0.08
+"Century Casino Cape Girardeau","Cape Girardeau","MO",72.1,0.39,0.41,0.02
+"Hamburg Gaming","Hamburg","NY",70.9,0.38,0.24,-0.14
+"Rocky Gap Casino Resort","Flintstone","MD",64.3,0.35,1.04,0.69
+"Q Casino","Dubuque","IA",51.7,0.28,0.6,0.32
+"Lakeside Hotel Casino","Osceola","IA",51.1,0.28,0.26,-0.02
+"Century Casino Caruthersville","Caruthersville","MO",48.3,0.26,0.6,0.34
+"St. Jo Frontier Casino","St. Joseph","MO",48.1,0.26,0.26,0
+"Catfish Bend Casino","Burlington","IA",44.9,0.24,0.2,-0.04
+"Rising Star Casino Resort","Rising Sun","IN",44.5,0.24,1.29,1.05
+"Mark Twain Casino","La Grange","MO",38.5,0.21,0.65,0.44
+"Wild Rose Casino Jefferson","Jefferson","IA",35.9,0.19,0.34,0.15
+"Wild Rose Casino Clinton","Clinton","IA",33.2,0.18,0.25,0.07
+"Wild Rose Casino Emmetsburg","Emmetsburg","IA",30.9,0.17,0.27,0.1
+"Vernon Downs Casino Hotel","Vernon","NY",28.4,0.15,0.56,0.41
+"Lady Luck Casino Nemacolin","Farmington","PA",22.2,0.12,0.88,0.76
+"Casino Queen Marquette","Marquette","IA",21.4,0.12,0.26,0.14

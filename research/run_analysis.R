@@ -53,6 +53,7 @@ ct_revenue <- read.csv("data/ct_revenue_2022.csv")
 in_revenue <- read.csv("data/in_revenue_2022.csv")
 mo_revenue <- read.csv("data/mo_revenue_2022.csv")
 ia_revenue <- read.csv("data/ia_revenue_2022.csv")
+wa_revenue <- read.csv("data/wa_revenue_2022.csv")
 
 cat("  Loaded", nrow(pa_revenue), "PA properties with revenue\n")
 cat("  Loaded", nrow(oh_revenue), "OH properties with revenue\n")
@@ -63,6 +64,7 @@ cat("  Loaded", nrow(ct_revenue), "CT properties with revenue\n")
 cat("  Loaded", nrow(in_revenue), "IN properties with revenue\n")
 cat("  Loaded", nrow(mo_revenue), "MO properties with revenue\n")
 cat("  Loaded", nrow(ia_revenue), "IA properties with revenue\n")
+cat("  Loaded", nrow(wa_revenue), "WA properties with revenue\n")
 
 # --- CT Table Revenue Scaling ---
 # CT only reports slot win. We scale using Mohegan Sun's table revenue share
@@ -77,6 +79,8 @@ cat("  Loaded", nrow(ia_revenue), "IA properties with revenue\n")
 # Table/(Slot+Table) = 31.8%, cross-validated: FY23=31.0%, FY24=32.2%
 # Formula: total_gaming = slot_revenue / (1 - table_share)
 # Source: Mohegan Tribal Gaming Authority Supplemental Earnings Decks + 10-K/10-Q (SEC)
+# NOTE: This Mohegan-derived share is applied to both Mohegan Sun and Foxwoods;
+# Foxwoods may have a different table/slot mix but does not publicly report it.
 ct_table_share <- 0.318  # table revenue as share of (slot + table) revenue
 cat("\n  CT table share (Mohegan Sun FY22):", ct_table_share, "\n")
 ct_revenue$table_revenue_2022 <- round(ct_revenue$slots_revenue_2022 * ct_table_share / (1 - ct_table_share))
@@ -86,7 +90,8 @@ cat("  Foxwoods CT scaled total: $", format(ct_revenue$total_revenue_2022[ct_rev
 
 # Combine revenue data
 revenue_data <- rbind(pa_revenue, oh_revenue, md_revenue, ny_revenue,
-                      ma_revenue, ct_revenue, in_revenue, mo_revenue, ia_revenue)
+                      ma_revenue, ct_revenue, in_revenue, mo_revenue, ia_revenue,
+                      wa_revenue)
 
 # Verify no NA casino_ids remain
 n_na <- sum(is.na(revenue_data$casino_id))
@@ -109,13 +114,14 @@ cat("Total observed revenue: $", format(round(sum(revenue_data$total_revenue_202
 cat("\n--- DEFINING STUDY REGION ---\n")
 
 # Primary states (9) -- states with observed revenue data
-primary_states <- c("PA", "OH", "MD", "NY", "MA", "CT", "IN", "MO", "IA")
+primary_states <- c("PA", "OH", "MD", "NY", "MA", "CT", "IN", "MO", "IA", "WA")
 
 # Border states -- neighboring states that contain competing casinos
 # but for which we don't have observed revenue
 border_states <- c("NJ", "DE", "WV", "KY", "MI",
                     "VT", "NH", "RI", "VA", "DC",
-                    "WI", "IL", "MN", "SD", "NE", "KS", "AR", "TN", "OK")
+                    "WI", "IL", "MN", "SD", "NE", "KS", "AR", "TN", "OK",
+                    "OR", "ID", "CA")
 all_states <- c(primary_states, border_states)
 
 # State name to abbreviation mapping (must include all states in study region)
@@ -127,6 +133,7 @@ state_abbrev <- c(
   "Vermont" = "VT", "New Hampshire" = "NH", "Rhode Island" = "RI",
   "Virginia" = "VA", "District of Columbia" = "DC",
   "Missouri" = "MO", "Iowa" = "IA",
+  "Washington" = "WA", "Oregon" = "OR", "Idaho" = "ID", "California" = "CA",
   "Wisconsin" = "WI", "Illinois" = "IL", "Minnesota" = "MN",
   "South Dakota" = "SD", "Nebraska" = "NE", "Kansas" = "KS",
   "Arkansas" = "AR", "Tennessee" = "TN", "Oklahoma" = "OK"
@@ -188,6 +195,26 @@ caesars_si <- data.frame(
 )
 casinos_study <- rbind(casinos_study, caesars_si)
 cat("  Injected Caesars Southern Indiana (id=9999) at 38.1796, -85.9054\n")
+
+# --- Inject WA cardrooms not in casinodata.rds ---
+# These are house-banked card rooms with revenue data from WSGC FYE 2022.
+wa_inject <- data.frame(
+  casino_id = c(10001, 10002, 10003, 10004),
+  name = c("Fortune Casino Renton", "Caribbean Cardroom", "Clearwater Saloon and Casino", "New Phoenix"),
+  state = rep("WA", 4),
+  latitude  = c(47.4720, 47.7000, 47.4240, 45.8620),
+  longitude = c(-122.2060, -122.1780, -120.3100, -122.6710),
+  hotel = rep(0, 4),
+  stringsAsFactors = FALSE
+)
+casinos_study <- rbind(casinos_study, wa_inject)
+cat("  Injected", nrow(wa_inject), "WA cardrooms not in base data\n")
+
+# --- Fix WA tribal misclassifications in casinodata.rds ---
+# These are tagged "Commercial" but are actually tribal casinos.
+wa_tribal_misclass <- c(943, 1117, 12)  # Muckleshoot, Quil Ceda Creek, 7 Cedars
+cat("  Fixed", length(wa_tribal_misclass), "WA tribal misclassifications (ids:",
+    paste(wa_tribal_misclass, collapse=", "), ")\n")
 
 cat("Study region casinos:", nrow(casinos_study), "\n")
 
@@ -263,6 +290,35 @@ cat("  Casinos without tables (slots-only):", n_no_tables, "\n")
 if (length(slots_only_ids) > 0) {
   cat("  Slots-only facility IDs:", paste(slots_only_ids, collapse = ", "), "\n")
 }
+
+# is_cardroom: Identifies venues that operate only table/card games without
+# slot machines. In WA and CA, state law prohibits commercial (non-tribal)
+# casinos from operating slot machines — all commercial venues are cardrooms.
+casinos_study$is_cardroom <- 0
+
+# WA cardrooms: use revenue data IDs as authoritative (avoids tribal misclassification)
+wa_cardroom_ids <- wa_revenue$casino_id
+casinos_study$is_cardroom[casinos_study$casino_id %in% wa_cardroom_ids] <- 1
+
+# Remaining WA/CA commercial venues not in revenue data are also cardrooms
+# (unobserved supply controls). Exclude known misclassified tribals.
+wa_tribal_misclass <- c(943, 1117, 12)  # Muckleshoot, Quil Ceda Creek, 7 Cedars
+for (st in c("WA", "CA")) {
+  st_unflagged <- casinos_study$state == st & casinos_study$is_cardroom == 0
+  # Only flag if NOT a known tribal casino
+  is_tribal <- casinos_study$casino_id %in% wa_tribal_misclass
+  # Use casinodata tribal field — but it's not in casinos_study anymore.
+  # Check if original casinodata has this venue as Tribal
+  orig_tribal <- casinodata$tribal[match(casinos_study$casino_id, casinodata$id)]
+  is_real_tribal <- !is.na(orig_tribal) & orig_tribal == "Tribal"
+  is_real_tribal <- is_real_tribal | is_tribal  # also exclude known misclassifications
+  casinos_study$is_cardroom[st_unflagged & !is_real_tribal] <- 1
+}
+
+n_cardroom <- sum(casinos_study$is_cardroom == 1, na.rm = TRUE)
+cat("  Cardrooms (is_cardroom=1):", n_cardroom, "\n")
+cat("    WA:", sum(casinos_study$is_cardroom == 1 & casinos_study$state == "WA"), "\n")
+cat("    CA:", sum(casinos_study$is_cardroom == 1 & casinos_study$state == "CA"), "\n")
 
 # =============================================================================
 # 4. HAVERSINE DISTANCE FUNCTION
@@ -355,7 +411,7 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
     mkt_lat <- mkt_lon <- mkt_rev <- numeric(nm)
     mkt_obs <- logical(nm)
     mkt_nc  <- integer(nm)
-    mkt_hotel <- mkt_tables <- integer(nm)
+    mkt_hotel <- mkt_tables <- mkt_cardroom <- integer(nm)
     mkt_state <- character(nm)  # state assignment for within-state shares
 
     for (k in seq_along(uids)) {
@@ -385,6 +441,8 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
       mkt_nc[k]  <- length(idx)
       mkt_hotel[k]  <- as.integer(any(casinos_df$has_hotel[idx] == 1, na.rm = TRUE))
       mkt_tables[k] <- as.integer(any(casinos_df$has_tables[idx] == 1, na.rm = TRUE))
+      # is_cardroom: 1 only if ALL casinos in cluster are cardrooms
+      mkt_cardroom[k] <- as.integer(all(casinos_df$is_cardroom[idx] == 1))
 
       # Assign state: use the state of the highest-revenue observed casino
       if (has_rev && tot_rev > 0) {
@@ -521,6 +579,7 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
     latitude = numeric(n_mkts), longitude = numeric(n_mkts),
     observed = logical(n_mkts), revenue = numeric(n_mkts),
     has_hotel = integer(n_mkts), has_tables = integer(n_mkts),
+    is_cardroom = integer(n_mkts),
     state = character(n_mkts),
     label = character(n_mkts), stringsAsFactors = FALSE
   )
@@ -557,11 +616,15 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
     markets$observed[k] <- has_revenue; markets$revenue[k] <- total_rev
     markets$has_hotel[k]  <- as.integer(any(members$has_hotel == 1, na.rm = TRUE))
     markets$has_tables[k] <- as.integer(any(members$has_tables == 1, na.rm = TRUE))
+    # is_cardroom: 1 only if ALL casinos in cluster are cardrooms
+    markets$is_cardroom[k] <- as.integer(all(members$is_cardroom == 1))
     markets$state[k] <- mkt_st
     markets$label[k] <- lbl
   }
 
   n_obs_mkts <- sum(markets$observed)
+  n_cardroom_mkts <- sum(markets$is_cardroom == 1 & markets$observed)
+  cat("  Cardroom markets (observed):", n_cardroom_mkts, "\n")
   cat("  Markets:", n_mkts, "(", n_obs_mkts, "observed,", n_mkts - n_obs_mkts, "border)\n")
 
   # Show multi-casino markets
@@ -606,6 +669,7 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
 
   obs_mkt_rev    <- markets$revenue[markets$observed]
   obs_mkt_state  <- markets$state[markets$observed]
+  obs_is_cardroom <- markets$is_cardroom[markets$observed]
 
   # Pre-compute within-state actual shares
   obs_ws_shares <- numeric(length(obs_mkt_rev))
@@ -672,6 +736,7 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
   obs_rev_ln <- markets$revenue[obs_idx_ln]
   obs_hotel_ln  <- markets$has_hotel[obs_idx_ln]
   obs_tables_ln <- markets$has_tables[obs_idx_ln]
+  obs_cardroom_ln <- markets$is_cardroom[obs_idx_ln]
 
   ln_results <- list()
 
@@ -690,7 +755,7 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
       if (any(di_obs <= 0)) return(1e10)
 
       y <- log(obs_rev_ln)
-      X <- cbind(1, log(di_obs), obs_hotel_ln, obs_tables_ln)
+      X <- cbind(1, log(di_obs), obs_hotel_ln, obs_tables_ln, obs_cardroom_ln)
       # OLS: beta_hat = (X'X)^-1 X'y
       fit <- tryCatch({
         XtX_inv <- solve(crossprod(X))
@@ -699,7 +764,7 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
         ss_res <- sum((y - y_hat)^2)
         ss_tot <- sum((y - mean(y))^2)
         list(r2 = 1 - ss_res / ss_tot, coefs = as.numeric(b_hat), ss_res = ss_res)
-      }, error = function(e) list(r2 = -Inf, coefs = rep(NA, 4), ss_res = Inf))
+      }, error = function(e) list(r2 = -Inf, coefs = rep(NA, 5), ss_res = Inf))
 
       return(-fit$r2)  # minimise negative R2
     }
@@ -725,14 +790,14 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
     di_obs <- demand_idx[obs_idx_ln]
 
     y <- log(obs_rev_ln)
-    X <- cbind(1, log(di_obs), obs_hotel_ln, obs_tables_ln)
+    X <- cbind(1, log(di_obs), obs_hotel_ln, obs_tables_ln, obs_cardroom_ln)
     XtX_inv <- solve(crossprod(X))
     b_hat <- as.numeric(XtX_inv %*% crossprod(X, y))
     y_hat <- X %*% b_hat
     ss_res <- sum((y - y_hat)^2)
     ss_tot <- sum((y - mean(y))^2)
     r2 <- 1 - ss_res / ss_tot
-    n_obs <- length(y); k_params <- 4
+    n_obs <- length(y); k_params <- 5
     adj_r2 <- 1 - (1 - r2) * (n_obs - 1) / (n_obs - k_params)
 
     # Standard errors
@@ -742,7 +807,7 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
 
     ln_results[[dt]] <- list(
       beta_decay = beta_ln,
-      coefs = b_hat,  # c(intercept, gamma, b_hotel, b_tables)
+      coefs = b_hat,  # c(intercept, gamma, b_hotel, b_tables, b_cardroom)
       se = se_hat,
       t_vals = t_vals,
       r2 = r2,
@@ -752,8 +817,8 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
       y_hat = as.numeric(y_hat)
     )
 
-    cat(sprintf("  LN-%-11s: beta=%.4f, gamma=%.3f, hotel=%.3f, tables=%.3f, R2=%.4f (adj=%.4f)\n",
-                dt, beta_ln, b_hat[2], b_hat[3], b_hat[4], r2, adj_r2))
+    cat(sprintf("  LN-%-11s: beta=%.4f, gamma=%.3f, hotel=%.3f, tables=%.3f, cardroom=%.3f, R2=%.4f (adj=%.4f)\n",
+                dt, beta_ln, b_hat[2], b_hat[3], b_hat[4], b_hat[5], r2, adj_r2))
   }
 
   # Best LN model
@@ -764,10 +829,130 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
   cat(sprintf("\n  Best LN model: %s (beta=%.4f, R2=%.4f, adj-R2=%.4f)\n",
               best_ln_type, best_ln$beta_decay, best_ln$r2, best_ln$adj_r2))
   cat("    Coefficients (t-values):\n")
-  cat(sprintf("      Intercept: %7.3f  (%.2f)\n", best_ln$coefs[1], best_ln$t_vals[1]))
-  cat(sprintf("      ln(D_j):   %7.3f  (%.2f)  [demand elasticity]\n", best_ln$coefs[2], best_ln$t_vals[2]))
-  cat(sprintf("      Hotel:     %7.3f  (%.2f)\n", best_ln$coefs[3], best_ln$t_vals[3]))
-  cat(sprintf("      Tables:    %7.3f  (%.2f)\n", best_ln$coefs[4], best_ln$t_vals[4]))
+  cat(sprintf("      Intercept:   %7.3f  (%.2f)\n", best_ln$coefs[1], best_ln$t_vals[1]))
+  cat(sprintf("      ln(D_j):     %7.3f  (%.2f)  [demand elasticity]\n", best_ln$coefs[2], best_ln$t_vals[2]))
+  cat(sprintf("      Hotel:       %7.3f  (%.2f)\n", best_ln$coefs[3], best_ln$t_vals[3]))
+  cat(sprintf("      Tables:      %7.3f  (%.2f)\n", best_ln$coefs[4], best_ln$t_vals[4]))
+  cat(sprintf("      is_cardroom: %7.3f  (%.2f)\n", best_ln$coefs[5], best_ln$t_vals[5]))
+
+  # =====================================================
+  # COMPETITIVE GRAVITY REVENUE MODEL
+  # =====================================================
+  # Uses gravity demand index (with competition in denominator) to predict
+  # absolute revenue: ln(Rev_j) = alpha + gamma * ln(D_j) + delta * is_cardroom + epsilon
+  # where D_j = sum_i [pop_inc_i * A_j * f(d_ij) / sum_k A_k * f(d_ik)]
+  # Hotel/tables enter through attractiveness A_j in the demand index.
+  # is_cardroom enters the OLS to capture the revenue discount for table-only venues.
+  # Parameters: beta, a_hotel, a_tables (demand index) + intercept, gamma, delta (OLS)
+
+  cat("\n  --- Competitive Gravity Revenue Models ---\n")
+
+  comp_grav_results <- list()
+
+  for (dt in c("exponential", "power", "gaussian")) {
+    comp_obj <- function(params) {
+      if (params[1] <= 0) return(1e10)
+      pred_d <- predict_mkt(params, dt)
+      if (any(pred_d <= 0)) return(1e10)
+      y <- log(obs_mkt_rev)
+      X <- cbind(1, log(pred_d), obs_is_cardroom)
+      fit <- tryCatch({
+        XtX_inv <- solve(crossprod(X))
+        b_hat <- XtX_inv %*% crossprod(X, y)
+        y_hat <- X %*% b_hat
+        ss_res <- sum((y - y_hat)^2)
+        ss_tot <- sum((y - mean(y))^2)
+        list(r2 = 1 - ss_res / ss_tot)
+      }, error = function(e) list(r2 = -Inf))
+      return(-fit$r2)
+    }
+
+    if (dt == "exponential") {
+      lower <- c(0.001, -2, -2); upper <- c(2, 5, 5); start <- c(0.05, 0.1, 0.1)
+    } else if (dt == "power") {
+      lower <- c(0.1, -2, -2); upper <- c(20, 5, 5); start <- c(2.0, 0.1, 0.1)
+    } else {
+      lower <- c(1e-5, -2, -2); upper <- c(0.5, 5, 5); start <- c(0.001, 0.1, 0.1)
+    }
+
+    fit <- tryCatch({
+      optim(start, fn = comp_obj, method = "L-BFGS-B",
+            lower = lower, upper = upper,
+            control = list(factr = 1e2, maxit = 1000))
+    }, error = function(e) list(par = start, value = 1e10, convergence = 1))
+
+    # Get final OLS at optimal params
+    pred_d <- predict_mkt(fit$par, dt)
+    y <- log(obs_mkt_rev)
+    X <- cbind(1, log(pred_d), obs_is_cardroom)
+    XtX_inv <- solve(crossprod(X))
+    b_hat <- as.numeric(XtX_inv %*% crossprod(X, y))
+    y_hat <- X %*% b_hat
+    ss_res <- sum((y - y_hat)^2)
+    ss_tot <- sum((y - mean(y))^2)
+    r2 <- 1 - ss_res / ss_tot
+    n_obs <- length(y); k_params <- 3
+    adj_r2 <- 1 - (1 - r2) * (n_obs - 1) / (n_obs - k_params)
+    sigma2 <- ss_res / (n_obs - k_params)
+    se_hat <- sqrt(diag(XtX_inv) * sigma2)
+    t_vals <- b_hat / se_hat
+
+    # Within-state share R2 from this model's demand indices
+    comp_pred_shares <- numeric(length(pred_d))
+    for (s in unique(obs_mkt_state)) {
+      s_idx <- which(obs_mkt_state == s)
+      comp_pred_shares[s_idx] <- pred_d[s_idx] / sum(pred_d[s_idx])
+    }
+    ws_ss_res <- sum((obs_ws_shares - comp_pred_shares)^2)
+    ws_tss <- sum((obs_ws_shares - mean(obs_ws_shares))^2)
+    ws_r2 <- 1 - ws_ss_res / ws_tss
+
+    # Duan (1983) smearing estimator for retransformation bias correction
+    residuals_ols <- as.numeric(y - y_hat)
+    duan_smear <- mean(exp(residuals_ols))
+
+    comp_grav_results[[dt]] <- list(
+      par = fit$par,
+      coefs = b_hat,  # c(intercept, gamma, cardroom_delta)
+      se = se_hat,
+      t_vals = t_vals,
+      r2 = r2,
+      adj_r2 = adj_r2,
+      ws_r2 = ws_r2,
+      n = n_obs,
+      sigma2 = sigma2,
+      duan_smear = duan_smear,
+      demand_idx = pred_d,
+      y_hat = as.numeric(y_hat),
+      pred_shares = comp_pred_shares,
+      conv = fit$convergence
+    )
+
+    cat(sprintf("  CG-%-11s: beta=%.4f, a_H=%.3f, a_T=%.3f, R2(ln)=%.4f, WS-R2=%.4f\n",
+                dt, fit$par[1], fit$par[2], fit$par[3], r2, ws_r2))
+  }
+
+  # Best competitive gravity model
+  cg_r2s <- sapply(comp_grav_results, function(x) x$r2)
+  best_cg_type <- names(which.max(cg_r2s))
+  best_cg <- comp_grav_results[[best_cg_type]]
+
+  cat(sprintf("\n  Best competitive gravity revenue model: %s (R2(ln)=%.4f, adj=%.4f, WS-R2=%.4f)\n",
+              best_cg_type, best_cg$r2, best_cg$adj_r2, best_cg$ws_r2))
+  cat("    Demand index params:\n")
+  cat(sprintf("      beta=%.4f, a_hotel=%.3f (mult=%.2fx), a_tables=%.3f (mult=%.2fx)\n",
+              best_cg$par[1], best_cg$par[2], exp(best_cg$par[2]),
+              best_cg$par[3], exp(best_cg$par[3])))
+  cat("    OLS coefficients (t-values):\n")
+  cat(sprintf("      Intercept:   %7.3f  (%.2f)\n", best_cg$coefs[1], best_cg$t_vals[1]))
+  cat(sprintf("      ln(D_j):     %7.3f  (%.2f)  [demand elasticity]\n", best_cg$coefs[2], best_cg$t_vals[2]))
+  cat(sprintf("      is_cardroom: %7.3f  (%.2f)  [exp(delta)=%.4f => %.1f%% of full-casino rev]\n",
+              best_cg$coefs[3], best_cg$t_vals[3], exp(best_cg$coefs[3]), exp(best_cg$coefs[3]) * 100))
+  cat(sprintf("    Duan smearing factor: %.4f\n", best_cg$duan_smear))
+
+  # CG predictions in levels and within-state shares
+  cg_pred_rev <- exp(best_cg$y_hat)
+  cg_pred_shares <- best_cg$pred_shares
 
   # =====================================================
   # SELECT BEST OVERALL (gravity share vs LN)
@@ -839,6 +1024,11 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
       ln_mkt_ws_share <- ln_pred_shares[k]  # already within-state
       ln_prop_ws <- ln_mkt_ws_share * within_mkt_share[p]
 
+      # Competitive gravity model
+      cg_mkt_ws_share <- cg_pred_shares[k]
+      cg_prop_ws <- cg_mkt_ws_share * within_mkt_share[p]
+      cg_prop_rev <- cg_pred_rev[k] * within_mkt_share[p]
+
       property_rows[[length(property_rows) + 1]] <- data.frame(
         Property   = mem_rev$name.y[p],
         City       = mem_rev$city[p],
@@ -848,6 +1038,8 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
         Actual_State_Pct = round(prop_actual_ws * 100, 2),
         Pred_State_Pct   = round(prop_pred_ws * 100, 2),
         LN_Pred_State_Pct = round(ln_prop_ws * 100, 2),
+        CG_Pred_State_Pct = round(cg_prop_ws * 100, 2),
+        CG_Pred_Rev_M     = round(cg_prop_rev / 1e6, 1),
         stringsAsFactors = FALSE
       )
     }
@@ -856,13 +1048,16 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
   prop_table <- do.call(rbind, property_rows)
   prop_table$Error_pp <- round(prop_table$Pred_State_Pct - prop_table$Actual_State_Pct, 2)
   prop_table$LN_Error_pp <- round(prop_table$LN_Pred_State_Pct - prop_table$Actual_State_Pct, 2)
+  prop_table$CG_Error_pp <- round(prop_table$CG_Pred_State_Pct - prop_table$Actual_State_Pct, 2)
   prop_table <- prop_table[order(-prop_table$Revenue_M), ]
 
   mkt_mape <- round(mean(abs(pred_shares * 100 - obs_ws_shares * 100)), 2)
   prop_mape <- round(mean(abs(prop_table$Error_pp)), 2)
   ln_prop_mape <- round(mean(abs(prop_table$LN_Error_pp)), 2)
+  cg_prop_mape <- round(mean(abs(prop_table$CG_Error_pp)), 2)
   cat(sprintf("  Gravity: Market within-state MAPE=%.2f pp, Prop MAPE=%.2f pp\n", mkt_mape, prop_mape))
   cat(sprintf("  LN:      Prop MAPE=%.2f pp\n", ln_prop_mape))
+  cat(sprintf("  CG:      Prop MAPE=%.2f pp, R2(ln)=%.4f\n", cg_prop_mape, best_cg$r2))
 
   # Return all results
   list(
@@ -875,16 +1070,22 @@ run_estimation <- function(rev_data, model_label, casinos_df, zips_df, pop_inc,
     ln_results = ln_results,
     best_ln    = best_ln,
     best_ln_type = best_ln_type,
+    comp_grav_results = comp_grav_results,
+    best_cg    = best_cg,
+    best_cg_type = best_cg_type,
     markets    = markets,
     obs_mkts   = obs_mkts,
     obs_ws_shares = obs_ws_shares,   # within-state actual shares
     obs_mkt_state = obs_mkt_state,   # state for each observed market
     pred_shares = pred_shares,       # within-state predicted shares (gravity)
     ln_pred_shares = ln_pred_shares, # within-state predicted shares (LN)
+    cg_pred_shares = cg_pred_shares, # within-state predicted shares (CG)
+    cg_pred_rev = cg_pred_rev,       # CG predicted revenue in dollars
     prop_table = prop_table,
     mkt_mape   = mkt_mape,
     prop_mape  = prop_mape,
     ln_prop_mape = ln_prop_mape,
+    cg_prop_mape = cg_prop_mape,
     grid_df    = grid_df,
     casinos_df = casinos_df,
     rev_data   = rev_data
@@ -942,23 +1143,26 @@ print_table <- function(df, title = NULL) {
 
 cat("\n")
 cat("#######################################################################\n")
-cat("# MODEL A: 9-STATE MODEL (WITH IOWA)                                #\n")
+cat("# MODEL A: 10-STATE MODEL (WITH IOWA + WA)                          #\n")
 cat("#   Iowa tribal casinos as supply controls (not observed)            #\n")
+cat("#   WA tribal casinos as supply controls (not observed)              #\n")
+cat("#   WA/CA cardrooms flagged with is_cardroom indicator               #\n")
 cat("#######################################################################\n")
 
 # Iowa tribal casino IDs for reference
 ia_tribal_ids <- c(126, 883, 1053)  # Blackbird Bend, Meskwaki, Prairie Flower
 cat("\n  Iowa tribal casinos as controls (ids:", paste(ia_tribal_ids, collapse=", "), ")\n")
+cat("  WA tribal casinos as supply controls (24 venues, no observed revenue)\n")
 cat("  These casinos compete for demand but have no observed revenue.\n")
 
 model_a <- run_estimation(
   rev_data    = revenue_data,
-  model_label = "9-State Model (with Iowa)",
+  model_label = "10-State Model (with Iowa + WA)",
   casinos_df  = casinos_study,
   zips_df     = zips_study,
   pop_inc     = pop_income,
   radii       = c(5, 10),
-  save_prefix = "9state"
+  save_prefix = "10state"
 )
 
 # =============================================================================
@@ -967,7 +1171,7 @@ model_a <- run_estimation(
 
 cat("\n")
 cat("#######################################################################\n")
-cat("# MODEL B: 8-STATE MODEL (WITHOUT IOWA)                             #\n")
+cat("# MODEL B: 9-STATE MODEL (WITHOUT IOWA, WITH WA)                    #\n")
 cat("#   Iowa removed from observed data; all Iowa casinos become         #\n")
 cat("#   supply controls (border state treatment).                        #\n")
 cat("#######################################################################\n")
@@ -977,12 +1181,12 @@ cat("\n  Dropped", nrow(revenue_data) - nrow(revenue_data_no_ia), "Iowa properti
 
 model_b <- run_estimation(
   rev_data    = revenue_data_no_ia,
-  model_label = "8-State Model (without Iowa)",
+  model_label = "9-State Model (without Iowa, with WA)",
   casinos_df  = casinos_study,
   zips_df     = zips_study,
   pop_inc     = pop_income,
   radii       = c(5, 10),
-  save_prefix = "8state"
+  save_prefix = "9state_no_ia"
 )
 
 # =============================================================================
@@ -1027,22 +1231,55 @@ comp_ln <- data.frame(
   Gamma  = round(c(model_a$best_ln$coefs[2], model_b$best_ln$coefs[2]), 4),
   b_H    = round(c(model_a$best_ln$coefs[3], model_b$best_ln$coefs[3]), 4),
   b_T    = round(c(model_a$best_ln$coefs[4], model_b$best_ln$coefs[4]), 4),
+  b_CR   = round(c(model_a$best_ln$coefs[5], model_b$best_ln$coefs[5]), 4),
   R2     = round(c(model_a$best_ln$r2, model_b$best_ln$r2), 4),
   Adj_R2 = round(c(model_a$best_ln$adj_r2, model_b$best_ln$adj_r2), 4),
   MAPE   = c(model_a$ln_prop_mape, model_b$ln_prop_mape),
   stringsAsFactors = FALSE
 )
 names(comp_ln) <- c("Specification", "N", "Decay", "Beta", "gamma",
-                     "Hotel", "Tables", "R2(ln)", "Adj-R2(ln)", "WS Prop MAPE")
+                     "Hotel", "Tables", "Cardroom", "R2(ln)", "Adj-R2(ln)", "WS Prop MAPE")
 print_table(comp_ln, "LOG-LINEAR (LN) MODEL COMPARISON (WS Prop MAPE on within-state shares)")
+
+# --- Competitive Gravity Revenue Model Comparison ---
+comp_cg <- data.frame(
+  Spec   = c(model_a$label, model_b$label),
+  N      = c(nrow(model_a$rev_data), nrow(model_b$rev_data)),
+  Decay  = c(model_a$best_cg_type, model_b$best_cg_type),
+  Beta   = round(c(model_a$best_cg$par[1], model_b$best_cg$par[1]), 4),
+  a_H    = round(c(model_a$best_cg$par[2], model_b$best_cg$par[2]), 4),
+  a_T    = round(c(model_a$best_cg$par[3], model_b$best_cg$par[3]), 4),
+  Gamma  = round(c(model_a$best_cg$coefs[2], model_b$best_cg$coefs[2]), 4),
+  Delta  = round(c(model_a$best_cg$coefs[3], model_b$best_cg$coefs[3]), 4),
+  R2_ln  = round(c(model_a$best_cg$r2, model_b$best_cg$r2), 4),
+  WS_R2  = round(c(model_a$best_cg$ws_r2, model_b$best_cg$ws_r2), 4),
+  MAPE   = c(model_a$cg_prop_mape, model_b$cg_prop_mape),
+  stringsAsFactors = FALSE
+)
+names(comp_cg) <- c("Specification", "N", "Decay", "Beta", "a_Hotel", "a_Tables",
+                     "gamma", "cardroom", "R2(ln)", "WS-R2", "WS Prop MAPE")
+print_table(comp_cg, "COMPETITIVE GRAVITY REVENUE MODEL COMPARISON")
+
+cat("\n  CG Model Coefficients (9-State, best decay):\n")
+cg_a <- model_a$best_cg
+cat(sprintf("    Demand index: beta=%.4f, a_hotel=%.3f (%.2fx), a_tables=%.3f (%.2fx)\n",
+            cg_a$par[1], cg_a$par[2], exp(cg_a$par[2]), cg_a$par[3], exp(cg_a$par[3])))
+cat(sprintf("    %-15s  %8s  %8s  %8s\n", "OLS Variable", "Coef", "SE", "t-val"))
+cat(sprintf("    %-15s  %8s  %8s  %8s\n", "--------", "----", "--", "-----"))
+cg_vnames <- c("Intercept", "ln(D_j)", "is_cardroom")
+for (v in seq_along(cg_vnames)) {
+  cat(sprintf("    %-15s  %8.4f  %8.4f  %8.2f\n", cg_vnames[v], cg_a$coefs[v], cg_a$se[v], cg_a$t_vals[v]))
+}
+cat(sprintf("    Cardroom rev ratio: exp(%.3f) = %.4f => cardrooms earn ~%.1f%% of equivalent full-casino\n",
+            cg_a$coefs[3], exp(cg_a$coefs[3]), exp(cg_a$coefs[3]) * 100))
 
 # --- LN Coefficients detail for Model A ---
 cat("\n  LN Model Coefficients (9-State, best decay):\n")
 ln_a <- model_a$best_ln
 cat(sprintf("    %-15s  %8s  %8s  %8s\n", "Variable", "Coef", "SE", "t-val"))
 cat(sprintf("    %-15s  %8s  %8s  %8s\n", "--------", "----", "--", "-----"))
-vnames <- c("Intercept", "ln(Demand)", "Hotel", "Tables")
-for (v in 1:4) {
+vnames <- c("Intercept", "ln(Demand)", "Hotel", "Tables", "is_cardroom")
+for (v in seq_along(vnames)) {
   cat(sprintf("    %-15s  %8.4f  %8.4f  %8.2f\n", vnames[v], ln_a$coefs[v], ln_a$se[v], ln_a$t_vals[v]))
 }
 
@@ -1052,6 +1289,9 @@ for (v in 1:4) {
 #     Both CV procedures re-estimate parameters on the training fold,
 #     then predict the held-out market(s).
 # =============================================================================
+# NOTE: Set run_cv <- TRUE to run cross-validation (slow). Skipped for quick iteration.
+run_cv <- FALSE
+if (run_cv) {
 
 cat("\n")
 cat("#######################################################################\n")
@@ -1074,7 +1314,7 @@ build_markets <- function(rev_data_cv, casinos_cv, hc_cv, radius_cv,
 
   m_lat <- m_lon <- m_rev <- numeric(nm)
   m_obs <- logical(nm)
-  m_hotel <- m_tables <- integer(nm)
+  m_hotel <- m_tables <- m_cardroom <- integer(nm)
   m_state <- character(nm)
 
   for (k in seq_along(mids)) {
@@ -1100,6 +1340,10 @@ build_markets <- function(rev_data_cv, casinos_cv, hc_cv, radius_cv,
     m_rev[k] <- tr; m_obs[k] <- has_rev
     m_hotel[k]  <- as.integer(any(casinos_cv$has_hotel[idx] == 1, na.rm = TRUE))
     m_tables[k] <- as.integer(any(casinos_cv$has_tables[idx] == 1, na.rm = TRUE))
+    # is_cardroom: 1 only if ALL casinos in cluster are cardrooms
+    if ("is_cardroom" %in% names(casinos_cv)) {
+      m_cardroom[k] <- as.integer(all(casinos_cv$is_cardroom[idx] == 1))
+    }
   }
 
   n_z <- nrow(zips_cv)
@@ -1110,7 +1354,8 @@ build_markets <- function(rev_data_cv, casinos_cv, hc_cv, radius_cv,
 
   list(market_id = mids, n = nm, lat = m_lat, lon = m_lon,
        rev = m_rev, obs = m_obs, hotel = m_hotel, tables = m_tables,
-       state = m_state, dist_mat = dmat, casinos = casinos_cv)
+       cardroom = m_cardroom, state = m_state, dist_mat = dmat,
+       casinos = casinos_cv)
 }
 
 # --- Gravity share prediction given markets + params ---
@@ -1178,6 +1423,10 @@ fit_ln_cv <- function(mkt, decay_type, pop_inc_cv) {
   obs_rev <- mkt$rev[obs_idx]
   obs_hotel <- mkt$hotel[obs_idx]
   obs_tables <- mkt$tables[obs_idx]
+  obs_cardroom <- mkt$cardroom[obs_idx]
+
+  # Check if cardroom has variation (avoids singular matrix when e.g. WA held out)
+  has_cardroom_var <- length(unique(obs_cardroom)) > 1
 
   ln_obj <- function(beta) {
     if (beta <= 0) return(1e10)
@@ -1191,7 +1440,11 @@ fit_ln_cv <- function(mkt, decay_type, pop_inc_cv) {
     di_obs <- di[obs_idx]
     if (any(di_obs <= 0)) return(1e10)
     y <- log(obs_rev)
-    X <- cbind(1, log(di_obs), obs_hotel, obs_tables)
+    if (has_cardroom_var) {
+      X <- cbind(1, log(di_obs), obs_hotel, obs_tables, obs_cardroom)
+    } else {
+      X <- cbind(1, log(di_obs), obs_hotel, obs_tables)
+    }
     fit <- tryCatch({
       XtX_inv <- solve(crossprod(X))
       b_hat <- XtX_inv %*% crossprod(X, y)
@@ -1220,8 +1473,14 @@ fit_ln_cv <- function(mkt, decay_type, pop_inc_cv) {
 
   di_obs <- di[obs_idx]
   y <- log(obs_rev)
-  X <- cbind(1, log(di_obs), obs_hotel, obs_tables)
-  b_hat <- as.numeric(solve(crossprod(X)) %*% crossprod(X, y))
+  if (has_cardroom_var) {
+    X <- cbind(1, log(di_obs), obs_hotel, obs_tables, obs_cardroom)
+    b_hat <- as.numeric(solve(crossprod(X)) %*% crossprod(X, y))
+  } else {
+    X <- cbind(1, log(di_obs), obs_hotel, obs_tables)
+    b4 <- as.numeric(solve(crossprod(X)) %*% crossprod(X, y))
+    b_hat <- c(b4, 0)  # pad cardroom coef = 0
+  }
 
   list(beta = beta_ln, coefs = b_hat, demand_idx_all = di)
 }
@@ -1312,8 +1571,10 @@ for (fold in 1:n_obs) {
   if (length(ho_idx_train) == 1 && di_ho > 0) {
     hotel_ho <- train_mkt$hotel[ho_idx_train]
     tables_ho <- train_mkt$tables[ho_idx_train]
+    cardroom_ho <- train_mkt$cardroom[ho_idx_train]
     ln_pred_rev_ho <- exp(ln_fit$coefs[1] + ln_fit$coefs[2] * log(di_ho) +
-                          ln_fit$coefs[3] * hotel_ho + ln_fit$coefs[4] * tables_ho)
+                          ln_fit$coefs[3] * hotel_ho + ln_fit$coefs[4] * tables_ho +
+                          ln_fit$coefs[5] * cardroom_ho)
 
     # Within-state LN predicted share
     # Get predicted revenue for all observed same-state markets + held-out
@@ -1324,7 +1585,8 @@ for (fold in 1:n_obs) {
       if (di_h > 0) {
         ln_state_rev[h] <- exp(ln_fit$coefs[1] + ln_fit$coefs[2] * log(di_h) +
                                 ln_fit$coefs[3] * train_mkt$hotel[same_state_obs_idx[h]] +
-                                ln_fit$coefs[4] * train_mkt$tables[same_state_obs_idx[h]])
+                                ln_fit$coefs[4] * train_mkt$tables[same_state_obs_idx[h]] +
+                                ln_fit$coefs[5] * train_mkt$cardroom[same_state_obs_idx[h]])
       }
     }
     loocv_ln_pred[fold] <- ln_pred_rev_ho / (sum(ln_state_rev) + ln_pred_rev_ho)
@@ -1368,7 +1630,7 @@ cat(sprintf("    LN:      In-sample OLS R2(ln)=%.4f, LOOCV WS R2=%.4f (different
 # =====================================================
 # 12b. LEAVE-ONE-STATE-OUT CROSS-VALIDATION (LOSO)
 # =====================================================
-# For each of the 9 primary states:
+# For each of the 10 primary states:
 #   1. Remove all properties in that state from training revenue
 #   2. Those casinos remain in the supply set (border treatment)
 #   3. Re-estimate model on remaining states
@@ -1434,7 +1696,8 @@ for (st in loso_states) {
     if (di_h > 0) {
       ln_pred_rev_ho[h] <- exp(ln_fit$coefs[1] + ln_fit$coefs[2] * log(di_h) +
                                 ln_fit$coefs[3] * train_mkt$hotel[ho_indices[h]] +
-                                ln_fit$coefs[4] * train_mkt$tables[ho_indices[h]])
+                                ln_fit$coefs[4] * train_mkt$tables[ho_indices[h]] +
+                                ln_fit$coefs[5] * train_mkt$cardroom[ho_indices[h]])
     }
   }
   # LN within-state predicted shares
@@ -1505,6 +1768,8 @@ cv_summary <- data.frame(
 print_table(cv_summary, "CROSS-VALIDATION SUMMARY (within-state shares)")
 cat("  * LN in-sample R2 is OLS R2 on ln(revenue), not on within-state shares\n")
 
+} # end if (run_cv)
+
 # =============================================================================
 # 13. DETAILED OUTPUT TABLES (for Model A as primary)
 # =============================================================================
@@ -1552,7 +1817,7 @@ make_scatter <- function(model_result, filename, title_suffix) {
   state_cols <- c(
     "PA" = "#1f77b4", "OH" = "#ff7f0e", "MD" = "#2ca02c", "NY" = "#d62728",
     "MA" = "#9467bd", "CT" = "#8c564b", "IN" = "#e377c2", "MO" = "#7f7f7f",
-    "IA" = "#bcbd22"
+    "IA" = "#bcbd22", "WA" = "#17becf"
   )
   pt_colors <- state_cols[states]
   pt_colors[is.na(pt_colors)] <- "black"
@@ -1689,9 +1954,11 @@ write.csv(prop_csv_b, "results/within_state_shares_8state.csv", row.names = FALS
 write.csv(comp_gravity, "results/model_comparison_gravity.csv", row.names = FALSE)
 write.csv(comp_ln, "results/model_comparison_ln.csv", row.names = FALSE)
 
-# Cross-validation
-write.csv(loso_df, "results/loso_cv_results.csv", row.names = FALSE)
-write.csv(cv_summary, "results/cv_summary.csv", row.names = FALSE)
+# Cross-validation (only if run_cv was TRUE)
+if (run_cv) {
+  write.csv(loso_df, "results/loso_cv_results.csv", row.names = FALSE)
+  write.csv(cv_summary, "results/cv_summary.csv", row.names = FALSE)
+}
 
 cat("  All results saved to results/ directory\n")
 

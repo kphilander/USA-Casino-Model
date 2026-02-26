@@ -1,0 +1,40 @@
+casino_id,name,city,state,facility_type,slots_revenue_2022,table_revenue_2022,total_revenue_2022,num_slots,num_tables,source
+10001,Fortune Casino Renton,Renton,WA,cardroom,0,20045711,20045711,0,NA,WSGC HBCR FYE 2022
+225,Casino Caribbean Kirkland,Kirkland,WA,cardroom,0,11139000,11139000,0,NA,WSGC HBCR FYE 2022
+489,Fortune Casino Tukwila,Tukwila,WA,cardroom,0,14042179,14042179,0,NA,WSGC HBCR FYE 2022
+570,Great American Casino Everett,Everett,WA,cardroom,0,11779000,11779000,0,NA,WSGC HBCR FYE 2022
+830,Macau Casino Lakewood,Lakewood,WA,cardroom,0,9564000,9564000,0,NA,WSGC HBCR FYE 2022
+329,Crazy Moose Casino Pasco,Pasco,WA,cardroom,0,9908000,9908000,0,NA,WSGC HBCR FYE 2022
+720,Jokers Casino Sports Bar and Fiesta,Richland,WA,cardroom,0,4350334,4350334,0,NA,WSGC HBCR FYE 2022
+949,Last Frontier,LaCenter,WA,cardroom,0,11974381,11974381,0,NA,WSGC HBCR FYE 2022
+1180,Roman Casino,Seattle,WA,cardroom,0,14092000,14092000,0,NA,WSGC HBCR FYE 2022
+328,Crazy Moose Casino Mountlake Terrace,Mountlake Terrace,WA,cardroom,0,5215000,5215000,0,NA,WSGC HBCR FYE 2022
+1014,Papas Casino Restaurant and Lounge,Moses Lake,WA,cardroom,0,1821518,1821518,0,NA,WSGC HBCR FYE 2022
+10002,Caribbean Cardroom,Kirkland,WA,cardroom,0,4378000,4378000,0,NA,WSGC HBCR FYE 2022
+325,Coyote Bobs,Kennewick,WA,cardroom,0,5803000,5803000,0,NA,WSGC HBCR FYE 2022
+572,Great American Casino Tukwila,Tukwila,WA,cardroom,0,7718000,7718000,0,NA,WSGC HBCR FYE 2022
+956,Nob Hill Casino,Yakima,WA,cardroom,0,5221880,5221880,0,NA,WSGC HBCR FYE 2022
+1183,Roxys Bar and Grill,Seattle,WA,cardroom,0,5415358,5415358,0,NA,WSGC HBCR FYE 2022
+226,Casino Caribbean Yakima,Yakima,WA,cardroom,0,5679000,5679000,0,NA,WSGC HBCR FYE 2022
+1277,Slo Pitch Pub and Eatery,Bellingham,WA,cardroom,0,2338196,2338196,0,NA,WSGC HBCR FYE 2022
+1006,The Palace LaCenter,LaCenter,WA,cardroom,0,7461505,7461505,0,NA,WSGC HBCR FYE 2022
+1253,Silver Dollar Casino Mill Creek,Mill Creek,WA,cardroom,0,4293000,4293000,0,NA,WSGC HBCR FYE 2022
+10003,Clearwater Saloon and Casino,Wenatchee,WA,cardroom,0,3390587,3390587,0,NA,WSGC HBCR FYE 2022
+33,All Star Casino,Silverdale,WA,cardroom,0,4670032,4670032,0,NA,WSGC HBCR FYE 2022
+172,Buzz Inn Steakhouse East Wenatchee,East Wenatchee,WA,cardroom,0,3530353,3530353,0,NA,WSGC HBCR FYE 2022
+831,Macau Casino Tukwila,Tukwila,WA,cardroom,0,5609000,5609000,0,NA,WSGC HBCR FYE 2022
+571,Great American Casino Lakewood,Lakewood,WA,cardroom,0,4613000,4613000,0,NA,WSGC HBCR FYE 2022
+10004,New Phoenix,LaCenter,WA,cardroom,0,3382554,3382554,0,NA,WSGC HBCR FYE 2022
+615,Fortune Casino Lacey,Lacey,WA,cardroom,0,6680576,6680576,0,NA,WSGC HBCR FYE 2022
+771,Lilac Lanes and Casino,Spokane,WA,cardroom,0,2549099,2549099,0,NA,WSGC HBCR FYE 2022
+1255,Silver Dollar Casino SeaTac,SeaTac,WA,cardroom,0,4334000,4334000,0,NA,WSGC HBCR FYE 2022
+1254,Silver Dollar Casino Renton,Renton,WA,cardroom,0,6647000,6647000,0,NA,WSGC HBCR FYE 2022
+125,Black Pearl Restaurant and Card Room,Spokane,WA,cardroom,0,7629498,7629498,0,NA,WSGC HBCR FYE 2022
+1169,Riverside Casino,Tukwila,WA,cardroom,0,804000,804000,0,NA,WSGC HBCR FYE 2022
+1132,RCs at Valley Lanes,Sunnyside,WA,cardroom,0,625693,625693,0,NA,WSGC HBCR FYE 2022
+1432,Wild Goose Casino,Ellensburg,WA,cardroom,0,981348,981348,0,NA,WSGC HBCR FYE 2022
+764,Lancer Lanes Restaurant and Casino,Clarkston,WA,cardroom,0,1436003,1436003,0,NA,WSGC HBCR FYE 2022
+271,Chips Casino Lakewood,Lakewood,WA,cardroom,0,306000,306000,0,NA,WSGC HBCR FYE 2022
+549,Goldies Shoreline Casino,Shoreline,WA,cardroom,0,181000,181000,0,NA,WSGC HBCR FYE 2022
+942,Zs Restaurant at Zeppoz,Pullman,WA,cardroom,0,710651,710651,0,NA,WSGC HBCR FYE 2022
+1007,Palace Casino Lakewood,Lakewood,WA,cardroom,0,178000,178000,0,NA,WSGC HBCR FYE 2022

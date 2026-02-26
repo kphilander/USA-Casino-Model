@@ -1,0 +1,303 @@
+/* Full-screen map layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body, label, input, button, select {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+
+h1, h2, h3, h4, h5 { font-weight: 500; }
+
+div.outer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* Leaflet map fills the viewport */
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.leaflet-container {
+  background-color: #f8f9fa !important;
+}
+
+/* ---- Floating Control Panel (left) ---- */
+#controls {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  width: 320px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  transition: opacity 300ms;
+}
+
+#controls::-webkit-scrollbar {
+  width: 4px;
+}
+
+#controls::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+#controls .app-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 4px 0;
+}
+
+#controls .app-subtitle {
+  font-size: 11px;
+  color: #666;
+  margin: 0 0 16px 0;
+}
+
+#controls hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 12px 0;
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.input-row .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.input-row .btn {
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.help-text {
+  font-size: 11px;
+  color: #888;
+  margin-top: -4px;
+  margin-bottom: 10px;
+}
+
+.location-display {
+  background: #f0f4ff;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #333;
+}
+
+.location-display strong {
+  color: #1a1a2e;
+}
+
+.checkbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-bottom: 12px;
+}
+
+.checkbox-row > div {
+  flex: 0 0 auto;
+}
+
+.checkbox-row .checkbox {
+  margin: 0;
+}
+
+#btn_forecast {
+  width: 100%;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+/* ---- Floating Results Panel (right) ---- */
+#results_panel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  width: 360px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+}
+
+#results_panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+#results_panel::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.revenue-headline {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+.revenue-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.metric-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.metric-card .metric-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.metric-card .metric-label {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.metric-card.expansion .metric-value {
+  color: #16a34a;
+}
+
+.state-totals {
+  background: #f0f4ff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.state-totals .before-after {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ---- Cannibalization Table ---- */
+#canib_section {
+  margin-top: 8px;
+}
+
+#canib_section .canib-toggle {
+  cursor: pointer;
+  color: #3b82f6;
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+}
+
+#canib_section .canib-toggle:hover {
+  text-decoration: underline;
+}
+
+/* Make the DT table compact */
+#canib_table .dataTables_wrapper {
+  font-size: 12px;
+}
+
+#canib_table table.dataTable {
+  margin-top: 8px !important;
+}
+
+#canib_table th {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 6px !important;
+}
+
+#canib_table td {
+  padding: 3px 6px !important;
+  font-size: 12px;
+}
+
+/* View toggle radio buttons */
+.view-toggle {
+  margin-top: 14px;
+}
+
+.view-toggle .radio label {
+  font-size: 13px;
+}
+
+/* ---- Citation footer ---- */
+#cite {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: #666;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 4px 12px;
+  border-radius: 4px;
+  z-index: 999;
+  white-space: nowrap;
+}
+
+/* ---- Responsive adjustments ---- */
+@media (max-width: 800px) {
+  #controls {
+    width: 280px;
+    padding: 14px 16px;
+  }
+  #results_panel {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 50vh;
+    border-radius: 10px 10px 0 0;
+  }
+}
