@@ -7,14 +7,14 @@
 #   D_j = Σ_i [ pop_inc_i × A_j × f(d_ij) / Σ_k A_k × f(d_ik) ]
 #   ln(Rev_j) = intercept + gamma × ln(D_j)
 #
-# where A_j = exp(a_hotel × H_j + a_tables × T_j) and f(d) = (d + 0.1)^(-beta)
+# where A_j = exp(a_rooms × ln(rooms_j) + a_tables × T_j) and f(d) = (d + 0.1)^(-beta)
 #
 # The model is accretive: adding a new casino increases the competitive
 # denominator (reducing nearby casinos' D_j) while contributing its own D_j.
 # The state total naturally grows because the new casino taps previously
 # underserved demand.
 #
-# Depends on: allzips.rds, casinodata.rds, data/*_revenue_2022.csv
+# Depends on: allzips.rds, casinodata.rds, data/*_revenue_2024.csv
 # =============================================================================
 
 cat("Loading forecasting data...\n")
@@ -23,26 +23,63 @@ cat("Loading forecasting data...\n")
 allzips    <- readRDS("../allzips.rds")
 casinodata <- readRDS("../casinodata.rds")
 
-# Revenue data (9 states)
-pa_revenue <- read.csv("data/pa_revenue_2022.csv", stringsAsFactors = FALSE)
-oh_revenue <- read.csv("data/oh_revenue_2022.csv", stringsAsFactors = FALSE)
-md_revenue <- read.csv("data/md_revenue_2022.csv", stringsAsFactors = FALSE)
-ny_revenue <- read.csv("data/ny_revenue_2022.csv", stringsAsFactors = FALSE)
-ma_revenue <- read.csv("data/ma_revenue_2022.csv", stringsAsFactors = FALSE)
-ct_revenue <- read.csv("data/ct_revenue_2022.csv", stringsAsFactors = FALSE)
-in_revenue <- read.csv("data/in_revenue_2022.csv", stringsAsFactors = FALSE)
-mo_revenue <- read.csv("data/mo_revenue_2022.csv", stringsAsFactors = FALSE)
-ia_revenue <- read.csv("data/ia_revenue_2022.csv", stringsAsFactors = FALSE)
+# Revenue data (10 states, all CY2024)
+pa_revenue <- read.csv("data/pa_revenue_2024.csv", stringsAsFactors = FALSE)
+oh_revenue <- read.csv("data/oh_revenue_2024.csv", stringsAsFactors = FALSE)
+md_revenue <- read.csv("data/md_revenue_2024.csv", stringsAsFactors = FALSE)
+ny_revenue <- read.csv("data/ny_revenue_2024.csv", stringsAsFactors = FALSE)
+ma_revenue <- read.csv("data/ma_revenue_2024.csv", stringsAsFactors = FALSE)
+ct_revenue <- read.csv("data/ct_revenue_2024.csv", stringsAsFactors = FALSE)
+in_revenue <- read.csv("data/in_revenue_2024.csv", stringsAsFactors = FALSE)
+mo_revenue <- read.csv("data/mo_revenue_2024.csv", stringsAsFactors = FALSE)
+ia_revenue <- read.csv("data/ia_revenue_2024.csv", stringsAsFactors = FALSE)
 
-# CT table revenue scaling (31.8% table share from Mohegan Sun FY22 SEC filings).
+# Rename 2024 columns to _2022 suffix (downstream code uses _2022 throughout)
+for (df_name in c("pa_revenue", "oh_revenue", "md_revenue", "ny_revenue",
+                   "ma_revenue", "ct_revenue", "in_revenue", "mo_revenue", "ia_revenue")) {
+  df <- get(df_name)
+  names(df)[names(df) == "total_revenue_2024"]  <- "total_revenue_2022"
+  names(df)[names(df) == "table_revenue_2024"]  <- "table_revenue_2022"
+  names(df)[names(df) == "slots_revenue_2024"]  <- "slots_revenue_2022"
+  assign(df_name, df)
+}
+
+# CT table revenue scaling (32.2% table share from Mohegan Sun FY24 SEC filings).
 # NOTE: This Mohegan-derived share is applied to both Mohegan Sun and Foxwoods;
 # Foxwoods may have a different table/slot mix but does not publicly report it.
-ct_revenue$table_revenue_2022 <- round(ct_revenue$slots_revenue_2022 * 0.318 / (1 - 0.318))
+ct_revenue$table_revenue_2022 <- round(ct_revenue$slots_revenue_2022 * 0.322 / (1 - 0.322))
 ct_revenue$total_revenue_2022 <- ct_revenue$slots_revenue_2022 + ct_revenue$table_revenue_2022
 
-revenue_data <- rbind(pa_revenue, oh_revenue, md_revenue, ny_revenue,
-                      ma_revenue, ct_revenue, in_revenue, mo_revenue, ia_revenue)
-revenue_data <- revenue_data[!is.na(revenue_data$casino_id), ]
+rev_full <- rbind(pa_revenue, oh_revenue, md_revenue, ny_revenue,
+                  ma_revenue, ct_revenue, in_revenue, mo_revenue, ia_revenue)
+rev_full <- rev_full[!is.na(rev_full$casino_id), ]
+# Keep compact 3-column revenue_data for compatibility with border-state rbind
+revenue_data <- rev_full[, c("casino_id", "state", "total_revenue_2022")]
+# Separate table revenue reference for slots-only detection
+study_table_rev <- rev_full[, c("casino_id", "table_revenue_2022")]
+
+# Additional state property-level revenue data (border states with public data)
+# Only states where government regulators publish actual property-level GGR.
+extra_border_files <- list.files("data",
+  pattern = "^(nj|mi|il|ks)_revenue",
+  full.names = TRUE)
+extra_border_files <- extra_border_files[grepl("\\.csv$", extra_border_files)]
+for (f in extra_border_files) {
+  rev <- tryCatch(read.csv(f, stringsAsFactors = FALSE), error = function(e) NULL)
+  if (is.null(rev)) next
+  rev <- rev[!is.na(rev$casino_id), ]
+  rev_col <- intersect(c("total_revenue", "total_revenue_2022"), names(rev))
+  if (length(rev_col) == 0) next
+  rev$total_revenue_2022 <- rev[[rev_col[1]]]
+  if (!"state" %in% names(rev)) {
+    st <- toupper(gsub("_revenue.*", "", basename(f)))
+    rev$state <- st
+  }
+  revenue_data <- rbind(revenue_data,
+                        rev[, c("casino_id", "state", "total_revenue_2022")])
+  cat("  Loaded border state revenue:", basename(f), "-", nrow(rev), "properties\n")
+}
+revenue_data <- revenue_data[!is.na(revenue_data$total_revenue_2022), ]
 
 # ---- Study region setup (mirrors run_analysis.R) ----
 primary_states <- c("PA", "OH", "MD", "NY", "MA", "CT", "IN", "MO", "IA")
@@ -96,10 +133,37 @@ casinos_study <- rbind(casinos_study, data.frame(
   stringsAsFactors = FALSE
 ))
 
-# Hotel overrides (verified for 2022)
+# Inject Terre Haute Casino (opened 2024, IN)
+casinos_study <- rbind(casinos_study, data.frame(
+  casino_id = 9998, name = "Terre Haute Casino",
+  state = "IN", latitude = 39.4667, longitude = -87.4139, hotel = 0,
+  stringsAsFactors = FALSE
+))
+
+# Inject PA mini-casinos (opened after 2022)
+casinos_study <- rbind(casinos_study, data.frame(
+  casino_id = c(9003, 9004, 9005),
+  name = c("Hollywood Casino York", "Hollywood Casino Morgantown", "Parx Casino Shippensburg"),
+  state = rep("PA", 3),
+  latitude  = c(39.9526, 40.1551, 40.0512),
+  longitude = c(-76.7275, -75.8855, -77.5199),
+  hotel = rep(0, 3), stringsAsFactors = FALSE
+))
+
+# Inject NY new racinos (opened after 2022)
+casinos_study <- rbind(casinos_study, data.frame(
+  casino_id = c(9001, 9002),
+  name = c("Nassau OTB VGM Facility", "Resorts World Hudson Valley"),
+  state = rep("NY", 2),
+  latitude  = c(40.7770, 41.5034),
+  longitude = c(-73.4674, -74.0104),
+  hotel = rep(0, 2), stringsAsFactors = FALSE
+))
+
+# Hotel overrides (verified for 2024)
 casinos_study$has_hotel <- casinos_study$hotel
 casinos_study$has_hotel[casinos_study$casino_id == 1060] <- 0  # Presque Isle Downs
-casinos_study$has_hotel[casinos_study$casino_id == 865]  <- 0  # Hard Rock Northern IN
+casinos_study$has_hotel[casinos_study$casino_id == 865]  <- 1  # Hard Rock Northern IN (hotel now open)
 casinos_study$has_hotel[casinos_study$casino_id == 1167] <- 1  # Rivers Schenectady
 casinos_study$has_hotel[casinos_study$casino_id == 83]   <- 1  # Batavia Downs
 casinos_study$has_hotel[casinos_study$casino_id == 1162] <- 1  # River City MO
@@ -110,19 +174,76 @@ casinos_study$has_hotel[casinos_study$casino_id == 366]  <- 1  # Diamond Jo Wort
 casinos_study$has_hotel[casinos_study$casino_id == 1434] <- 1  # Wild Rose Clinton IA
 casinos_study$has_hotel[casinos_study$casino_id == 1435] <- 1  # Wild Rose Emmetsburg IA
 
+# ---- Hotel/tables corrections: border states ----
+# Verified Feb 2026. Only border states in this model's scope.
+# Must stay in sync with build_data.R corrections.
+
+# -- Hotel corrections: set has_hotel = 1 (currently 0) --
+# AR: All 3 casinos expanded with hotels
+casinos_study$has_hotel[casinos_study$casino_id %in% c(966, 1165, 1289)] <- 1
+# WV: Mountaineer Casino (350+ room hotel)
+casinos_study$has_hotel[casinos_study$casino_id == 941] <- 1
+# MN: Jackpot Junction (700, 276-room hotel)
+casinos_study$has_hotel[casinos_study$casino_id == 700] <- 1
+# ND: 4 of 5 tribal casinos have hotels (ND commercial already filtered)
+casinos_study$has_hotel[casinos_study$casino_id %in% c(8, 344, 1054, 1294)] <- 1
+# OK: Major tribal resorts with hotels
+casinos_study$has_hotel[casinos_study$casino_id %in% c(
+  61, 275, 430, 555, 665, 818, 1164, 1173, 1363, 1457
+)] <- 1
+# SD: Tribal and deadwood hotels
+casinos_study$has_hotel[casinos_study$casino_id %in% c(
+  345, 487, 564, 1058, 1186, 1266
+)] <- 1
+# WI: Ho-Chunk (628), Potawatomi (1046), Lake of the Torches (762)
+casinos_study$has_hotel[casinos_study$casino_id %in% c(628, 1046, 762)] <- 1
+# MI: FireKeepers (474), MGM Grand Detroit (888), Soaring Eagle (1283)
+casinos_study$has_hotel[casinos_study$casino_id %in% c(474, 888, 1283)] <- 1
+
+# -- Hotel corrections: set has_hotel = 0 (currently 1) --
+# KS: Boot Hill Casino (no hotel)
+casinos_study$has_hotel[casinos_study$casino_id == 141] <- 0
+# MN: Seven Clans Red Lake (no true hotel)
+casinos_study$has_hotel[casinos_study$casino_id == 1233] <- 0
+
+# ---- Hotel room counts (power-function specification) ----
+hotel_rooms_data <- read.csv("data/wcd_hotel_rooms.csv", stringsAsFactors = FALSE)
+hotel_rooms_data <- hotel_rooms_data[, c("casino_id", "hotel_rooms")]
+hotel_rooms_data$hotel_rooms[is.na(hotel_rooms_data$hotel_rooms)] <- 0
+casinos_study <- merge(casinos_study, hotel_rooms_data, by = "casino_id", all.x = TRUE)
+casinos_study$hotel_rooms[is.na(casinos_study$hotel_rooms)] <- 0
+
+# Room counts for injected casinos
+casinos_study$hotel_rooms[casinos_study$casino_id == 9999] <- 503  # Caesars Southern Indiana
+casinos_study$hotel_rooms[casinos_study$casino_id == 9998] <- 0    # Terre Haute Casino
+casinos_study$hotel_rooms[casinos_study$casino_id == 9003] <- 0    # Hollywood Casino York
+casinos_study$hotel_rooms[casinos_study$casino_id == 9004] <- 0    # Hollywood Casino Morgantown
+casinos_study$hotel_rooms[casinos_study$casino_id == 9005] <- 0    # Parx Casino Shippensburg
+casinos_study$hotel_rooms[casinos_study$casino_id == 9001] <- 0    # Nassau OTB VGM Facility
+casinos_study$hotel_rooms[casinos_study$casino_id == 9002] <- 0    # Resorts World Hudson Valley
+
+# Compute ln(hotel_rooms) for power-function attractiveness
+casinos_study$ln_hotel_rooms <- ifelse(casinos_study$hotel_rooms > 0, log(casinos_study$hotel_rooms), 0)
+
 # has_tables
 casinos_study$has_tables <- 1
 slots_only_ids <- c()
-for (i in 1:nrow(revenue_data)) {
-  trev <- revenue_data$table_revenue_2022[i]
-  if (!is.na(trev) && trev == 0) slots_only_ids <- c(slots_only_ids, revenue_data$casino_id[i])
+for (i in 1:nrow(study_table_rev)) {
+  trev <- study_table_rev$table_revenue_2022[i]
+  if (!is.na(trev) && trev == 0) slots_only_ids <- c(slots_only_ids, study_table_rev$casino_id[i])
 }
 slots_only_ids <- c(slots_only_ids,
                     oh_revenue$casino_id[oh_revenue$facility_type == "racino"],
-                    ny_revenue$casino_id[ny_revenue$facility_type == "VLT"],
+                    ny_revenue$casino_id[ny_revenue$facility_type == "racino"],
                     ma_revenue$casino_id[grepl("Plainridge", ma_revenue$name, ignore.case = TRUE)])
 slots_only_ids <- unique(slots_only_ids[!is.na(slots_only_ids)])
 casinos_study$has_tables[casinos_study$casino_id %in% slots_only_ids] <- 0
+
+# Border state slots-only corrections (non-study states in model scope)
+# NE: Iron Horse Bar (slots only)
+casinos_study$has_tables[casinos_study$casino_id == 671] <- 0
+# NJ: Hard Rock Meadowlands (sports betting only)
+casinos_study$has_tables[casinos_study$casino_id == 584] <- 0
 
 casinos_study$observed <- casinos_study$casino_id %in% revenue_data$casino_id
 
@@ -165,6 +286,11 @@ casinos_study$is_convenience[casinos_study$state == "NM" &
 casinos_study$is_convenience[casinos_study$casino_id == 191] <- 1
 # WY: Smokeshop
 casinos_study$is_convenience[casinos_study$casino_id == 18] <- 1
+# Closed properties (no longer operating)
+casinos_study$is_convenience[casinos_study$casino_id %in% c(
+  363,   # Diamond Jacks Bossier City LA (closed)
+  893    # Old West Casino SD (closed)
+)] <- 1
 casinos_study <- casinos_study[casinos_study$is_convenience == 0, ]
 
 # ---- Haversine and decay functions ----
@@ -200,6 +326,7 @@ markets <- data.frame(
   latitude = numeric(n_mkts), longitude = numeric(n_mkts),
   observed = logical(n_mkts), revenue = numeric(n_mkts),
   has_hotel = integer(n_mkts), has_tables = integer(n_mkts),
+  hotel_rooms = numeric(n_mkts),
   state = character(n_mkts), label = character(n_mkts),
   stringsAsFactors = FALSE
 )
@@ -238,8 +365,15 @@ for (k in seq_along(market_ids)) {
   markets$observed[k] <- has_rev; markets$revenue[k] <- tot_rev
   markets$has_hotel[k] <- as.integer(any(casinos_study$has_hotel[idx] == 1, na.rm = TRUE))
   markets$has_tables[k] <- as.integer(any(casinos_study$has_tables[idx] == 1, na.rm = TRUE))
+  markets$hotel_rooms[k] <- sum(casinos_study$hotel_rooms[idx], na.rm = TRUE)
   markets$state[k] <- mkt_st; markets$label[k] <- lbl
 }
+
+# is_cardroom: no cardrooms in this model's scope (WA/CA excluded)
+markets$is_cardroom <- 0L
+
+# ln(hotel_rooms) for power-function attractiveness
+markets$ln_hotel_rooms <- ifelse(markets$hotel_rooms > 0, log(markets$hotel_rooms), 0)
 
 # ---- Compute baseline distance matrix ----
 n_zips <- nrow(zips_study)
@@ -250,28 +384,29 @@ for (j in 1:n_mkts) {
 }
 
 # ---- Competitive Gravity Revenue Model Parameters ----
-# From 10-State Model estimation (run_analysis.R) with is_cardroom indicator
-# Best model: Power decay
-cg_beta    <- 2.6738    # distance decay exponent
-cg_a_hotel <- 0.207     # hotel attractiveness coefficient
-cg_a_table <- 0.452     # tables attractiveness coefficient
-cg_intercept <- 5.624   # OLS intercept
-cg_gamma     <- 0.995   # demand elasticity
-cg_cardroom_delta <- -1.851  # cardroom revenue discount [exp(-1.85) = 15.7% of full-casino]
-cg_duan_smear <- 1.2833 # Duan (1983) retransformation bias correction
+# From 16-State Model estimation (run_analysis.R) with binary hotel specification
+# 186 properties across 16 states, all revenue in 2024$.
+# Best model: Power decay with binary has_hotel attractiveness
+cg_beta    <- 2.9459    # distance decay exponent
+cg_a_hotel <- 0.6300    # binary hotel attractiveness coefficient
+cg_a_table <- 0.5370    # tables attractiveness coefficient
+cg_intercept <- 6.6854  # OLS intercept (in 2024$)
+cg_gamma     <- 0.9147  # demand elasticity
+cg_cardroom_delta <- -2.0043  # cardroom revenue discount
+cg_duan_smear <- 1.2688 # Duan (1983) retransformation bias correction
 
 MAX_DIST <- 150  # miles cutoff
 
 cat("  Loaded", nrow(zips_study), "ZIPs,", nrow(casinos_study), "casinos,",
     n_mkts, "markets (", sum(markets$observed), "observed)\n")
-cat("  CG model: power decay, beta=", cg_beta, ", gamma=", cg_gamma, "\n")
+cat("  CG model: power decay, beta=", cg_beta, ", gamma=", cg_gamma, ", a_hotel=", cg_a_hotel, "\n")
 cat("Forecasting engine ready.\n\n")
 
 # =============================================================================
 # FORECASTING FUNCTION
 # =============================================================================
 
-forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
+forecast_casino <- function(lat, lon, hotel_rooms = 200, has_tables = 1,
                             is_cardroom = 0,
                             state = NULL, state_ggr = NULL,
                             label = "Proposed Casino") {
@@ -282,13 +417,15 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
     n_casinos = 1L,
     latitude = lat, longitude = lon,
     observed = FALSE, revenue = 0,
-    has_hotel = as.integer(has_hotel),
+    has_hotel = as.integer(hotel_rooms > 0),
     has_tables = as.integer(has_tables),
+    hotel_rooms = as.numeric(hotel_rooms),
     is_cardroom = as.integer(is_cardroom),
     state = ifelse(is.null(state), "NEW", state),
     label = label,
     stringsAsFactors = FALSE
   )
+  # has_hotel already set above from hotel_rooms > 0
 
   markets_new <- rbind(markets, new_mkt)
   n_mkts_new <- nrow(markets_new)
@@ -420,8 +557,8 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
   cat("  REVENUE FORECAST:", label, "\n")
   cat("=================================================================\n")
   cat(sprintf("  Location: (%.4f, %.4f)\n", lat, lon))
-  cat(sprintf("  Hotel: %s  |  Tables: %s\n",
-              ifelse(has_hotel, "Yes", "No"), ifelse(has_tables, "Yes", "No")))
+  cat(sprintf("  Hotel rooms: %s  |  Tables: %s\n",
+              format(hotel_rooms, big.mark = ","), ifelse(has_tables, "Yes", "No")))
   cat(sprintf("  State: %s\n\n", target_state))
 
   cat(sprintf("  Demand index (D_j):     %s\n", format(round(new_demand), big.mark = ",")))
@@ -460,7 +597,7 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
   invisible(list(
     label = label,
     lat = lat, lon = lon,
-    has_hotel = has_hotel, has_tables = has_tables,
+    hotel_rooms = hotel_rooms, has_tables = has_tables,
     state = target_state,
     demand_index = new_demand,
     predicted_revenue = predicted_revenue,

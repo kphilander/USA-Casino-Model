@@ -83,14 +83,30 @@ ui <- tagList(
 
       # Casino attributes
       div(style = "display: flex; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 12px;",
-        tags$div(title = "Full-service casino with on-site hotel accommodations; increases destination appeal",
-          checkboxInput("has_hotel", "Hotel/Resort", value = TRUE)
+        tags$div(title = "Hotel size category; thresholds reflect destination resort qualification levels",
+          selectInput("hotel_rooms", "Hotel Size",
+            choices = c("No hotel" = 0, "Under 500 rooms" = 200,
+                        "500\u20131,499 rooms" = 750, "1,500+ rooms" = 2000),
+            selected = 200, width = "160px")
         ),
         tags$div(title = "Casino offers table games (blackjack, poker, roulette, etc.) in addition to slots",
           checkboxInput("has_tables", "Table Games", value = TRUE)
         ),
         tags$div(title = "Card room only \u2014 no slot machines (e.g., WA/CA commercial card rooms); implies table games",
           checkboxInput("is_cardroom", "Cardroom (no slots)", value = FALSE)
+        ),
+        tags$div(
+          checkboxInput("destination_resort", "Destination Resort", value = FALSE),
+          tags$small(style = "display:block; color:#666; margin-top:-8px; line-height:1.3;",
+            "~4x revenue premium. Qualifies if:",
+            tags$br(),
+            "\u2022 1,500+ rooms (mega-resort), OR",
+            tags$br(),
+            "\u2022 500+ rooms in a casino cluster",
+            tags$br(),
+            "  or tourist destination (e.g.,",
+            tags$br(),
+            "  Atlantic City, Biloxi, New Orleans)")
         )
       ),
 
@@ -215,6 +231,7 @@ server <- function(input, output, session) {
 
     rv$shape_just_clicked <- TRUE
     rv$forecast_result <- NULL  # clear forecast view
+    leafletProxy("map") %>% clearGroup("catchment")  # clear stale catchment polygons
 
     # Look up the casino
     cid <- as.integer(sub("^cas_", "", lid))
@@ -241,7 +258,7 @@ server <- function(input, output, session) {
       name           = cas$name,
       state          = cas$state,
       type           = cas$tribal,
-      has_hotel      = cas$has_hotel,
+      hotel_rooms    = if (!is.null(cas$hotel_rooms)) cas$hotel_rooms else 0,
       has_tables     = cas$has_tables,
       lat            = cas$latitude,
       lon            = cas$longitude,
@@ -251,13 +268,17 @@ server <- function(input, output, session) {
       within_cluster_share = wcs,
       allocated_rev  = if (mkt$observed) mkt$revenue * wcs else NA,
       cluster_rev    = if (mkt$observed) mkt$revenue else NA,
-      tribal_pseudo  = if (!is.null(mkt$tribal_pseudo) && mkt$tribal_pseudo > 0) mkt$tribal_pseudo * wcs else NA,
+      tribal_pseudo  = if (!is.null(mkt$tribal_pseudo) && !is.na(mkt$tribal_pseudo) && mkt$tribal_pseudo > 0) mkt$tribal_pseudo * wcs else NA,
       model_pred_rev = mkt$model_pred_rev * wcs,
       demand_index   = mkt$demand_index,
       aga_state      = aga_state,
       state_total    = state_total,
       observed       = mkt$observed,
-      commercial_share = if (!is.null(mkt$commercial_share)) mkt$commercial_share else 1
+      commercial_share = if (!is.null(mkt$commercial_share)) mkt$commercial_share else 1,
+      # Three-tier revenue display
+      actual_rev     = if (!is.null(cas$actual_revenue)) cas$actual_revenue else NA,
+      revenue_year   = if (!is.null(cas$revenue_year)) cas$revenue_year else NA,
+      gravity_rev    = if (!is.null(mkt$gravity_rev) && mkt$observed) mkt$gravity_rev * wcs else NA
     )
   })
 
@@ -338,10 +359,10 @@ server <- function(input, output, session) {
     )
   })
 
-  # ---- Cardroom toggle: auto-check tables (cardrooms ARE table games), uncheck hotel ----
+  # ---- Cardroom toggle: auto-check tables (cardrooms ARE table games), zero out hotel rooms ----
   observeEvent(input$is_cardroom, {
     if (input$is_cardroom) {
-      updateCheckboxInput(session, "has_hotel", value = FALSE)
+      updateSelectInput(session, "hotel_rooms", selected = 0)
       updateCheckboxInput(session, "has_tables", value = TRUE)
     }
   })
@@ -350,6 +371,18 @@ server <- function(input, output, session) {
   observeEvent(input$has_tables, {
     if (!input$has_tables && input$is_cardroom) {
       updateCheckboxInput(session, "is_cardroom", value = FALSE)
+    }
+  })
+
+  # ---- Hotel size auto-links to destination resort ----
+  observeEvent(input$hotel_rooms, {
+    rooms <- as.integer(input$hotel_rooms)
+    if (rooms >= 1500) {
+      # 1,500+ rooms = automatic destination resort (Rule 1)
+      updateCheckboxInput(session, "destination_resort", value = TRUE)
+    } else if (rooms == 0) {
+      # No hotel = cannot be destination resort
+      updateCheckboxInput(session, "destination_resort", value = FALSE)
     }
   })
 
@@ -364,9 +397,10 @@ server <- function(input, output, session) {
     withProgress(message = "Running forecast...", value = 0.5, {
       result <- forecast_casino(
         lat = rv$lat, lon = rv$lon,
-        has_hotel = as.integer(input$has_hotel),
+        hotel_rooms = as.integer(input$hotel_rooms),
         has_tables = as.integer(input$has_tables),
         is_cardroom = as.integer(input$is_cardroom),
+        destination_resort = as.integer(input$destination_resort),
         state = target_state,
         label = "Proposed Casino",
         env = env
@@ -383,14 +417,19 @@ server <- function(input, output, session) {
     # Case 1: Existing casino info
     if (!is.null(rv$casino_info)) {
       info <- rv$casino_info
-      alloc_label <- if (!is.na(info$allocated_rev)) {
-        paste0("$", formatC(round(info$allocated_rev / 1e6), format = "d", big.mark = ","), "M")
-      } else "N/A"
-      pred_label <- paste0("$", formatC(round(info$model_pred_rev / 1e6), format = "d", big.mark = ","), "M")
 
-      calib_ratio <- if (!is.na(info$allocated_rev) && info$model_pred_rev > 0) {
-        round(info$allocated_rev / info$model_pred_rev, 2)
-      } else NA
+      # Format the three revenue values
+      actual_label <- if (!is.na(info$actual_rev)) {
+        paste0("$", formatC(round(info$actual_rev / 1e6), format = "d", big.mark = ","), "M")
+      } else NULL
+      gravity_label <- if (!is.na(info$gravity_rev)) {
+        paste0("$", formatC(round(info$gravity_rev / 1e6), format = "d", big.mark = ","), "M")
+      } else "N/A"
+      pred_label <- if (!is.na(info$model_pred_rev)) {
+        paste0("$", formatC(round(info$model_pred_rev / 1e6), format = "d", big.mark = ","), "M")
+      } else "N/A"
+
+      year_tag <- if (!is.na(info$revenue_year)) paste0(" (", info$revenue_year, " data, 2026$)") else ""
 
       # Tribal pseudo-estimate label
       tribal_label <- if (!is.na(info$tribal_pseudo)) {
@@ -404,7 +443,7 @@ server <- function(input, output, session) {
         div(class = "revenue-headline", style = "font-size: 20px;", info$name),
         div(class = "revenue-label",
             paste0(info$state, " \u2022 ", info$type,
-                   if (info$has_hotel) " \u2022 Hotel" else "",
+                   if (!is.null(info$hotel_rooms) && info$hotel_rooms > 0) paste0(" \u2022 ", info$hotel_rooms, " Rooms") else "",
                    if (info$has_tables) " \u2022 Table Games" else "")),
 
         if (info$n_in_cluster > 1) {
@@ -422,21 +461,44 @@ server <- function(input, output, session) {
           )
         },
 
-        # Revenue metrics (individual casino share of cluster)
+        # ---- Three-tier revenue display ----
+
+        # Top: Reported Revenue (full-width highlight card)
+        div(class = "metric-highlight",
+          if (!is.null(actual_label)) {
+            tagList(
+              div(class = "metric-value", actual_label),
+              div(class = "metric-label", paste0("Reported Revenue", year_tag)),
+              div(class = "metric-sublabel", "Annual GGR, adjusted to 2026 dollars")
+            )
+          } else {
+            tagList(
+              div(class = "metric-value", style = "color: #999; font-size: 16px;", "Not Available"),
+              div(class = "metric-label", "Reported Revenue"),
+              div(class = "metric-sublabel",
+                if (info$type == "Tribal") "Tribal gaming revenue is not publicly reported"
+                else "No property-level revenue data for this state")
+            )
+          }
+        ),
+
+        # Bottom: Two model-based estimates (2-column grid)
         div(class = "metric-grid",
           div(class = "metric-card",
-            div(class = "metric-value", alloc_label),
-            div(class = "metric-label",
-              if (!is.na(info$allocated_rev)) "Allocated Revenue" else "Allocated Revenue")
+            div(class = "metric-value", gravity_label),
+            div(class = "metric-label", "State-Share Estimate"),
+            div(class = "metric-sublabel", "Share of state total, 2026$")
           ),
           div(class = "metric-card",
             div(class = "metric-value", pred_label),
-            div(class = "metric-label", "Model Predicted")
+            div(class = "metric-label", "Model Prediction"),
+            div(class = "metric-sublabel", "Gravity model estimate, 2026$")
           )
         ),
 
         # Methodology notes
-        if (!is.na(calib_ratio)) {
+        if (!is.na(info$gravity_rev) && info$model_pred_rev > 0) {
+          calib_ratio <- round(info$gravity_rev / info$model_pred_rev, 2)
           mixed_note <- if (is_mixed) {
             paste0("<br>Mixed cluster (", comm_pct, "% commercial attractiveness)",
                    " &mdash; tribal pseudo-est.: ", tribal_label)
@@ -447,12 +509,12 @@ server <- function(input, output, session) {
           } else ""
           div(class = "state-totals",
             HTML(paste0(
-              "<strong>Calibration Ratio: ", calib_ratio, "</strong><br>",
+              "<strong>Calibration Ratio: ", calib_ratio, "</strong>",
+              " (state-share / model prediction)<br>",
               "<span style='font-size:11px; color:#666;'>",
-              "Demand share of state total ($",
+              "State total: $",
               formatC(round(info$state_total / 1e6), format = "d", big.mark = ","),
-              "M)", mixed_note, cluster_note, "<br>",
-              "Predicted: CG Model &mdash; ln(Rev) = 5.459 + 1.009 &times; ln(D) &minus; 1.851 &times; Cardroom</span>"
+              "M", mixed_note, cluster_note, "</span>"
             ))
           )
         } else if (info$aga_state && info$type == "Tribal") {
@@ -463,17 +525,15 @@ server <- function(input, output, session) {
           div(class = "state-totals",
             HTML(paste0(
               "<span style='font-size:11px; color:#666;'>",
-              "Tribal venue &mdash; AGA state total covers commercial casinos only",
-              tribal_est, "<br>",
-              "CG Model: ln(Rev) = 5.459 + 1.009 &times; ln(D) &minus; 1.851 &times; Cardroom</span>"
+              "Tribal venue &mdash; state total covers commercial casinos only",
+              tribal_est, "</span>"
             ))
           )
-        } else {
+        } else if (!info$aga_state) {
           div(class = "state-totals",
             HTML(paste0(
               "<span style='font-size:11px; color:#666;'>",
-              "No AGA state revenue data &mdash; showing raw model prediction only<br>",
-              "CG Model: ln(Rev) = 5.459 + 1.009 &times; ln(D) &minus; 1.851 &times; Cardroom</span>"
+              "No state-level revenue data &mdash; model prediction only</span>"
             ))
           )
         },
@@ -494,7 +554,7 @@ server <- function(input, output, session) {
 
     tagList(
       div(class = "revenue-headline", rev_label),
-      div(class = "revenue-label", "Predicted Annual Revenue"),
+      div(class = "revenue-label", "Predicted Annual Revenue (2026$)"),
       p(style = "font-size: 10px; color: #888; margin-top: 2px;",
         if (res$is_existing_state) {
           "Competitive gravity model, calibrated to state commercial GGR"
@@ -511,6 +571,16 @@ server <- function(input, output, session) {
             "\u26A0\uFE0F <strong>Within existing market cluster</strong><br>",
             paste(sprintf("%s (%.1f mi)", nm$label, nm$distance), collapse = "<br>"),
             "<br><span style='color:#92400e;'>Direct product competition expected in this local market.</span>"
+          ))
+        )
+      },
+
+      # Model confidence warnings
+      if (length(res$warnings) > 0) {
+        div(style = "margin: 8px 0; padding: 8px 10px; background: #fef2f2; border-left: 3px solid #ef4444; border-radius: 4px; font-size: 11px; color: #991b1b;",
+          HTML(paste0(
+            "<strong>Model limitations</strong><br>",
+            paste0("\u2022 ", res$warnings, collapse = "<br>")
           ))
         )
       },
@@ -538,7 +608,7 @@ server <- function(input, output, session) {
       if (res$is_existing_state) {
         div(class = "state-totals",
           HTML(paste0(
-            "<strong>", res$state, " State Totals</strong><br>",
+            "<strong>", res$state, " State Totals (2026$)</strong><br>",
             "<div class='before-after'>",
             "<span>Before: $", formatC(round(res$old_state_total / 1e6), format = "d", big.mark = ","), "M</span>",
             "<span>After: $", formatC(round(res$new_state_total / 1e6), format = "d", big.mark = ","), "M</span>",
@@ -561,37 +631,56 @@ server <- function(input, output, session) {
     ct <- rv$forecast_result$cannibalization_table
     if (is.null(ct)) return(NULL)
 
-    # Format for display
+    has_share <- !all(is.na(ct$Share_Change_pp))
+    has_model <- any(ct$Source == "Model Est.")
+
+    # Build display columns — Source always shown
     display <- data.frame(
       Market = ct$Market,
+      Source = ct$Source,
       `Before ($M)` = ct$Before_Rev_M,
       `After ($M)` = ct$After_Rev_M,
       `Change ($M)` = ct$Change_M,
-      `Share Chg (pp)` = ct$Share_Change_pp,
       check.names = FALSE,
       stringsAsFactors = FALSE
     )
+    if (has_share) display$`Share Chg (pp)` <- ct$Share_Change_pp
 
-    DT::datatable(display,
+    n_right <- ncol(display) - 1  # all columns except Market are right-aligned
+
+    dt <- DT::datatable(display,
       options = list(
         pageLength = 20,
         dom = 't',
         ordering = TRUE,
         scrollX = TRUE,
         columnDefs = list(
-          list(className = 'dt-right', targets = 1:4)
+          list(className = 'dt-right', targets = 2:n_right)
         )
       ),
       rownames = FALSE,
-      selection = "none"
+      selection = "none",
+      caption = htmltools::tags$caption(
+        style = "caption-side: bottom; font-size: 11px; color: #888; padding-top: 6px;",
+        paste0("All figures in 2026 dollars.",
+               if (has_model) " Model Est. rows use uncalibrated gravity predictions." else "")
+      )
     ) %>%
       formatStyle("Change ($M)",
         color = styleInterval(0, c("#dc2626", "#16a34a")),
         fontWeight = "bold"
       ) %>%
-      formatStyle("Share Chg (pp)",
+      formatStyle("Source",
+        color = styleEqual("Model Est.", "#9ca3af"),
+        fontStyle = styleEqual("Model Est.", "italic")
+      )
+
+    if (has_share) {
+      dt <- dt %>% formatStyle("Share Chg (pp)",
         color = styleInterval(0, c("#dc2626", "#16a34a"))
       )
+    }
+    dt
   })
 
   # ---- Catchment area map rendering ----

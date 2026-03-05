@@ -22,7 +22,7 @@ decay_power <- function(d, beta) (d + 0.1)^(-beta)
 
 # ---- Auto-detect state/city from nearest ZIP ----
 detect_location <- function(lat, lon, allzips_map) {
-  dists <- (allzips_map$latitude - lat)^2 + (allzips_map$longitude - lon)^2
+  dists <- haversine(allzips_map$longitude, allzips_map$latitude, lon, lat)
   nearest <- which.min(dists)
   list(
     state   = as.character(allzips_map$state[nearest]),
@@ -47,8 +47,8 @@ lookup_zip <- function(zipcode, allzips_map) {
 # =============================================================================
 # MAIN FORECAST FUNCTION
 # =============================================================================
-forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
-                            is_cardroom = 0,
+forecast_casino <- function(lat, lon, hotel_rooms = 200, has_tables = 1,
+                            is_cardroom = 0, destination_resort = 0,
                             state = NULL, state_ggr = NULL,
                             label = "Proposed Casino", env) {
 
@@ -68,7 +68,9 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
     n_casinos  = 1L,
     latitude   = lat, longitude = lon,
     observed   = FALSE, revenue = 0,
-    has_hotel  = as.integer(has_hotel),
+    has_hotel  = as.integer(hotel_rooms > 0),
+    hotel_rooms = as.numeric(hotel_rooms),
+    destination_resort = as.integer(destination_resort),
     has_tables = as.integer(has_tables),
     is_cardroom = as.integer(is_cardroom),
     state      = ifelse(is.null(state), "NEW", state),
@@ -103,7 +105,8 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
   # In competitive markets, hotel/tables differentiate through gravity demand share.
   # In isolated markets (no competitors), share = 100% regardless of amenities.
   # Fix: scale demand from uncontested zips by attractiveness factor.
-  attract_new <- exp(p$cg_a_hotel * has_hotel + p$cg_a_table * has_tables)
+  has_hotel_proposed <- as.integer(hotel_rooms > 0)
+  attract_new <- exp(p$cg_a_hotel * has_hotel_proposed + p$cg_a_table * has_tables)
   if (attract_new != 1) {
     monopoly_mask <- probs[, n_mkts_new] > 0.99  # effectively uncontested zips
     if (any(monopoly_mask)) {
@@ -136,6 +139,12 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
   new_idx <- n_mkts_new
   new_demand <- demand_idx[new_idx]
   new_pred_rev <- pred_rev[new_idx]
+
+  # Apply destination resort premium as revenue multiplier.
+  # The premium captures tourism/destination draw not reflected in residential-population
+  # gravity demand. Derived from LN destination model (coef=1.391, t=3.99).
+  dest_mult <- if (!is.null(p$cg_dest_premium) && destination_resort == 1) p$cg_dest_premium else 1
+  new_pred_rev <- new_pred_rev * dest_mult
 
   # Determine target state
   target_state <- ifelse(is.null(state), "NEW", state)
@@ -189,6 +198,11 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
       before_share <- before_rev / actual_state_total
       after_share  <- after_rev / new_state_total
 
+      # Revenue source tag from build pipeline
+      src <- if (!is.null(markets$revenue_source) && !is.na(markets$revenue_source[idx])) {
+        markets$revenue_source[idx]
+      } else "State-Share Est."
+
       canib_rows[[length(canib_rows) + 1]] <- data.frame(
         Market          = markets$label[idx],
         Before_Rev_M    = round(before_rev / 1e6, 1),
@@ -197,6 +211,7 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
         Before_Share    = round(before_share * 100, 2),
         After_Share     = round(after_share * 100, 2),
         Share_Change_pp = round((after_share - before_share) * 100, 2),
+        Source          = src,
         stringsAsFactors = FALSE
       )
     }
@@ -210,7 +225,51 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
     expansion_dollars <- new_pred_rev
     expansion_pct     <- NA
     actual_state_total <- 0
-    canib_table <- NULL
+
+    # Cannibalization estimates for all affected markets.
+    # Uses best available revenue in priority order:
+    #   1. Reported (property-level) — from override states
+    #   2. State-Share Est. (AGA gravity) — from calibrated states
+    #   3. Model Est. (uncalibrated gravity prediction) — fallback
+    canib_rows <- list()
+    for (j in 1:n_mkts) {
+      d_before <- demand_idx_base_all[j]
+      d_after  <- demand_idx[j]
+      if (d_before <= 0) next
+
+      change_factor <- (d_after / d_before)^p$cg_gamma
+
+      # Best available revenue, in priority order
+      if (markets$observed[j] && markets$revenue[j] > 0) {
+        base_rev <- markets$revenue[j]
+        src <- if (!is.null(markets$revenue_source) && !is.na(markets$revenue_source[j])) {
+          markets$revenue_source[j]
+        } else "Reported"
+      } else {
+        base_rev <- pred_rev_base[j]
+        src <- "Model Est."
+      }
+
+      after_rev <- base_rev * change_factor
+      change    <- after_rev - base_rev
+
+      # Only include markets with > $0.1M impact
+      if (abs(change / 1e6) < 0.1) next
+
+      canib_rows[[length(canib_rows) + 1]] <- data.frame(
+        Market          = markets$label[j],
+        Before_Rev_M    = round(base_rev / 1e6, 1),
+        After_Rev_M     = round(after_rev / 1e6, 1),
+        Change_M        = round(change / 1e6, 1),
+        Before_Share    = NA_real_,
+        After_Share     = NA_real_,
+        Share_Change_pp = NA_real_,
+        Source          = src,
+        stringsAsFactors = FALSE
+      )
+    }
+    canib_table <- if (length(canib_rows) > 0) do.call(rbind, canib_rows) else NULL
+    if (!is.null(canib_table)) canib_table <- canib_table[order(canib_table$Change_M), ]
   }
 
   # --- Cluster proximity detection ---
@@ -232,14 +291,52 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
     nearby_markets <- nearby_markets[order(nearby_markets$distance), ]
   }
 
+  # --- Model confidence warnings ---
+  warnings <- character(0)
+
+  # 1. No competitors within MAX_DIST — pure extrapolation
+  nearest_competitor <- min(mkt_dists)
+  if (nearest_competitor > p$MAX_DIST) {
+    warnings <- c(warnings, paste0(
+      "No existing casinos within ", p$MAX_DIST, " miles (nearest: ",
+      round(nearest_competitor), " mi). Prediction is an out-of-sample extrapolation."
+    ))
+  }
+
+  # 2. Uncalibrated state
+  if (!is_existing_state) {
+    warnings <- c(warnings,
+      "Uncalibrated state: no observed casino revenue for this state. Prediction relies entirely on model estimates."
+    )
+  }
+
+  # 3. Extreme calibration factor (already clamped, but flag it)
+  if (is_existing_state && length(state_mask) > 0) {
+    raw_cf <- actual_state_total / sum(pred_rev_base[state_mask])
+    if (raw_cf > 3 || raw_cf < 0.33) {
+      warnings <- c(warnings, paste0(
+        "Calibration factor is ", round(raw_cf, 2),
+        "x \u2014 the model's uncalibrated prediction differs substantially from observed state revenue."
+      ))
+    }
+  }
+
+  # 4. Destination resort premium on monopoly market
+  if (destination_resort == 1 && nearest_competitor > p$MAX_DIST) {
+    warnings <- c(warnings,
+      "Destination resort premium (4x) applied in an isolated market. The premium was estimated on mainland casino markets with competitive clusters."
+    )
+  }
+
   # --- Return everything ---
   list(
     label             = label,
     lat               = lat,
     lon               = lon,
-    has_hotel         = has_hotel,
+    hotel_rooms       = hotel_rooms,
     has_tables        = has_tables,
     is_cardroom       = is_cardroom,
+    destination_resort = destination_resort,
     state             = target_state,
     is_existing_state = is_existing_state,
     demand_index      = new_demand,
@@ -256,6 +353,8 @@ forecast_casino <- function(lat, lon, has_hotel = 1, has_tables = 1,
     zip_visit_prob    = zip_visit_prob,
     zip_primary       = zip_primary,
     markets_new       = markets_new,
-    new_market_idx    = new_idx
+    new_market_idx    = new_idx,
+    # Model confidence
+    warnings          = warnings
   )
 }
